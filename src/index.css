@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #0B0F17;
+  --bg-card: #131926;
+  --bg-card-hover: #1A2235;
+  --border: #1E2D45;
+  --accent-blue: #2D7DD2;
+  --danger: #E53935;
+  --warning: #F57C00;
+  --success: #00897B;
+  --text-primary: #E8EDF4;
+  --text-secondary: #7A8BA8;
+  --text-muted: #445568;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'IBM Plex Sans', sans-serif;
+  margin: 0;
+}
+
+.font-display {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+/* 数字 */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 卡片 */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+/* 按钮 */
+button {
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* 输入框 */
+input, select, textarea {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+/* 表格 */
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border-color: var(--border);
+}
+
+/* 危险脉冲 */
+@keyframes pulse-danger {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0); }
+  50% { box-shadow: 0 0 0 6px rgba(229, 57, 53, 0.3); }
+}
+.pulse-danger {
+  animation: pulse-danger 2s ease-in-out infinite;
+}
+
+/* 打字机光标 */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* 过渡动画 */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* 页面进入动画 */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.page-enter {
+  animation: slideIn 0.15s ease-out;
+}
+
+/* 图表文字 */
+.echarts {
+  font-family: 'IBM Plex Sans', sans-serif;
+}
