@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Play, Bell, Settings, CheckCircle, XCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Bell, Settings, Play, Edit, Trash2, CheckCircle, AlertTriangle, XCircle, Filter } from 'lucide-react';
 
-// 规则状态类型
-type RuleStatus = 'draft' | 'enabled' | 'disabled';
+type RuleStatus = 'enabled' | 'disabled' | 'draft';
 type AlertPriority = 'P0' | 'P1' | 'P2' | 'P3';
 
 interface RuleCondition {
@@ -27,10 +26,10 @@ interface AlertRule {
   status: RuleStatus;
   conditions: RuleCondition[];
   actions: RuleAction[];
+  triggeredToday: number;
   createdAt: string;
 }
 
-// 模拟数据
 const mockRules: AlertRule[] = [
   {
     id: 'R001',
@@ -39,8 +38,9 @@ const mockRules: AlertRule[] = [
     category: 'supply',
     priority: 'P1',
     status: 'enabled',
-    conditions: [{ id: 'c1', field: 'supplier.otd', operator: 'lt', value: 0.9 }],
+    conditions: [{ id: 'c1', field: 'supplier.otd', operator: '<', value: '90%' }],
     actions: [{ id: 'a1', type: 'notification', template: '供应商OTD低于90%，请关注' }],
+    triggeredToday: 3,
     createdAt: '2026-02-01'
   },
   {
@@ -50,19 +50,21 @@ const mockRules: AlertRule[] = [
     category: 'inventory',
     priority: 'P1',
     status: 'enabled',
-    conditions: [{ id: 'c1', field: 'inventory.onHand', operator: 'lt', value: 'inventory.safetyStock' }],
+    conditions: [{ id: 'c1', field: 'inventory.onHand', operator: '<', value: '${safetyStock}' }],
     actions: [{ id: 'a1', type: 'notification', template: '库存不足，请及时补货' }],
+    triggeredToday: 5,
     createdAt: '2026-02-02'
   },
   {
     id: 'R003',
     name: '需求预测偏差>20%',
-    description: '实际需求与预测偏差超过20%',
+    description: '实际需求与预测偏差超过20%时触发',
     category: 'demand',
     priority: 'P2',
-    status: 'enabled',
-    conditions: [{ id: 'c1', field: 'demand.variance', operator: 'gt', value: 0.2 }],
-    actions: [{ id: 'a1', type: 'notification', template: '需求预测偏差大，请分析' }],
+    status: 'draft',
+    conditions: [{ id: 'c1', field: 'demand.variance', operator: '>', value: '20%' }],
+    actions: [{ id: 'a1', type: 'email', template: '需求偏差大，请分析' }],
+    triggeredToday: 0,
     createdAt: '2026-02-03'
   },
   {
@@ -71,196 +73,164 @@ const mockRules: AlertRule[] = [
     description: '实际成本超过预算时触发',
     category: 'cost',
     priority: 'P1',
-    status: 'draft',
-    conditions: [{ id: 'c1', field: 'cost.actual', operator: 'gt', value: 'cost.budget' }],
-    actions: [{ id: 'a1', type: 'email', template: '成本超预算，请关注' }],
+    status: 'enabled',
+    conditions: [{ id: 'c1', field: 'cost.actual', operator: '>', value: '${budget}' }],
+    actions: [{ id: 'a1', type: 'webhook', template: '成本超预算' }],
+    triggeredToday: 2,
     createdAt: '2026-02-04'
   }
 ];
 
 const AlertRules: React.FC = () => {
-  const [rules, setRules] = useState<AlertRule[]>(mockRules);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [filter, setFilter] = useState('all');
+  const [selected, setSelected] = useState<AlertRule | null>(null);
   
-  const categories = [
-    { id: 'all', name: '全部' },
-    { id: 'supply', name: '供应风险' },
-    { id: 'demand', name: '需求异常' },
-    { id: 'inventory', name: '库存风险' },
-    { id: 'cost', name: '成本风险' }
-  ];
+  const filtered = filter === 'all' 
+    ? mockRules 
+    : mockRules.filter(r => r.category === filter);
   
-  const priorityColors: Record<AlertPriority, string> = {
-    'P0': 'bg-red-500',
-    'P1': 'bg-orange-500',
-    'P2': 'bg-yellow-500',
-    'P3': 'bg-blue-500'
-  };
-  
-  const priorityLabels: Record<AlertPriority, string> = {
-    'P0': '紧急',
-    'P1': '重要',
-    'P2': '一般',
-    'P3': '提示'
-  };
-  
-  const filteredRules = rules.filter(r => 
-    selectedCategory === 'all' || r.category === selectedCategory
-  );
-  
-  const getCategoryLabel = (cat: string) => {
-    const labels: Record<string, string> = {
-      supply: '供应风险',
-      demand: '需求异常',
-      inventory: '库存风险',
-      cost: '成本风险'
+  const getPriorityColor = (p: AlertPriority) => {
+    const colors: Record<AlertPriority, string> = {
+      'P0': '#E53935',
+      'P1': '#F57C00', 
+      'P2': '#FCD34D',
+      'P3': '#00897B'
     };
-    return labels[cat] || cat;
+    return colors[p];
+  };
+  
+  const getCategoryIcon = (cat: string) => {
+    switch (cat) {
+      case 'supply': return <Truck className="w-5 h-5" style={{ color: '#E53935' }} />;
+      case 'inventory': return <Package className="w-5 h-5" style={{ color: '#00897B' }} />;
+      case 'demand': return <Bell className="w-5 h-5" style={{ color: '#F57C00' }} />;
+      case 'cost': return <Settings className="w-5 h-5" style={{ color: '#2D7DD2' }} />;
+      default: return <Bell className="w-5 h-5" />;
+    }
+  };
+  
+  const getStatusBadge = (status: RuleStatus) => {
+    const badges: Record<RuleStatus, { bg: string; color: string; label: string }> = {
+      enabled: { bg: 'rgba(0,137,123,0.1)', color: '#00897B', label: '已启用' },
+      disabled: { bg: 'rgba(68,85,104,0.1)', color: '#445568', label: '已禁用' },
+      draft: { bg: 'rgba(245,124,0,0.1)', color: '#F57C00', label: '草稿' }
+    };
+    const b = badges[status];
+    return (
+      <span className="px-2 py-0.5 rounded text-xs" style={{ background: b.bg, color: b.color }}>
+        {b.label}
+      </span>
+    );
   };
   
   return (
     <div className="page-enter">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-display" style={{ color: '#E8EDF4' }}>
-            预警规则引擎
-          </h1>
-          <p className="text-sm mt-1" style={{ color: '#7A8BA8' }}>
-            配置预警规则，实现供应链风险自动监控
-          </p>
+          <h1 className="text-2xl font-display" style={{ color: '#E8EDF4' }}>预警规则引擎</h1>
+          <p className="text-sm mt-1" style={{ color: '#7A8BA8' }}>配置预警规则，实现供应链风险自动监控</p>
         </div>
-        <button 
-          onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 rounded text-sm flex items-center gap-2"
-          style={{ background: '#2D7DD2', color: '#fff' }}
-        >
+        <button className="px-4 py-2 rounded text-sm font-medium flex items-center gap-2"
+          style={{ background: '#2D7DD2', color: '#fff' }}>
           <Plus className="w-4 h-4" />
           创建规则
         </button>
       </div>
       
-      {/* 统计卡片 */}
       <div className="grid gap-4 mb-6" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
         <div className="card p-4">
           <p className="text-xs mb-1" style={{ color: '#7A8BA8' }}>规则总数</p>
-          <p className="text-3xl font-display" style={{ color: '#E8EDF4' }}>{rules.length}</p>
+          <p className="text-3xl font-display" style={{ color: '#E8EDF4' }}>{mockRules.length}</p>
         </div>
         <div className="card p-4">
           <p className="text-xs mb-1" style={{ color: '#7A8BA8' }}>已启用</p>
           <p className="text-3xl font-display" style={{ color: '#00897B' }}>
-            {rules.filter(r => r.status === 'enabled').length}
-          </p>
-        </div>
-        <div className="card p-4">
-          <p className="text-xs mb-1" style={{ color: '#7A8BA8' }}>草稿</p>
-          <p className="text-3xl font-display" style={{ color: '#F57C00' }}>
-            {rules.filter(r => r.status === 'draft').length}
+            {mockRules.filter(r => r.status === 'enabled').length}
           </p>
         </div>
         <div className="card p-4">
           <p className="text-xs mb-1" style={{ color: '#7A8BA8' }}>今日触发</p>
-          <p className="text-3xl font-display" style={{ color: '#E53935' }}>12</p>
+          <p className="text-3xl font-display" style={{ color: '#F57C00' }}>
+            {mockRules.reduce((sum, r) => sum + r.triggeredToday, 0)}
+          </p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs mb-1" style={{ color: '#7A8BA8' }}>草稿</p>
+          <p className="text-3xl font-display" style={{ color: '#445568' }}>
+            {mockRules.filter(r => r.status === 'draft').length}
+          </p>
         </div>
       </div>
       
-      {/* 分类筛选 */}
       <div className="flex gap-2 mb-4">
-        {categories.map(cat => (
+        {['all', 'supply', 'inventory', 'demand', 'cost'].map(cat => (
           <button
-            key={cat.id}
-            onClick={() => setSelectedCategory(cat.id)}
-            className={`px-4 py-2 rounded text-sm ${
-              selectedCategory === cat.id 
-                ? '' 
-                : ''
-            }`}
+            key={cat}
+            onClick={() => setFilter(cat)}
+            className="px-4 py-2 rounded text-sm transition-all"
             style={{ 
-              background: selectedCategory === cat.id ? '#2D7DD2' : 'transparent',
-              color: selectedCategory === cat.id ? '#fff' : '#7A8BA8',
-              border: selectedCategory === cat.id ? 'none' : '1px solid #1E2D45'
+              background: filter === cat ? '#2D7DD2' : 'transparent',
+              color: filter === cat ? '#fff' : '#7A8BA8',
+              border: `1px solid ${filter === cat ? '#2D7DD2' : '#1E2D45'}`
             }}
           >
-            {cat.name}
+            {cat === 'all' ? '全部' : 
+             cat === 'supply' ? '供应' : 
+             cat === 'inventory' ? '库存' : 
+             cat === 'demand' ? '需求' : '成本'}
           </button>
         ))}
       </div>
       
-      {/* 规则列表 */}
       <div className="space-y-3">
-        {filteredRules.map(rule => (
-          <div key={rule.id} className="card p-4">
-            <div className="flex items-start justify-between">
+        {filtered.map(rule => (
+          <div 
+            key={rule.id}
+            onClick={() => setSelected(rule)}
+            className="card p-4 cursor-pointer transition-all"
+            style={{ 
+              background: selected?.id === rule.id ? 'rgba(45,125,210,0.08)' : '#131926',
+              borderColor: selected?.id === rule.id ? '#2D7DD2' : '#1E2D45'
+            }}
+          >
+            <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  rule.category === 'supply' ? 'bg-red-500/20' :
-                  rule.category === 'demand' ? 'bg-orange-500/20' :
-                  rule.category === 'inventory' ? 'bg-green-500/20' :
-                  'bg-blue-500/20'
-                }`}>
-                  <Bell className="w-5 h-5" style={{ 
-                    color: rule.category === 'supply' ? '#E53935' :
-                           rule.category === 'demand' ? '#F57C00' :
-                           rule.category === 'inventory' ? '#00897B' : '#2D7DD2'
-                  }} />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center"
+                  style={{ background: `${getPriorityColor(rule.priority)}20` }}>
+                  {getCategoryIcon(rule.category)}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-base font-medium" style={{ color: '#E8EDF4' }}>{rule.name}</h3>
-                    <span className={`px-2 py-0.5 rounded text-xs ${priorityColors[rule.priority]}`} style={{ color: '#fff' }}>
-                      {priorityLabels[rule.priority]}
-                    </span>
-                    <span className="px-2 py-0.5 rounded text-xs" 
-                      style={{ background: rule.status === 'enabled' ? 'rgba(0,137,123,0.1)' : 'rgba(245,124,0,0.1)',
-                      color: rule.status === 'enabled' ? '#00897B' : '#F57C00' }}>
-                      {rule.status === 'enabled' ? '已启用' : '草稿'}
+                    <span className="text-sm font-medium" style={{ color: '#E8EDF4' }}>{rule.name}</span>
+                    <span className="text-xs px-1.5 py-0.5 rounded" 
+                      style={{ background: `${getPriorityColor(rule.priority)}20`, color: getPriorityColor(rule.priority) }}>
+                      {rule.priority}
                     </span>
                   </div>
                   <p className="text-xs mt-1" style={{ color: '#7A8BA8' }}>{rule.description}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <button className="p-2 rounded hover:bg-opacity-50" 
-                  style={{ background: 'rgba(45,125,210,0.1)', color: '#2D7DD2' }}
-                  title="测试规则"
-                >
-                  <Play className="w-4 h-4" />
-                </button>
-                <button className="p-2 rounded hover:bg-opacity-50" 
-                  style={{ background: 'rgba(45,125,210,0.1)', color: '#2D7DD2' }}
-                  title="编辑"
-                >
-                  <Edit className="w-4 h-4" />
-                </button>
-                <button className="p-2 rounded hover:bg-opacity-50" 
-                  style={{ background: 'rgba(229,57,53,0.1)', color: '#E53935' }}
-                  title="删除"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+              <div className="flex items-center gap-3">
+                {getStatusBadge(rule.status)}
+                <div className="text-right">
+                  <p className="text-2xl font-display" style={{ color: rule.triggeredToday > 0 ? '#F57C00' : '#445568' }}>
+                    {rule.triggeredToday}
+                  </p>
+                  <p className="text-xs" style={{ color: '#445568' }}>今日触发</p>
+                </div>
               </div>
             </div>
             
-            {/* 规则详情 */}
-            <div className="mt-4 pt-3 border-t" style={{ borderColor: '#1E2D45' }}>
-              <div className="flex gap-6 text-xs">
-                <div>
-                  <span className="text-muted">分类:</span>
-                  <span className="ml-2" style={{ color: '#7A8BA8' }}>{getCategoryLabel(rule.category)}</span>
-                </div>
-                <div>
-                  <span className="text-muted">条件数:</span>
-                  <span className="ml-2" style={{ color: '#7A8BA8' }}>{rule.conditions.length}个</span>
-                </div>
-                <div>
-                  <span className="text-muted">动作数:</span>
-                  <span className="ml-2" style={{ color: '#7A8BA8' }}>{rule.actions.length}个</span>
-                </div>
-                <div>
-                  <span className="text-muted">创建时间:</span>
-                  <span className="ml-2" style={{ color: '#7A8BA8' }}>{rule.createdAt}</span>
-                </div>
-              </div>
+            <div className="flex gap-4 mt-3 pt-3 border-t" style={{ borderColor: '#1E2D45' }}>
+              <span className="text-xs" style={{ color: '#445568' }}>
+                条件: {rule.conditions.length}个
+              </span>
+              <span className="text-xs" style={{ color: '#445568' }}>
+                动作: {rule.actions.length}个
+              </span>
+              <span className="text-xs ml-auto" style={{ color: '#445568' }}>
+                创建: {rule.createdAt}
+              </span>
             </div>
           </div>
         ))}
