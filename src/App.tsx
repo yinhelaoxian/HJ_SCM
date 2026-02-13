@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Bell, User } from 'lucide-react';
+import { ToastProvider } from './hooks/useToast';
 import Sidebar from './components/layout/Sidebar';
 import Dashboard from './pages/p1_Dashboard';
 import DemandForecast from './pages/p2_DemandForecast';
@@ -50,30 +51,32 @@ const Header = () => (
   </header>
 );
 
-const App = () => (
-  <BrowserRouter>
-    <div className="h-screen flex" style={{ background: '#0B0F17' }}>
-      <Sidebar />
-      <main className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <div className="flex-1 overflow-auto p-6">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/demand" element={<DemandForecast />} />
-            <Route path="/supply" element={<SupplyBalance />} />
-            <Route path="/procurement" element={<ProcurementAI />} />
-            <Route path="/risk" element={<SupplierRisk />} />
-            <Route path="/sop" element={<SOP />} />
-            <Route path="/mps" element={<MPS />} />
-            <Route path="/otc-flow" element={<OTCFlow />} />
-            <Route path="/kpi" element={<KPIDashboard />} />
-            <Route path="/supplier" element={<SupplierRisk />} />
-            <Route path="/inventory" element={<PlaceholderPage title="库存管理" desc="安全库存 · ABC分析 · 呆滞处置" />} />
-          </Routes>
-        </div>
-      </main>
-    </div>
-  </BrowserRouter>
+const App: React.FC = () => (
+  <ToastProvider>
+    <BrowserRouter>
+      <div className="h-screen flex" style={{ background: '#0B0F17' }}>
+        <Sidebar />
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <Header />
+          <div className="flex-1 overflow-auto p-6">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/demand" element={<DemandForecast />} />
+              <Route path="/supply" element={<SupplyBalance />} />
+              <Route path="/procurement" element={<ProcurementAI />} />
+              <Route path="/risk" element={<SupplierRisk />} />
+              <Route path="/sop" element={<SOP />} />
+              <Route path="/mps" element={<MPS />} />
+              <Route path="/otc-flow" element={<OTCFlow />} />
+              <Route path="/kpi" element={<KPIDashboard />} />
+              <Route path="/supplier" element={<SupplierRisk />} />
+              <Route path="/inventory" element={<PlaceholderPage title="库存管理" desc="安全库存 · ABC分析 · 呆滞处置" />} />
+            </Routes>
+          </div>
+        </main>
+      </div>
+    </BrowserRouter>
+  </ToastProvider>
 );
 
 export default App;
