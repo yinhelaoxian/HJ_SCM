@@ -1,13 +1,13 @@
-# HJ_SCM 设计系统规范
+# HJ_SCM 设计系统规范 v2.0
 
-> 基于行业最佳实践（shadcn/ui + Tailwind CSS）构建的深色主题设计系统
+> 基于 Tailwind CSS v4 + shadcn/ui 最佳实践
 
 ## 1. 设计理念
 
-- **原子化设计**：使用Tailwind CSS utility classes构建UI
-- **语义化命名**：颜色、间距、字体都有明确语义
-- **深色优先**：针对指挥中心大屏场景优化的深色主题
-- **主题切换**：支持亮色/深色主题切换
+- **Tailwind CSS v4 集成**：使用 `@theme inline` 映射CSS变量
+- **语义化命名**：颜色使用 `--color-*` 前缀
+- **主题切换**：支持亮色/深色 `.dark` 类切换
+- **OKLCH 准备**：兼容现代色彩空间
 
 ## 2. 颜色系统
 
@@ -15,226 +15,230 @@
 
 ```css
 :root {
-  /* 主题色 */
-  --color-primary: #2D7DD2;      /* 品牌主色 */
-  --color-primary-hover: #3D9BE9; /* 主色悬停态 */
-  --color-primary-light: rgba(45, 125, 210, 0.1);
+  /* 品牌色 */
+  --color-primary: #2D7DD2;
+  --color-primary-hover: #3D9BE9;
   
   /* 状态色 */
-  --color-success: #00897B;       /* 成功/正常 */
-  --color-warning: #F57C00;       /* 警告/注意 */
-  --color-danger: #E53935;        /* 危险/错误 */
-  --color-info: #3D9BE9;          /* 信息 */
-  
-  /* 中性色 - 深色主题 */
-  --background: #0B0F17;          /* 页面背景 */
-  --foreground: #E8EDF4;          /* 主文字色 */
-  --card: #131926;                /* 卡片背景 */
-  --card-foreground: #E8EDF4;     /* 卡片文字 */
-  --popover: #131926;             /* 浮层背景 */
-  --popover-foreground: #E8EDF4;   /* 浮层文字 */
-  
-  /* 边框与辅助 */
-  --border: #1E2D45;              /* 边框色 */
-  --input: #0B0F17;              /* 输入框背景 */
-  --ring: #2D7DD2;                /* 聚焦边框 */
+  --color-success: #00897B;
+  --color-warning: #F57C00;
+  --color-destructive: #E53935;  /* danger → destructive */
+  --color-info: #3D9BE9;
 }
 ```
 
-### 2.2 图表颜色系统
+### 2.2 Tailwind CSS v4 映射
 
 ```css
-.chart-1: #2D7DD2;  /* 蓝色 - 主要数据 */
-.chart-2: #00897B;   /* 青绿 - 次要数据 */
-.chart-3: #F57C00;   /* 橙色 - 警告数据 */
-.chart-4: #E53935;   /* 红色 - 危险数据 */
-.chart-5: #7A8BA8;   /* 灰色 - 辅助数据 */
-```
-
-### 2.3 侧边栏颜色
-
-```css
-.sidebar: #0B0F17;           /* 侧边栏背景 */
-.sidebar-foreground: #E8EDF4; /* 侧边栏文字 */
-.sidebar-accent: #1A2235;     /* 侧边栏选中态 */
-.sidebar-border: #1E2D45;     /* 侧边栏边框 */
-```
-
-## 3. 间距系统
-
-```css
-:root {
-  --space-1: 4px;   /* 超小间距 */
-  --space-2: 8px;   /* 小间距 */
-  --space-3: 12px;  /* 中小间距 */
-  --space-4: 16px;  /* 中间距 */
-  --space-5: 20px;  /* 中大间距 */
-  --space-6: 24px;  /* 大间距 */
-  --space-8: 32px;  /* 特大间距 */
-  --space-10: 40px; /* 页面间距 */
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-card: var(--color-card);
+  --color-popover: var(--color-popover);
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-muted: var(--color-muted);
+  --color-accent: var(--color-accent);
+  --color-destructive: var(--color-destructive);
+  --color-border: var(--color-border);
+  --color-input: var(--color-input);
+  --color-ring: var(--color-ring);
+  
+  /* 图表颜色 */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 }
 ```
 
-## 4. 字体系统
+### 2.3 深色主题
+
+```css
+.dark {
+  --color-background: #0B0F17;
+  --color-foreground: #E8EDF4;
+  --color-card: #131926;
+  --color-secondary: #1A2235;
+  --color-muted: #1A2235;
+  --color-muted-foreground: #7A8BA8;
+  --color-accent: #1A2235;
+  --color-border: #1E2D45;
+  --color-destructive: #E53935;
+}
+```
+
+### 2.4 颜色使用示例
+
+```tsx
+// Tailwind 类
+<div className="bg-primary text-primary-foreground">主要按钮</div>
+<div className="bg-destructive text-destructive-foreground">危险操作</div>
+<div className="bg-muted text-muted-foreground">辅助文字</div>
+
+// CSS 变量
+<div style={{ background: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
+  卡片内容
+</div>
+```
+
+## 3. 字体系统
 
 ```css
 :root {
-  /* 字体族 */
-  --font-display: 'Barlow Condensed', sans-serif;  /* 标题字体 */
-  --font-body: 'IBM Plex Sans', sans-serif;       /* 正文字体 */
-  --font-mono: 'IBM Plex Mono', monospace;        /* 等宽字体 */
+  --font-family-display: 'Barlow Condensed', sans-serif;  /* 标题 */
+  --font-family-body: 'IBM Plex Sans', sans-serif;       /* 正文 */
+  --font-family-mono: 'IBM Plex Mono', monospace;       /* 代码 */
   
-  /* 字重 */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
-  --font-weight-bold: 700;
-  
-  /* 字号 */
-  --text-xs: 12px;     /* 辅助文字 */
-  --text-sm: 14px;     /* 小正文 */
-  --text-base: 16px;   /* 正文字号 */
-  --text-lg: 18px;     /* 小标题 */
-  --text-xl: 20px;     /* 中标题 */
-  --text-2xl: 24px;    /* 大标题 */
-  --text-3xl: 30px;   /* 特大标题 */
-  --text-4xl: 36px;   /* 页面标题 */
 }
 ```
 
-## 5. 圆角与阴影
+## 4. 圆角系统
 
 ```css
 :root {
-  --radius-sm: 4px;      /* 小圆角 */
-  --radius-md: 6px;      /* 中圆角 */
-  --radius-lg: 8px;      /* 大圆角 */
-  --radius-xl: 12px;     /* 特大圆角 */
-  --radius-full: 9999px; /* 全圆角 */
-  
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+  --radius: 8px;
+  --radius-sm: calc(var(--radius) - 4px);  /* 4px */
+  --radius-md: calc(var(--radius) - 2px);  /* 6px */
+  --radius-lg: var(--radius);               /* 8px */
+  --radius-xl: calc(var(--radius) + 4px);  /* 12px */
+  --radius-full: 9999px;
 }
 ```
 
-## 6. 动画系统
+## 5. 基础样式层 (@layer base)
 
 ```css
-:root {
-  --animate-fast: 150ms ease;   /* 快速过渡 */
-  --animate-base: 200ms ease;   /* 标准过渡 */
-  --animate-slow: 300ms ease;   /* 慢速过渡 */
+@layer base {
+  /* 全局重置 */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  /* 焦点环 */
+  *:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  
+  /* 基础排版 */
+  h1 { font-size: 24px; font-weight: 500; line-height: 1.5; }
+  h2 { font-size: 20px; font-weight: 500; line-height: 1.5; }
+  h3 { font-size: 18px; font-weight: 500; line-height: 1.5; }
+  h4 { font-size: 16px; font-weight: 500; line-height: 1.5; }
 }
 ```
 
-## 7. 组件规范
+## 6. 组件使用
 
-### 7.1 按钮 (Button)
+### 6.1 按钮
 
 ```tsx
-// props: variant, size, loading, disabled
-<Button variant="primary" size="md" loading={false}>
+// Tailwind 类
+<button className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary-hover">
   确定
-</Button>
+</button>
+
+// CSS 变量
+<button style={{ 
+  background: 'var(--color-primary)',
+  color: 'var(--color-primary-foreground)',
+  borderRadius: 'var(--radius-lg)'
+}}>
+  确定
+</button>
 ```
 
-### 7.2 卡片 (Card)
+### 6.2 卡片
 
 ```tsx
-// props: variant, padding
-<Card variant="bordered" padding="md">
-  内容
-</Card>
+<div className="bg-card border border-border rounded-lg p-4">
+  卡片内容
+</div>
 ```
 
-### 7.3 徽章 (Badge)
+### 6.3 输入框
 
 ```tsx
-// props: variant
-<Badge variant="success">已确认</Badge>
-<Badge variant="warning">待审批</Badge>
-<Badge variant="danger">有风险</Badge>
+<input 
+  className="bg-input border border-border rounded-md px-3 py-2"
+  placeholder="输入内容"
+/>
 ```
 
-### 7.4 加载骨架 (Skeleton)
+## 7. 状态颜色映射
 
-```tsx
-<Skeleton variant="text" width="100%" height={16} />
-<Skeleton variant="circular" width={40} height={40} />
-```
+| 状态 | CSS变量 | Tailwind类 | 用途 |
+|------|---------|------------|------|
+| 成功 | `--color-success` | `text-success` | 正常/完成 |
+| 警告 | `--color-warning` | `text-warning` | 预警/待处理 |
+| 危险 | `--color-destructive` | `text-destructive` | 错误/风险 |
+| 信息 | `--color-info` | `text-info` | 提示/进行中 |
 
-## 8. 布局规范
-
-### 8.1 页面布局
-
-```
-┌─────────────────────────────────────┐
-│ Header (56px)                       │
-├─────────────┬───────────────────────┤
-│             │                       │
-│  Sidebar    │    Main Content       │
-│  (220px)    │    (剩余宽度)         │
-│             │                       │
-│             │                       │
-└─────────────┴───────────────────────┘
-```
-
-### 8.2 网格系统
+## 8. 图表颜色规范
 
 ```css
-.grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-.gap-4 { gap: 16px; }
+.chart-1: #2D7DD2  /* 蓝色 - 主要数据 */
+.chart-2: #00897B  /* 青绿 - 次要数据 */
+.chart-3: #F57C00  /* 橙色 - 强调数据 */
+.chart-4: #E53935  /* 红色 - 警示数据 */
+.chart-5: #7A8BA8  /* 灰色 - 辅助数据 */
 ```
 
-## 9. 状态颜色映射
+## 9. 侧边栏专用颜色
 
-| 状态 | CSS变量 | 用途 |
-|------|---------|------|
-| 成功 | success | 正常/完成/通过 |
-| 警告 | warning | 待处理/预警 |
-| 危险 | danger | 错误/风险/断供 |
-| 信息 | info | 提示/进行中 |
-
-## 10. 使用示例
-
-### 10.1 深色卡片组件
-
-```tsx
-<div className="card p-4" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
-  <h3 style={{ color: 'var(--foreground)' }}>标题</h3>
-  <p style={{ color: 'var(--muted-foreground)' }}>正文内容</p>
-</div>
+```css
+@theme inline {
+  --color-sidebar: var(--color-sidebar);
+  --color-sidebar-foreground: var(--color-sidebar-foreground);
+  --color-sidebar-accent: var(--color-sidebar-accent);
+  --color-sidebar-accent-foreground: var(--color-sidebar-accent-foreground);
+  --color-sidebar-border: var(--color-sidebar-border);
+}
 ```
 
-### 10.2 危险状态
+## 10. 动画系统
 
-```tsx
-<div 
-  className="p-3 rounded"
-  style={{ 
-    background: 'var(--color-danger-light)',
-    border: '1px solid var(--color-danger)',
-    color: 'var(--color-danger)'
-  }}
->
-  ⚠️ 存在风险
-</div>
+```css
+.animate-slide-in { animation: slideIn 200ms ease-out; }
+.animate-fade-in { animation: fadeIn 200ms ease-out; }
+.animate-pulse { animation: pulse 2s infinite; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
 ```
 
-## 11. 最佳实践
+## 11. 文件结构
 
-1. **使用CSS变量**：避免硬编码颜色，优先使用`var(--color-*)`
-2. **保持一致性**：相同场景使用相同的颜色和间距
-3. **响应式设计**：移动优先，支持不同屏幕尺寸
-4. **无障碍访问**：确保文字与背景对比度足够
+```
+src/
+├── index.css              # 全局样式 + CSS变量
+├── ui/                    # 可复用UI组件
+│   ├── Button.tsx
+│   ├── Card.tsx
+│   └── Badge.tsx
+└── components/           # 业务组件
+```
 
-## 12. 相关文件
+## 12. 最佳实践
 
-- `src/index.css` - 全局样式变量
-- `src/ui/` - 可复用UI组件
-- `src/utils/format.ts` - 格式化工具
+1. **优先使用Tailwind类**：如 `bg-primary`, `text-destructive`
+2. **CSS变量用于动态值**：如 `style={{ background: 'var(--color-card)' }}`
+3. **保持一致性**：相同场景使用相同颜色
+4. **响应式设计**：使用Tailwind响应式类
+
+## 13. 相关文件
+
+- `src/index.css` - 完整样式变量定义
+- `src/ui/` - 组件库
 
 ---
 
-*版本: v1.0*
-*参考: shadcn/ui, Tailwind CSS*
+*版本: v2.0*
+*参考: Tailwind CSS v4, shadcn/ui*
