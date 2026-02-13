@@ -1,219 +1,189 @@
-// Page 1: 供应链指挥中心 Dashboard
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  TrendingUp, AlertTriangle, Clock, 
-  MapPin, Factory, Package, Truck,
-  ChevronRight, CheckCircle, Activity
-} from 'lucide-react';
-import { 
-  KPI_DATA, ALERTS, PLANT_STATUS, 
-  SALES_ORDERS 
-} from '../../data/mock.data';
+import { AlertTriangle, Clock, MapPin, Factory, Activity } from 'lucide-react';
+import { KPI_DATA, ALERTS, PLANT_STATUS, SALES_ORDERS } from '../../data/mock.data';
 import { DEMO_CONFIG } from '../../config/demo.config';
 
-const KPIGauge: React.FC<{ 
-  label: string; 
-  current: number; 
-  target: number; 
-  unit: string;
-}> = ({ label, current, target, unit }) => {
+function useCountUp(end, duration = 900) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let start = 0;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else setCount(Math.floor(start));
+    }, 16);
+    return () => clearInterval(timer);
+  }, [end, duration]);
+  return count;
+}
+
+const KPIGauge = ({ label, current, target, unit, status = 'danger' }) => {
   const percentage = Math.min((current / target) * 100, 100);
-  const circumference = 2 * Math.PI * 40;
+  const radius = 36;
+  const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference * (1 - percentage / 100);
+  const animatedValue = useCountUp(current, 1000);
+  const strokeColor = status === 'danger' ? '#E53935' : status === 'warning' ? '#F57C00' : '#00897B';
   
   return (
-    <div className="flex flex-col items-center p-3">
-      <div className="relative w-24 h-24">
-        <svg className="w-24 h-24 transform -rotate-90">
-          <circle cx="48" cy="48" r="40" stroke="var(--border)" strokeWidth="8" fill="transparent" />
-          <circle 
-            cx="48" cy="48" r="40" 
-            stroke="var(--accent-blue)" 
-            strokeWidth="8" 
-            fill="transparent"
-            strokeDasharray={circumference}
-            strokeDashoffset={circumference * 0.39}
-            className="transition-all duration-1000"
-          />
+    <div className="flex flex-col items-center p-2">
+      <div className="relative w-20 h-20">
+        <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r={radius} stroke="#1E2D45" strokeWidth="7" fill="transparent" />
+          <circle cx="40" cy="40" r={radius} stroke={strokeColor} strokeWidth="7" fill="transparent"
+            strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round"
+            style={{ transition: 'stroke-dashoffset 1s ease-out' }} />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-display text-2xl font-bold">{current}{unit}</span>
+          <span className="font-display text-xl font-bold" style={{ color: strokeColor }}>
+            {animatedValue}{unit}
+          </span>
         </div>
       </div>
-      <span className="text-xs text-secondary mt-1">{label}</span>
-      <span className="text-xs text-muted">目标{target}{unit}</span>
+      <span className="text-xs text-center mt-1" style={{ color: '#7A8BA8' }}>{label}</span>
+      <span className="text-xs" style={{ color: '#445568' }}>目标{target}{unit}</span>
     </div>
   );
 };
 
-const AlertCard: React.FC<{ alert: typeof ALERTS[0]; onClick?: () => void }> = ({ alert, onClick }) => {
-  const colors = {
-    critical: 'alert-critical border-danger bg-danger-bg',
-    warning: 'border-warning bg-warning-bg',
-    normal: 'border-success bg-success-bg'
-  };
-  
+const AlertCard = ({ alert, onClick }) => {
+  const isCritical = alert.level === 'critical';
   return (
-    <div 
-      className={`p-3 rounded mb-2 cursor-pointer ${colors[alert.level as keyof typeof colors]}`}
-      onClick={onClick}
-    >
+    <div className={`p-3 rounded mb-2 cursor-pointer border ${isCritical ? 'pulse-danger' : ''}`}
+      style={{ background: isCritical ? 'rgba(229,57,53,0.06)' : alert.level === 'warning' ? 'rgba(245,124,0,0.06)' : 'rgba(0,137,123,0.06)',
+        borderColor: isCritical ? '#E53935' : alert.level === 'warning' ? '#F57C00' : '#00897B', }}
+      onClick={onClick} >
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs">
-          {alert.level === 'critical' ? '🔴' : alert.level === 'warning' ? '🟡' : '🟢'}
-        </span>
-        <span className="text-xs font-display text-danger">{alert.amount}</span>
+        <span className="text-xs">{isCritical ? '🔴' : alert.level === 'warning' ? '🟡' : '🟢'}</span>
+        <span className="font-display text-lg font-bold" style={{ color: '#E53935' }}>{alert.amount}</span>
       </div>
-      <p className="text-sm text-primary mb-1">{alert.title}</p>
-      <p className="text-xs text-secondary flex items-center">
-        <Clock className="w-3 h-3 mr-1" />
-        {alert.deadline}
+      <p className="text-sm mb-1" style={{ color: '#E8EDF4' }}>{alert.title}</p>
+      <p className="text-xs flex items-center gap-1" style={{ color: '#7A8BA8' }}>
+        <Clock className="w-3 h-3" />{alert.deadline}
       </p>
     </div>
   );
 };
 
-const PlantMap: React.FC = () => (
-  <div className="relative h-64 bg-base rounded border border-border">
-    <svg viewBox="0 0 400 200" className="w-full h-full">
-      {/* 简化的亚洲地图轮廓 */}
-      <path d="M50,60 Q100,40 150,60 T250,80 T350,100" 
-            stroke="var(--border)" fill="transparent" strokeWidth="1"/>
-      
-      {/* 青岛 */}
-      <g className="cursor-pointer">
-        <circle cx="320" cy="50" r="12" fill="var(--danger)" className="animate-pulse"/>
-        <text x="320" y="75" textAnchor="middle" className="text-xs fill-text-primary">青岛</text>
-        <text x="320" y="88" textAnchor="middle" className="text-xs fill-danger">112%</text>
-      </g>
-      
-      {/* 苏州 */}
-      <g className="cursor-pointer">
-        <circle cx="330" cy="90" r="10" fill="var(--warning)"/>
-        <text x="330" y="115" textAnchor="middle" className="text-xs fill-text-primary">苏州</text>
-        <text x="330" y="128" textAnchor="middle" className="text-xs fill-warning">78%</text>
-      </g>
-      
-      {/* 泰国 */}
-      <g className="cursor-pointer">
-        <circle cx="280" cy="140" r="12" fill="var(--warning)"/>
-        <text x="280" y="165" textAnchor="middle" className="text-xs fill-text-primary">泰国</text>
-        <text x="280" y="178" textAnchor="middle" className="text-xs fill-warning">43%</text>
-      </g>
-      
-      {/* 物流流向线 */}
-      <path d="M280,140 Q300,100 320,90" 
-            stroke="var(--accent-blue)" fill="transparent" 
-            strokeWidth="2" strokeDasharray="5,5"/>
-      <path d="M280,140 Q260,100 320,50" 
-            stroke="var(--accent-blue)" fill="transparent" 
-            strokeWidth="2" strokeDasharray="5,5"/>
+const PlantMap = () => (
+  <div className="relative rounded overflow-hidden" style={{ height: '200px', background: '#0B0F17', border: '1px solid #1E2D45' }}>
+    <svg viewBox="0 0 400 220" className="w-full h-full">
+      <path d="M80,20 L120,18 L160,22 L200,30 L230,25 L260,35 L280,28 L300,40 L310,55 L305,70 L295,80 L290,95 L280,105 L270,115 L260,125 L250,130 L240,140 L230,150 L220,160 L210,175 L200,185"
+        stroke="#1E2D45" fill="none" strokeWidth="1.5" />
+      <path d="M200,185 L195,192 L190,200 L185,205 L188,210 L195,208 L200,205 L205,208 L208,205 L205,200"
+        stroke="#1E2D45" fill="none" strokeWidth="1" />
+      <line x1="310" y1="62" x2="295" y2="82" stroke="#2D7DD2" strokeWidth="1.5" strokeDasharray="4,3" opacity="0.7">
+        <animate attributeName="stroke-dashoffset" from="14" to="0" dur="1.5s" repeatCount="indefinite" />
+      </line>
+      <line x1="295" y1="95" x2="200" y2="195" stroke="#2D7DD2" strokeWidth="1.5" strokeDasharray="4,3" opacity="0.5">
+        <animate attributeName="stroke-dashoffset" from="14" to="0" dur="2s" repeatCount="indefinite" />
+      </line>
+      <circle cx="310" cy="60" r="10" fill="#E53935" opacity="0.9" />
+      <circle cx="310" cy="60" r="14" fill="none" stroke="#E53935" strokeWidth="1.5" opacity="0.4">
+        <animate attributeName="r" from="10" to="18" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" from="0.5" to="0" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <text x="310" y="80" textAnchor="middle" fill="#E8EDF4" fontSize="10" fontFamily="IBM Plex Sans">青岛总部</text>
+      <text x="310" y="92" textAnchor="middle" fill="#E53935" fontSize="9" fontFamily="IBM Plex Sans">112% ⚠</text>
+      <circle cx="295" cy="95" r="8" fill="#F57C00" opacity="0.9" />
+      <text x="295" y="113" textAnchor="middle" fill="#E8EDF4" fontSize="10" fontFamily="IBM Plex Sans">苏州华东</text>
+      <text x="295" y="125" textAnchor="middle" fill="#F57C00" fontSize="9" fontFamily="IBM Plex Sans">78%</text>
+      <circle cx="200" cy="195" r="9" fill="#F57C00" opacity="0.8" />
+      <text x="200" y="210" textAnchor="middle" fill="#E8EDF4" fontSize="10" fontFamily="IBM Plex Sans">泰国曼谷</text>
+      <text x="200" y="222" textAnchor="middle" fill="#F57C00" fontSize="9" fontFamily="IBM Plex Sans">43% 爬坡中</text>
+      <circle cx="20" cy="15" r="4" fill="#E53935" />
+      <text x="28" y="19" fill="#7A8BA8" fontSize="9" fontFamily="IBM Plex Sans">超负荷</text>
+      <circle cx="65" cy="15" r="4" fill="#F57C00" />
+      <text x="73" y="19" fill="#7A8BA8" fontSize="9" fontFamily="IBM Plex Sans">正常/爬坡</text>
     </svg>
   </div>
 );
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(47);
+  const [countdown, setCountdown] = useState(DEMO_CONFIG.company.daysToChristmasSeason);
+  const animatedRisk = useCountUp(DEMO_CONFIG.riskAmount.total, 1200);
   
   useEffect(() => {
-    const timer = setInterval(() => setCountdown(c => Math.max(0, c - 1), 86400000);
+    const timer = setInterval(() => setCountdown(c => Math.max(0, c - 1)), 86400000);
     return () => clearInterval(timer);
   }, []);
   
-  const totalRisk = ALERTS.reduce((sum, a) => 
-    sum + (a.level === 'critical' ? parseInt(a.amount.replace(/[^0-9]/g, '')) : 0), 0);
-  
   return (
     <div className="page-enter">
-      {/* 标题栏 */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-display text-primary">供应链指挥中心</h1>
-          <p className="text-sm text-secondary">2026年10月8日 · 青岛总部</p>
+          <h1 className="text-2xl font-display" style={{ color: '#E8EDF4' }}>供应链指挥中心</h1>
+          <p className="text-sm mt-0.5" style={{ color: '#7A8BA8' }}>{DEMO_CONFIG.company.demoDate} · 青岛总部</p>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="text-right">
-            <p className="text-xs text-secondary">距圣诞旺季发货</p>
-            <p className="text-3xl font-display text-danger animate-count">{countdown}</p>
+        <div className="flex items-center gap-6">
+          <div className="text-right p-3 rounded" style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.3)' }}>
+            <p className="text-xs mb-1" style={{ color: '#7A8BA8' }}>距圣诞旺季发货</p>
+            <p className="font-display text-4xl font-bold" style={{ color: '#E53935' }}>{countdown}<span className="text-lg ml-1" style={{ color: '#7A8BA8' }}>天</span></p>
           </div>
         </div>
       </div>
       
-      {/* 3列网格布局 */}
-      <div className="grid grid-cols-12 gap-4">
-        
-        {/* 左列：今日预警 */}
-        <div className="col-span-3">
-          <h2 className="text-lg font-medium text-primary mb-3 flex items-center">
-            <AlertTriangle className="w-5 h-5 mr-2 text-danger" />
-            今日需要你决策的事
-          </h2>
-          {ALERTS.map(alert => (
-            <AlertCard key={alert.id} alert={alert} onClick={() => navigate('/p5')} />
-          ))}
-          <button 
-            onClick={() => navigate('/p5')}
-            className="w-full mt-3 p-2 rounded border border-border text-sm text-secondary hover:bg-card-hover flex items-center justify-center"
-          >
-            AI已识别 ¥{totalRisk}万 潜在风险 → 查看全部建议
-          </button>
+      <div className="grid gap-4" style={{ gridTemplateColumns: '30% 42% 28%' }}>
+        <div>
+          <h2 className="text-base font-medium mb-3 flex items-center gap-2" style={{ color: '#E8EDF4' }}>
+            <AlertTriangle className="w-4 h-4" style={{ color: '#E53935' }} /> 今日需要你决策的事 </h2>
+          {ALERTS.map(alert => ( <AlertCard key={alert.id} alert={alert} onClick={() => navigate('/risk')} /> ))}
+          <button onClick={() => navigate('/procurement')}
+            className="w-full mt-3 p-3 rounded text-sm flex items-center justify-center gap-2"
+            style={{ background: 'rgba(45,125,210,0.08)', border: '1px solid rgba(45,125,210,0.3)', color: '#3D9BE9' }} >
+            AI已识别 ¥{animatedRisk}万 潜在风险 → 查看全部建议 </button>
         </div>
         
-        {/* 中列：KPI仪表 */}
-        <div className="col-span-5">
-          <h2 className="text-lg font-medium text-primary mb-3 flex items-center">
-            <Activity className="w-5 h-5 mr-2 text-accent-blue" />
-            KPI健康度
-          </h2>
+        <div>
+          <h2 className="text-base font-medium mb-3 flex items-center gap-2" style={{ color: '#E8EDF4' }}>
+            <Activity className="w-4 h-4" style={{ color: '#2D7DD2' }} /> 供应链健康度 </h2>
           <div className="card p-4">
-            <div className="grid grid-cols-3 gap-2">
-              {KPI_DATA.map((kpi, i) => (
-                <KPIGauge key={i} {...kpi} />
-              ))}
+            <div className="grid grid-cols-3 gap-1">
+              {KPI_DATA.map((kpi, i) => ( <KPIGauge key={i} {...kpi} /> ))}
             </div>
           </div>
-          
-          {/* 待办列表 */}
-          <div className="mt-4">
-            <h3 className="text-sm font-medium text-secondary mb-2">今日待办</h3>
-            <div className="space-y-2">
-              {SALES_ORDERS.slice(0, 4).map(order => (
-                <div key={order.id} className="flex items-center justify-between p-2 card">
+          <div className="mt-3">
+            <h3 className="text-xs mb-2 px-1" style={{ color: '#7A8BA8' }}>今日关键订单</h3>
+            <div className="space-y-1.5">
+              {SALES_ORDERS.slice(0, 3).map(order => (
+                <div key={order.id} className="flex items-center justify-between p-2 rounded"
+                  style={{ background: '#131926', border: '1px solid #1E2D45' }} >
                   <div className="flex items-center gap-2">
-                    {order.priority === 'critical' ? 
-                      <span className="text-danger">🔴</span> : 
-                      <span className="text-warning">🟡</span>
-                    }
-                    <span className="text-sm text-primary">{order.id}</span>
-                    <span className="text-xs text-secondary">{order.customer}</span>
+                    <span>{order.priority === 'critical' ? '🔴' : '🟡'}</span>
+                    <span className="text-sm" style={{ color: '#E8EDF4' }}>{order.id}</span>
+                    <span className="text-xs" style={{ color: '#7A8BA8' }}>{order.customer}</span>
                   </div>
-                  <span className="text-xs text-muted">{order.originalDeliveryDate}</span>
+                  <span className="text-xs font-display" style={{ color: '#E53935' }}> ¥{(order.amount / 10000).toFixed(0)}万 </span>
                 </div>
               ))}
             </div>
           </div>
         </div>
         
-        {/* 右列：三厂地图 */}
-        <div className="col-span-4">
-          <h2 className="text-lg font-medium text-primary mb-3 flex items-center">
-            <MapPin className="w-5 h-5 mr-2 text-accent-blue" />
-            三厂运营状态
-          </h2>
-          <div className="card p-4">
+        <div>
+          <h2 className="text-base font-medium mb-3 flex items-center gap-2" style={{ color: '#E8EDF4' }}>
+            <MapPin className="w-4 h-4" style={{ color: '#2D7DD2' }} /> 三厂运营状态 </h2>
+          <div className="card p-3">
             <PlantMap />
-            <div className="mt-4 space-y-2">
+            <div className="mt-3 space-y-1.5">
               {PLANT_STATUS.map((plant, i) => (
-                <div key={i} className="flex items-center justify-between p-2 border border-border rounded">
+                <div key={i} className="flex items-center justify-between p-2 rounded"
+                  style={{ background: '#0B0F17', border: '1px solid #1E2D45' }} >
                   <div className="flex items-center gap-2">
-                    <Factory className="w-4 h-4 text-secondary" />
-                    <span className="text-sm text-primary">{plant.name}</span>
+                    <Factory className="w-3.5 h-3.5" style={{ color: '#7A8BA8' }} />
+                    <span className="text-sm" style={{ color: '#E8EDF4' }}>{plant.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-display">{plant.utilization}%</span>
-                    <span className="text-xs">{plant.risk}</span>
+                    <span className="font-display text-base"
+                      style={{ color: plant.utilization > 100 ? '#E53935' : plant.utilization < 60 ? '#F57C00' : '#00897B' }}>
+                      {plant.utilization}%
+                    </span>
+                    <span className="text-xs">{plant.utilization > 100 ? '🔴' : '🟡'}</span>
                   </div>
                 </div>
               ))}
