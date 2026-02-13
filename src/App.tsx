@@ -12,6 +12,8 @@ import SOP from './pages/p6_SOP';
 import MPS from './pages/p7_MPS';
 import OTCFlow from './pages/p8_OTCFlow';
 import KPIDashboard from './pages/p9_KPI';
+import AlertRules from './pages/p10_AlertRules';
+import ATPCheck from './pages/p11_ATPCheck';
 
 const PlaceholderPage = ({ title, desc }: { title: string; desc: string }) => (
   <div className="flex flex-col items-center justify-center h-full" style={{ color: '#445568' }}>
@@ -68,6 +70,8 @@ const App: React.FC = () => (
               <Route path="/sop" element={<SOP />} />
               <Route path="/mps" element={<MPS />} />
               <Route path="/otc-flow" element={<OTCFlow />} />
+              <Route path="/alert-rules" element={<AlertRules />} />
+              <Route path="/atp-check" element={<ATPCheck />} />
               <Route path="/kpi" element={<KPIDashboard />} />
               <Route path="/supplier" element={<SupplierRisk />} />
               <Route path="/inventory" element={<PlaceholderPage title="库存管理" desc="安全库存 · ABC分析 · 呆滞处置" />} />
