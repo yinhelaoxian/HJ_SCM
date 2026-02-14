@@ -41,9 +41,15 @@ docs/
 | 文档 | 说明 |
 |------|------|
 | `BUSINESS_RESEARCH.md` | 业务深度调研 |
-| `BUSINESS_EXPERT.md` | 业务专家方案 |
+| `BUSINESS_EXPERT.md` | 业务专家方案 ⭐ |
 | `CONSULTING_REPORT.md` | 战略咨询报告 |
 | `REMEDIATION_PLAN.md` | 整改计划 |
+
+#### BUSINESS_EXPERT/PRESENTATION/ - 汇报方案（业务专家负责）
+
+| 文档 | 说明 | 受众 |
+|------|------|------|
+| `CONSULTING_PPT.html` | 高管汇报PPT | 高管层 |
 
 #### ACCEPTANCE/ - 验收报告
 
