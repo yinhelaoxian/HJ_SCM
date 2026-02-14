@@ -303,7 +303,7 @@
 
 | 汇报文件 | 用途 | 受众 |
 |----------|------|------|
-| `PRESENTATION/CONSULTING_PPT.html` | 战略咨询汇报 | 高管层 |
+| `CONSULTING_PPT.html` | 战略咨询汇报（高管PPT） | 高管层 |
 | `CONSULTING_REPORT.md` | 详细咨询报告 | 项目组 |
 | `BUSINESS_ACCEPTANCE_V2.md` | 业务验收报告 | 质量部门 |
 
@@ -318,7 +318,7 @@
 
 ### 9.4 CONSULTING_PPT.html 使用说明
 
-**文件位置**: `docs/03_BUSINESS/BUSINESS_EXPERT/PRESENTATION/CONSULTING_PPT.html`
+**文件位置**: `docs/03_BUSINESS/CONSULTING_PPT.html`
 
 **汇报要点**:
 

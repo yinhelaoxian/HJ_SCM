@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>青岛豪江智能SCM数字化转型战略咨询汇报</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:#0B0F17;color:#E8EDF4;overflow:hidden}
+.slides{width:100vw;height:100vh;position:relative}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;padding:60px 80px;display:none;background:linear-gradient(135deg,#0B0F17 0%,#131926 100%)}
+.slide.active{display:flex;flex-direction:column}
+h1{font-size:48px;font-weight:700;margin-bottom:20px;color:#E8EDF4}
+h2{font-size:36px;font-weight:600;margin-bottom:30px;color:#E8EDF4;border-left:4px solid #2D7DD2;padding-left:20px}
+h3{font-size:24px;font-weight:600;margin-bottom:15px;color:#7A8BA8}
+h4{font-size:20px;font-weight:600;margin-bottom:10px;color:#E8EDF4}
+p{font-size:20px;line-height:1.8;color:#B8C5D3;margin-bottom:15px}
+ul{list-style:none}
+li{padding:8px 0;padding-left:24px;position:relative;color:#B8C5D3;font-size:18px}
+li::before{content:'▸';position:absolute;left:0;color:#2D7DD2}
+.subtitle{font-size:24px;color:#7A8BA8;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;margin-top:30px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.card{background:rgba(255,255,255,0.03);border:1px solid #1E2D45;border-radius:12px;padding:30px}
+.card h3{color:#E8EDF4;margin-bottom:15px}
+.stat{text-align:center;padding:20px}
+.stat .number{font-size:48px;font-weight:700;color:#2D7DD2}
+.stat .label{font-size:18px;color:#7A8BA8;margin-top:10px}
+.pain-point{display:flex;align-items:flex-start;gap:20px;padding:25px;background:rgba(229,57,53,0.05);border:1px solid rgba(229,57,53,0.2);border-radius:12px;margin-bottom:20px}
+.pain-point .icon{width:50px;height:50px;background:rgba(229,57,53,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.pain-point h4{font-size:20px;color:#E53935;margin-bottom:8px}
+.pain-point p{font-size:16px;color:#B8C5D3;margin:0}
+.blueprint{display:grid;grid-template-columns:1fr 80px 1fr 80px 1fr;gap:20px;margin-top:30px}
+.blueprint-col{background:rgba(255,255,255,0.02);border:1px solid #1E2D45;border-radius:12px;padding:25px;text-align:center}
+.blueprint-col h4{font-size:18px;color:#E8EDF4;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #1E2D45}
+.blueprint-col li{font-size:14px;color:#B8C5D3;padding:6px 0}
+.arrow-col{display:flex;align-items:center;justify-content:center;font-size:30px;color:#2D7DD2}
+.org-chart{display:flex;gap:40px;margin-top:30px;background:rgba(255,255,255,0.02);border:1px solid #1E2D45;border-radius:12px;padding:40px}
+.org-level{text-align:center;flex:1}
+.org-level h4{font-size:16px;color:#E8EDF4;padding:15px 30px;background:rgba(45,125,210,0.1);border:1px solid #2D7DD2;border-radius:8px;margin-bottom:15px;display:inline-block}
+.org-level li{font-size:14px;color:#B8C5D3;padding:8px 0}
+.kpi-table{width:100%;border-collapse:collapse;margin-top:30px;background:rgba(255,255,255,0.02);border:1px solid #1E2D45;border-radius:12px;overflow:hidden}
+.kpi-table th{background:rgba(45,125,210,0.2);padding:18px 20px;text-align:left;font-size:16px;color:#E8EDF4;border-bottom:1px solid #1E2D45}
+.kpi-table td{padding:16px 20px;font-size:15px;color:#B8C5D3;border-bottom:1px solid #1E2D45}
+.scope-item{display:flex;align-items:center;gap:20px;padding:25px;background:rgba(45,125,210,0.05);border:1px solid rgba(45,125,210,0.2);border-radius:12px;margin-bottom:15px}
+.scope-item .num{width:50px;height:50px;background:#2D7DD2;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;flex-shrink:0}
+.scope-item h4{font-size:20px;color:#E8EDF4;margin-bottom:5px}
+.scope-item p{font-size:15px;color:#7A8BA8;margin:0}
+.roi-card{text-align:center;padding:30px 20px;background:rgba(45,125,210,0.1);border:1px solid #2D7DD2;border-radius:12px}
+.roi-card .value{font-size:36px;font-weight:700;color:#2D7DD2;margin-bottom:10px}
+.roi-card .label{font-size:16px;color:#7A8BA8}
+.solution-card{padding:30px;background:rgba(255,255,255,0.02);border:1px solid #1E2D45;border-radius:12px;text-align:center}
+.solution-card .icon{width:70px;height:70px;background:rgba(45,125,210,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px}
+.solution-card h4{font-size:20px;color:#E8EDF4;margin-bottom:12px}
+.solution-card p{font-size:14px;color:#7A8BA8;margin:0;line-height:1.6}
+.nav{position:fixed;bottom:30px;right:30px;display:flex;gap:10px;z-index:100}
+.nav button{width:50px;height:50px;background:rgba(45,125,210,0.2);border:1px solid #2D7DD2;border-radius:50%;color:#E8EDF4;cursor:pointer;font-size:20px;transition:all 0.3s}
+.nav button:hover{background:#2D7DD2}
+.progress{position:fixed;top:0;left:0;height:3px;background:#2D7DD2;transition:width 0.3s;z-index:100}
+.page-num{position:fixed;bottom:30px;left:30px;color:#445568;font-size:14px}
+.highlight{color:#2D7DD2;font-weight:600}
+.investment-table{width:100%;margin-top:30px;border-collapse:collapse;background:rgba(255,255,255,0.02);border:1px solid #1E2D45;border-radius:12px;overflow:hidden}
+.investment-table th{background:rgba(45,125,210,0.2);padding:18px 20px;text-align:left;font-size:16px;color:#E8EDF4}
+.investment-table td{padding:16px 20px;font-size:15px;color:#B8C5D3;border-bottom:1px solid #1E2D45}
+.investment-table .total{background:rgba(45,125,210,0.1);font-weight:600;color:#E8EDF4}
+.toc{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px}
+.toc-item{display:flex;align-items:center;padding:20px 30px;background:rgba(255,255,255,0.02);border:1px solid #1E2D45;border-radius:8px;cursor:pointer;transition:all 0.3s}
+.toc-item:hover{background:rgba(45,125,210,0.1);border-color:#2D7DD2}
+.toc-item .num{width:40px;height:40px;background:#2D7DD2;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:20px}
+.toc-item .text{font-size:20px;color:#E8EDF4}
+.cover-slide{justify-content:center;align-items:center;text-align:center}
+.cover-slide h1{font-size:56px;margin-bottom:30px}
+.cover-slide .company{font-size:28px;color:#2D7DD2;margin-top:40px}
+.cover-slide .meta{margin-top:60px;color:#445568;font-size:18px}
+.timeline{display:flex;justify-content:space-between;margin-top:40px;position:relative}
+.timeline::before{content:'';position:absolute;top:30px;left:0;right:0;height:2px;background:#1E2D45}
+.timeline-item{text-align:center;position:relative;flex:1}
+.timeline-item .dot{width:20px;height:20px;background:#2D7DD2;border-radius:50%;margin:20px auto 20px;position:relative;z-index:1}
+.timeline-item h4{font-size:18px;color:#E8EDF4;margin-bottom:10px}
+.timeline-item p{font-size:14px;color:#7A8BA8}
+.qa-slide{justify-content:center;align-items:center;text-align:center}
+.qa-slide h1{font-size:64px;margin-bottom:30px}
+.qa-slide p{font-size:28px;color:#7A8BA8}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="page-num" id="pageNum">1 / 18</div>
+<div class="slides">
+
+<!-- Slide 1: 封面 -->
+<div class="slide cover-slide active">
+<h1>青岛豪江智能科技有限公司</h1>
+<h2 style="border:none;padding:0;font-size:36px;">SCM数字化转型战略咨询汇报</h2>
+<p class="subtitle">供应链管理升级 · 智能制造赋能 · 价值创造</p>
+<div class="company">离散制造行业标杆 · 智能装备领域专家</div>
+<div class="meta"><p>汇报人：业务专家 Agent</p><p>2026年2月</p></div>
+</div>
+
+<!-- Slide 2: 目录 -->
+<div class="slide">
+<h2>汇报目录</h2>
+<div class="toc">
+<div class="toc-item" onclick="goToSlide(1)"><div class="num">01</div><div class="text">战略规划</div></div>
+<div class="toc-item" onclick="goToSlide(2)"><div class="num">02</div><div class="text">业务现状分析</div></div>
+<div class="toc-item" onclick="goToSlide(3)"><div class="num">03</div><div class="text">痛点与需求分析</div></div>
+<div class="toc-item" onclick="goToSlide(4)"><div class="num">04</div><div class="text">业务蓝图规划</div></div>
+<div class="toc-item" onclick="goToSlide(5)"><div class="num">05</div><div class="text">组织架构优化</div></div>
+<div class="toc-item" onclick="goToSlide(6)"><div class="num">06</div><div class="text">绩效体系设计</div></div>
+<div class="toc-item" onclick="goToSlide(7)"><div class="num">07</div><div class="text">数字化项目范围</div></div>
+<div class="toc-item" onclick="goToSlide(8)"><div class="num">08</div><div class="text">数字化解决方案</div></div>
+<div class="toc-item" onclick="goToSlide(9)"><div class="num">09</div><div class="text">投入产出分析</div></div>
+<div class="toc-item" onclick="goToSlide(10)"><div class="num">10</div><div class="text">实施路线图</div></div>
+</div>
+</div>
+
+<!-- Slide 3: 01 战略规划 -->
+<div class="slide">
+<h2>01 战略规划</h2>
+<h3>1.1 战略愿景</h3>
+<p>构建<span class="highlight">端到端可视化</span>的智能供应链管理体系，实现从需求预测到订单交付的全链路数字化管控，打造离散制造智能装备行业供应链管理标杆。</p>
+
+<h3 style="margin-top:30px">1.2 战略目标</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>运营目标</h3><ul><li>库存周转率提升 65%（9.1次→15次）</li><li>订单准时交付率 94%</li><li>计划准确率达到 90%</li><li>缺货率降低 80%</li></ul></div>
+<div class="card"><h3>财务目标</h3><ul><li>库存成本降低 ¥300万/年</li><li>缺货损失减少 ¥180万/年</li><li>物流成本节约 ¥120万/年</li><li>供应链总成本降低 15%</li></ul></div>
+</div>
+
+<h3 style="margin-top:30px">1.3 规划原则</h3>
+<div class="grid-4" style="margin-top:20px">
+<div class="stat"><div class="number">顶层设计</div><div class="label">全局规划，分步实施</div></div>
+<div class="stat"><div class="number">业务驱动</div><div class="label">需求导向，价值优先</div></div>
+<div class="stat"><div class="number">标准统一</div><div class="label">接口开放，数据互通</div></div>
+<div class="stat"><div class="number">持续优化</div><div class="label">迭代演进，敏捷响应</div></div>
+</div>
+</div>
+
+<!-- Slide 4: 02 业务现状分析 -->
+<div class="slide">
+<h2>02 业务现状分析</h2>
+<h3>2.1 企业概况</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>基本信息</h3><ul><li><strong>企业名称：</strong>青岛豪江智能科技有限公司</li><li><strong>行业定位：</strong>智能装备研发与制造</li><li><strong>业务模式：</strong>B端企业客户，非标定制化</li><li><strong>产品特点：</strong>高附加值、技术密集、交付周期长</li><li><strong>企业规模：</strong>中大型制造企业</li></ul></div>
+<div class="card"><h3>供应链特征</h3><ul><li><strong>物料品类：</strong>1000+ SKU，品类繁多</li><li><strong>供应商数量：</strong>50+ 核心供应商</li><li><strong>客户结构：</strong>多行业、多区域企业客户</li><li><strong>生产模式：</strong>多品种、小批量、订单驱动</li><li><strong>交付周期：</strong>平均 4-8 周</li></ul></div>
+</div>
+
+<h3 style="margin-top:30px">2.2 现有系统基础</h3>
+<div class="grid-3" style="margin-top:20px">
+<div class="card" style="text-align:center"><h3>ERP</h3><p>核心业务系统</p><p style="color:#7A8BA8;font-size:14px;margin-top:10px">订单管理、财务核算</p></div>
+<div class="card" style="text-align:center"><h3>Excel</h3><p>计划与报表</p><p style="color:#7A8BA8;font-size:14px;margin-top:10px">手工计划、数据汇总</p></div>
+<div class="card" style="text-align:center"><h3>手工</h3><p>齐套与追踪</p><p style="color:#7A8BA8;font-size:14px;margin-top:10px">人工核对、效率低下</p></div>
+</div>
+
+<h3 style="margin-top:30px">2.3 现状评估</h3>
+<table class="kpi-table">
+<tr><th>评估维度</th><th>现状水平</th><th>行业差距</th></tr>
+<tr><td>计划体系成熟度</td><td>基础级（手工为主）</td><td>落后行业标杆2-3级</td></tr>
+<tr><td>供应链可视化</td><td>碎片化</td><td>缺乏端到端追踪</td></tr>
+<tr><td>数据驱动能力</td><td>弱</td><td>依赖经验决策</td></tr>
+<tr><td>供应商协同</td><td>基础级</td><td>缺乏战略协同</td></tr>
+</table>
+</div>
+
+<!-- Slide 5: 03 痛点分析 -->
+<div class="slide">
+<h2>03 痛点与需求分析</h2>
+<h3>3.1 核心痛点诊断</h3>
+
+<div class="pain-point">
+<div class="icon">📊</div>
+<div>
+<h4>痛点一：产销信息不对称（影响度：高）</h4>
+<p>销售承诺与生产交期经常冲突，缺乏有效的产销协同机制。销售部门接单时无法准确获知生产产能和物料齐套情况，导致订单承诺不可靠，客户满意度下降。根因：缺乏S&OP产销协同机制，信息传递依赖人工。</p>
+</div>
+</div>
+
+<div class="pain-point">
+<div class="icon">📋</div>
+<div>
+<h4>痛点二：计划准确性低（影响度：高）</h4>
+<p>MPS/MRP执行率低，计划变更频繁。缺乏滚动更新机制，计划与执行脱节，紧急插单处理无序，导致生产效率低下，设备利用率不足。根因：计划模型简单，缺乏科学排程。</p>
+</div>
+</div>
+
+<div class="pain-point">
+<div class="icon">📦</div>
+<div>
+<h4>痛点三：齐套管理困难（影响度：高）</h4>
+<p>生产停工待料现象频发，供应商交期不可控。缺乏安全库存策略，物料计划与采购执行脱节，齐套检查依赖人工，效率低且容易出错。根因：MRP运算不自动化，缺乏齐套预警。</p>
+</div>
+</div>
+
+<div class="pain-point">
+<div class="icon">⚠️</div>
+<div>
+<h4>痛点四：供应商风险传导（影响度：中）</h4>
+<p>缺乏供应商风险监控体系，突发断供影响交付。供应商准入、评估、监控机制不完善，风险预警能力不足，应急响应能力弱。根因：缺乏供应商全生命周期管理。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 6: 03 需求分析（续） -->
+<div class="slide">
+<h2>03 痛点与需求分析（续）</h2>
+<h3>3.2 业务需求矩阵</h3>
+<table class="kpi-table">
+<thead><tr><th>需求域</th><th>核心需求</th><th>优先级</th><th>业务价值</th></tr></thead>
+<tbody>
+<tr><td><strong>S&OP协同</strong></td><td>建立产销协同机制，平衡需求与供应</td><td style="color:#E53935;font-weight:600">P0</td><td>消除信息孤岛，提升决策效率</td></tr>
+<tr><td><strong>MPS计划</strong></td><td>13周滚动计划，产能约束优化</td><td style="color:#E53935;font-weight:600">P0</td><td>提高计划准确性，减少紧急插单</td></tr>
+<tr><td><strong>MRP运算</strong></td><td>每日MRP运算，齐套自动检查</td><td style="color:#E53935;font-weight:600">P0</td><td>降低停工待料，提升齐套率</td></tr>
+<tr><td><strong>供应商管理</strong></td><td>准入评估、绩效监控、风险预警</td><td style="color:#F57C00;font-weight:600">P1</td><td>保障供应稳定性，降低断供风险</td></tr>
+<tr><td><strong>订单追踪</strong></td><td>全链路可视化，异常实时预警</td><td style="color:#F57C00;font-weight:600">P1</td><td>提升交付透明度，加快异常响应</td></tr>
+<tr><td><strong>库存优化</strong></td><td>安全库存策略，呆滞物料预警</td><td style="color:#00897B;font-weight:600">P2</td><td>降低库存资金占用，提高周转率</td></tr>
+<tr><td><strong>ATP承诺</strong></td><td>可承诺量计算，智能交期答复</td><td style="color:#00897B;font-weight:600">P2</td><td>提升客户满意度，减少订单纠纷</td></tr>
+<tr><td><strong>绩效监控</strong></td><td>SCOR指标体系，可视化看板</td><td style="color:#00897B;font-weight:600">P2</td><td>量化管理改进，支撑持续优化</td></tr>
+</tbody>
+</table>
+
+<h3 style="margin-top:30px">3.3 需求优先级说明</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>P0 - 核心需求</h3><p>直接影响订单交付和客户满意度，必须在第一阶段实现。</p></div>
+<div class="card"><h3>P1 - 重要需求</h3><p>提升运营效率，建议在第二阶段实现。</p></div>
+<div class="card"><h3>P2 - 优化需求</h3><p>持续改进项，可在后续迭代中完善。</p></div>
+</div>
+</div>
+
+<!-- Slide 7: 04 业务蓝图规划 -->
+<div class="slide">
+<h2>04 业务蓝图规划</h2>
+<h3>4.1 三层计划架构（SAP最佳实践）</h3>
+<div class="blueprint">
+<div class="blueprint-col"><h4>S&OP（战略层）</h4><ul><li>产销协同会议</li><li>需求预测评审</li><li>资源平衡决策</li><li>财务约束优化</li><li>情景模拟分析</li><li>年度计划制定</li></ul></div>
+<div class="arrow-col">→</div>
+<div class="blueprint-col"><h4>MPS（战术层）</h4><ul><li>13周滚动计划</li><li>产能约束排程</li><li>订单分解释放</li><li>计划冻结管理</li><li>ATP交期承诺</li><li>计划变更处理</li></ul></div>
+<div class="arrow-col">→</div>
+<div class="blueprint-col"><h4>MRP（执行层）</h4><ul><li>物料需求运算</li><li>采购计划生成</li><li>齐套检查确认</li><li>投料计划下达</li><li>异常快速响应</li><li>每日计划更新</li></ul></div>
+</div>
+
+<h3 style="margin-top:30px">4.2 核心业务流程</h3>
+<div class="grid-3" style="margin-top:20px">
+<div class="card"><h3>计划域</h3><ul><li>S&OP产销协同流程</li><li>MPS排程流程</li><li>MRP运算流程</li><li>计划变更处理流程</li><li>需求预测流程</li></ul></div>
+<div class="card"><h3>执行域</h3><ul><li>采购执行流程</li><li>生产执行流程</li><li>仓储执行流程</li><li>配送执行流程</li><li>供应商协同流程</li></ul></div>
+<div class="card"><h3>监控域</h3><ul><li>订单追踪流程</li><li>异常预警流程</li><li>绩效分析流程</li><li>持续改进流程</li><li>风险监控流程</li></ul></div>
+</div>
+</div>
+
+<!-- Slide 8: 05 组织架构优化建议 -->
+<div class="slide">
+<h2>05 组织架构优化建议</h2>
+<h3>5.1 供应链组织架构演进</h3>
+<div class="org-chart">
+<div class="org-level"><h4>高管层</h4><ul><li>供应链总监</li></ul></div>
+<div class="org-level"><h4>计划部门</h4><ul><li>S&OP经理</li><li>MPS计划员</li><li>MRP专员</li></ul></div>
+<div class="org-level"><h4>执行部门</h4><ul><li>采购经理</li><li>采购员</li><li>仓储主管</li></ul></div>
+<div class="org-level"><h4>支持部门</h4><ul><li>供应商管理</li><li>数据分析师</li><li>系统管理员</li></ul></div>
+</div>
+
+<h3 style="margin-top:30px">5.2 组织优化要点</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>关键优化项</h3><ul><li>成立S&OP委员会，跨部门协同决策</li><li>强化计划部门，明确S&OP/MPS/MRP职责</li><li>设立供应商管理岗，专职风险监控</li><li>配置数据分析师，支撑数据驱动决策</li><li>建立供应链CoE（卓越中心）</li></ul></div>
+<div class="card"><h3>关键岗位职责</h3><ul><li><strong>S&OP经理：</strong>统筹产销协同，推动决策落地</li><li><strong>MPS计划员：</strong>执行滚动排程，确保产能平衡</li><li><strong>MRP专员：</strong>运行物料计划，保障齐套供应</li><li><strong>供应商管理：</strong>准入评估，绩效监控，风险预警</li></ul></div>
+</div>
+</div>
+
+<!-- Slide 9: 06 绩效体系设计 -->
+<div class="slide">
+<h2>06 绩效体系设计</h2>
+<h3>6.1 SCOR指标体系（适配离散制造）</h3>
+<table class="kpi-table">
+<thead><tr><th>维度</th><th>KPI指标</th><th>计算公式</th><th>目标值</th></tr></thead>
+<tbody>
+<tr><td rowspan="2"><strong>可靠性</strong></td><td>订单准时交付率 (OTD)</td><td>准时交付订单数 / 总订单数 × 100%</td><td style="color:#2D7DD2;font-weight:600">≥ 94%</td></tr>
+<tr><td>计划达成率</td><td>实际完成 / 计划数量 × 100%</td><td style="color:#2D7DD2;font-weight:600">≥ 90%</td></tr>
+<tr><td rowspan="2"><strong>响应性</strong></td><td>订单响应周期</td><td>从接单到发货的平均天数</td><td style="color:#2D7DD2;font-weight:600">≤ 5天</td></tr>
+<tr><td>缺货响应时间</td><td>从缺货识别到补货的时长</td><td style="color:#2D7DD2;font-weight:600">≤ 24h</td></tr>
+<tr><td rowspan="2"><strong>灵活性</strong></td><td>紧急订单响应率</td><td>紧急订单准时交付数 / 总紧急订单数</td><td style="color:#2D7DD2;font-weight:600">≥ 85%</td></tr>
+<tr><td>计划变更处理时效</td><td>计划变更到执行的平均时长</td><td style="color:#2D7DD2;font-weight:600">≤ 4h</td></tr>
+<tr><td rowspan="2"><strong>成本</strong></td><td>供应链总成本率</td><td>供应链成本 / 销售额 × 100%</td><td style="color:#2D7DD2;font-weight:600">≤ 8%</td></tr>
+<tr><td>库存周转率</td><td>年销售成本 / 平均库存金额</td><td style="color:#2D7DD2;font-weight:600">≥ 15次</td></tr>
+<tr><td rowspan="2"><strong>资产</strong></td><td>现金周转周期</td><td>库存 + 应收账款 - 应付账款</td><td style="color:#2D7DD2;font-weight:600">≤ 45天</td></tr>
+<tr><td>呆滞库存占比</td><td>呆滞库存金额 / 总库存金额</td><td style="color:#2D7DD2;font-weight:600">≤ 2%</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- Slide 10: 07 数字化项目范围 -->
+<div class="slide">
+<h2>07 数字化项目范围</h2>
+<h3>7.1 项目建设范围</h3>
+
+<div class="scope-item"><div class="num">1</div><div><h4>模块一：S&OP产销协同平台</h4><p>需求预测、产销平衡、财务约束、情景模拟、协同会议管理、S&OP仪表盘</p></div></div>
+<div class="scope-item"><div class="num">2</div><div><h4>模块二：MPS主生产计划系统</h4><p>13周滚动计划、产能约束排程、ATP可用承诺、计划冻结管理、计划变更处理</p></div></div>
+<div class="scope-item"><div class="num">3</div><div><h4>模块三：MRP物料计划系统</h4><p>每日MRP运算、齐套检查、采购建议生成、投料计划下达、异常预警</p></div></div>
+<div class="scope-item"><div class="num">4</div><div><h4>模块四：供应商风险管理系统</h4><p>供应商准入管理、绩效评估、风险监控、预警推送、备选供应商库、协同门户</p></div></div>
+<div class="scope-item"><div class="num">5</div><div><h4>模块五：订单全链路追踪平台</h4><p>可视化追踪、状态更新、异常预警、交付分析、客户门户、承诺管理</p></div></div>
+<div class="scope-item"><div class="num">6</div><div><h4>模块六：SCOR绩效看板</h4><p>OTD、库存周转、计划达成率、成本分析、趋势预警、对标分析</p></div></div>
+</div>
+
+<h3 style="margin-top:30px">7.2 系统集成范围</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>上游集成</h3><ul><li>SAP S/4HANA（主数据、订单）</li><li>ERP系统（财务、采购）</li><li>CRM系统（客户信息）</li></ul></div>
+<div class="card"><h3>下游集成</h3><ul><li>MES系统（生产执行）</li><li>WMS系统（仓储管理）</li><li>TMS系统（运输管理）</li></ul></div>
+</div>
+</div>
+
+<!-- Slide 11: 08 数字化解决方案 -->
+<div class="slide">
+<h2>08 数字化解决方案</h2>
+<h3>8.1 系统架构设计</h3>
+<div class="grid-3">
+<div class="solution-card"><div class="icon">📊</div><h4>供应链指挥中心</h4><p>全局可视化监控，实时掌握供应链运营状态，异常预警驱动决策</p></div>
+<div class="solution-card"><div class="icon">🤖</div><h4>AI需求预测</h4><p>机器学习算法，结合历史数据、市场因素、季节性，提升预测准确率</p></div>
+<div class="solution-card"><div class="icon">⚖️</div><h4>供需平衡工作台</h4><p>What-if情景模拟，辅助管理决策，财务约束下的最优方案</p></div>
+<div class="solution-card"><div class="icon">🛡️</div><h4>供应商风险雷达</h4><p>多维风险监控，供应链传导分析，备选供应商快速切换</p></div>
+<div class="solution-card"><div class="icon">🤖</div><h4>AI采购建议</h4><p>智能推荐最优采购方案，综合价格、交期、质量、风险</p></div>
+<div class="solution-card"><div class="icon">📋</div><h4>S&OP产销协同</h4><p>产销平衡模型，财务约束优化，情景模拟支撑决策</p></div>
+</div>
+</div>
+
+<h3 style="margin-top:30px">8.2 核心功能模块</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>计划层</h3><ul><li>需求预测引擎</li><li>S&OP协同平台</li><li>MPS排程系统</li><li>MRP运算中心</li><li>RCCP产能分析</li></ul></div>
+<div class="card"><h3>执行层</h3><ul><li>ATP可用承诺</li><li>采购建议生成</li><li>齐套检查确认</li><li>投料计划下达</li><li>订单追踪监控</li></ul></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 12: 08 解决方案（续） -->
+<div class="slide">
+<h2>08 数字化解决方案（续）</h2>
+<h3>8.3 扩展功能模块</h3>
+<div class="grid-3">
+<div class="solution-card"><div class="icon">📅</div><h4>MPS主生产计划</h4><p>13周滚动计划，产能负荷可视化，计划冻结与变更管理</p></div>
+<div class="solution-card"><div class="icon">🚚</div><h4>订单全链路追踪</h4<p>端到端可视化，异常实时预警，状态自动更新</p></div>
+<div class="solution-card"><div class="icon">📈</div><h4>SCOR绩效看板</h4><p>四维度KPI，对标行业最佳实践，趋势分析与预警</p></div>
+<div class="solution-card"><div class="icon">🔔</div><h4>告警规则引擎</h4><p>自定义阈值，多渠道推送，智能分级响应</p></div>
+<div class="solution-card"><div class="icon">✅</div><h4>ATP可用承诺</h4><p>实时库存检查，承诺日期计算，智能交期答复</p></div>
+<div class="solution-card"><div class="icon">📊</div><h4>差异分析</h4><p>计划vs实际对比，根因分析，改进建议</p></div>
+<div class="solution-card"><div class="icon">📋</div><h4>S&OP会议管理</h4><p>会议日程、议题管理、决议跟踪、行动项追踪</p></div>
+</div>
+
+<h3 style="margin-top:30px">8.4 技术选型建议</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>前端技术</h3><ul><li>React 18 + TypeScript</li><li>ECharts 5.x（数据可视化）</li><li>Lucide React（图标库）</li><li>Tailwind CSS v4</li></ul></div>
+<div class="card"><h3>后端技术</h3><ul><li>微服务架构</li><li>支持SAP S/4HANA集成</li><li>标准化API接口</li><li>容器化部署</li></ul></div>
+<div class="card"><h3>AI技术</h3><ul><li>Python + TensorFlow</li><li>需求预测模型</li><li>智能推荐算法</li><li>风险预警模型</li></ul></div>
+</div>
+</div>
+
+<!-- Slide 13: 09 投入产出分析 -->
+<div class="slide">
+<h2>09 投入产出分析</h2>
+<h3>9.1 投资预算（3年总投入 ¥330万）</h3>
+<table class="investment-table">
+<thead><tr><th>项目</th><th>金额（万元）</th><th>占比</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>软件授权与许可</td><td>80</td><td>24.2%</td><td>平台 license、第三方组件</td></tr>
+<tr><td>定制开发费用</td><td>120</td><td>36.4%</td><td>6大模块定制开发</td></tr>
+<tr><td>硬件与基础设施</td><td>50</td><td>15.2%</td><td>服务器、存储、网络</td></tr>
+<tr><td>实施服务费</td><td>50</td><td>15.2%</td><td>咨询、实施、培训</td></tr>
+<tr><td>培训与推广</td><td>15</td><td>4.5%</td><td>用户培训、变革管理</td></tr>
+<tr><td>运维支持（3年）</td><td>15</td><td>4.5%</td><td>技术支持、版本升级</td></tr>
+<tr class="total"><td><strong>合计</strong></td><td><strong>330</strong></td><td><strong>100%</strong></td><td>-</td></tr>
+</tbody>
+</table>
+
+<h3 style="margin-top:30px">9.2 年度投资分解</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>第一年（Y1）</h3><ul><li>投资金额：¥180万</li><li>重点：平台搭建、核心模块开发</li><li>里程碑：S&OP、MPS上线</li></ul></div>
+<div class="card"><h3>第二年（Y2）</h3><ul><li>投资金额：¥100万</li><li>重点：MRP、供应商管理上线</li><li>里程碑：全模块上线</li></ul></div>
+<div class="card"><h3>第三年（Y3）</h3><ul><li>投资金额：¥50万</li><li>重点：AI增强、优化迭代</li><li>里程碑：智能化升级</li></ul></div>
+</div>
+</div>
+
+<!-- Slide 14: 09 投入产出（续） -->
+<div class="slide">
+<h2>09 投入产出分析（续）</h2>
+<h3>9.3 预期收益测算</h3>
+<div class="grid-4" style="margin-top:30px">
+<div class="roi-card"><div class="value">¥300万</div><div class="label">年库存成本降低</div></div>
+<div class="roi-card"><div class="value">¥180万</div><div class="label">年缺货损失减少</div></div>
+<div class="roi-card"><div class="value">¥120万</div><div class="label">年物流成本节约</div></div>
+<div class="roi-card"><div class="value">¥70万</div><div class="label">年采购效率提升</div></div>
+</div>
+
+<h3 style="margin-top:30px">9.4 ROI分析</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>财务指标</h3><ul><li><strong>年总收益：</strong>约 ¥670万</li><li><strong>投资回收期：</strong>约 6 个月</li><li><strong>3年ROI：</strong>4.75x</li><li><strong>年化收益率：</strong>158%</li></ul></div>
+<div class="card"><h3>KPI改善预期</h3><ul><li><strong>库存周转率：</strong>9.1次 → 15次 (+65%)</li><li><strong>订单准时率：</strong>76% → 94% (+18%)</li><li><strong>计划准确率：</strong>61% → 90% (+29%)</li><li><strong>缺货率：</strong>8% → 1.5% (-81%)</li></ul></div>
+</div>
+
+<h3 style="margin-top:30px">9.5 非财务收益</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>客户满意度</h3><p>订单准时交付率提升，客户投诉减少，预估提升 25%</p></div>
+<div class="card"><h3>决策效率</h3><p>数据驱动决策，报表自动化，预估提升 50%</p></div>
+<div class="card"><h3>风险可控</h3><p>供应商风险可视化，异常预警，响应提速 70%</p></div>
+</div>
+</div>
+
+<!-- Slide 15: 10 实施路线图 -->
+<div class="slide">
+<h2>10 实施路线图</h2>
+<h3>10.1 2026年Q1-Q4实施计划</h3>
+<div class="timeline">
+<div class="timeline-item"><div class="dot"></div><h4>Q1</h4><p>基础平台搭建<br/>S&OP/MPS开发</p></div>
+<div class="timeline-item"><div class="dot"></div><h4>Q2</h4><p>MRP上线<br/>供应商管理</p></div>
+<div class="timeline-item"><div class="dot"></div><h4>Q3</h4><p>订单追踪<br/>绩效看板</p></div>
+<div class="timeline-item"><div class="dot"></div><h4>Q4</h4><p>AI增强<br/>优化迭代</p></div>
+</div>
+
+<h3 style="margin-top:40px">10.2 关键里程碑</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>M1（3月底）</h3><ul><li>需求确认完成</li><li>系统设计完成</li><li>开发环境搭建</li></ul></div>
+<div class="card"><h3>M2（6月底）</h3><ul><li>S&OP模块上线</li><li>MPS模块上线</li><li>试运行启动</li></ul></div>
+<div class="card"><h3>M3（9月底）</h3><ul><li>全模块上线</li><li>全面推广</li><li>用户培训完成</li></ul></div>
+<div class="card"><h3>M4（12月底）</h3><ul><li>优化完善</li><li>项目验收</li><li>运维交接</li></ul></div>
+</div>
+</div>
+
+<!-- Slide 16: 10 实施保障 -->
+<div class="slide">
+<h2>10 实施路线图（续）</h2>
+<h3>10.3 实施保障措施</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>组织保障</h3><ul><li>成立项目指导委员会，高层挂帅</li><li>组建专职项目组，明确职责</li><li>建立变更管理流程</li><li>定期项目汇报机制</li></ul></div>
+<div class="card"><h3>质量保障</h3><ul><li>分阶段验收，控制质量</li><li>严格测试流程</li><li>UAT用户验收测试</li><li>缺陷跟踪管理</li></ul></div>
+</div>
+
+<h3 style="margin-top:30px">10.4 风险管理</h3>
+<table class="kpi-table">
+<thead><tr><th>风险类别</th><th>风险描述</th><th>应对措施</th></tr></thead>
+<tbody>
+<tr><td>需求变更</td><td>业务需求频繁变更</td><td>严格变更管理流程，基线控制</td></tr>
+<tr><td>数据质量</td><td>主数据不准确</td><td>数据清洗，治理先行</td></tr>
+<tr><td>系统集成</td><td>ERP集成难度大</td><td>提前接口设计，充分测试</td></tr>
+<tr><td>用户接受</td><td>用户抵触新系统</td><td>加强培训，变革管理</td></tr>
+</tbody>
+</table>
+
+<h3 style="margin-top:30px">10.5 成功因素</h3>
+<div class="grid-3" style="margin-top:20px">
+<div class="stat"><div class="number">高层支持</div><div class="label">一把手工程，持续关注</div></div>
+<div class="stat"><div class="number">业务参与</div><div class="label">关键用户深度参与</div></div>
+<div class="stat"><div class="number">专业团队</div><div class="label">经验丰富的实施团队</div></div>
+</div>
+</div>
+
+<!-- Slide 17: 总结 -->
+<div class="slide">
+<h2>项目总结</h2>
+<h3>核心价值主张</h3>
+<div class="card" style="margin-top:20px;text-align:center;padding:40px">
+<p style="font-size:28px;color:#E8EDF4;margin-bottom:30px">构建<span class="highlight">端到端可视化</span>的智能供应链管理体系</p>
+<p style="font-size:20px;color:#7A8BA8">实现从需求预测到订单交付的全链路数字化管控</p>
+</div>
+
+<h3 style="margin-top:40px">投资回报概览</h3>
+<div class="grid-3" style="margin-top:20px">
+<div class="roi-card"><div class="value">¥330万</div><div class="label">3年总投资</div></div>
+<div class="roi-card"><div class="value">¥670万</div><div class="label">年收益</div></div>
+<div class="roi-card"><div class="value">4.75x</div><div class="label">3年ROI</div></div>
+</div>
+
+<h3 style="margin-top:40px">下一步行动</h3>
+<div class="grid" style="margin-top:20px">
+<div class="card"><h3>短期</h3><ul><li>项目立项审批</li><li>成立项目组</li><li>供应商选型</li></ul></div>
+<div class="card"><h3>中期</h3><ul><li>详细设计</li><li>开发实施</li><li>测试验收</li></ul></div>
+<div class="card"><h3>长期</h3><ul><li>持续优化</li><li>AI智能化升级</li><li>生态协同扩展</li></ul></div>
+</div>
+</div>
+
+<!-- Slide 18: Q&A -->
+<div class="slide qa-slide">
+<h1>感谢聆听</h1>
+<p>青岛豪江智能SCM数字化转型战略咨询汇报</p>
+<p style="margin-top:60px;font-size:24px">汇报人：业务专家 Agent</p>
+<p style="font-size:20px;margin-top:20px">Q & A</p>
+</div>
+
+</div>
+
+<div class="nav">
+<button onclick="prevSlide()">←</button>
+<button onclick="nextSlide()">→</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+const progress = document.getElementById('progress');
+const pageNum = document.getElementById('pageNum');
+
+function showSlide(n) {
+slides[currentSlide].classList.remove('active');
+currentSlide = (n + totalSlides) % totalSlides;
+slides[currentSlide].classList.add('active');
+progress.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+pageNum.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+}
+
+function nextSlide() { showSlide(currentSlide + 1); }
+function prevSlide() { showSlide(currentSlide - 1); }
+function goToSlide(n) { showSlide(n); }
+
+document.addEventListener('keydown', (e) => {
+if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+if (e.key === 'ArrowLeft') prevSlide();
+});
+
+showSlide(0);
+</script>
+</body>
+</html>
