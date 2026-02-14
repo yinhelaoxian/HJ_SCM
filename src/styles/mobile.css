@@ -1,0 +1,69 @@
+/* 移动端响应式布局 */
+
+/* 手机端适配样式 */
+@media (max-width: 768px) {
+  /* 侧边栏折叠 */
+  .sidebar {
+    position: fixed;
+    transform: translateX(-100%);
+    z-index: 50;
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  /* 主内容区 */
+  .main-content {
+    margin-left: 0 !important;
+    padding: 1rem;
+  }
+  
+  /* 卡片网格 */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* 表格响应式 */
+  .table-responsive {
+    overflow-x: auto;
+  }
+}
+
+/* 平板端适配 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+  }
+  
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 触控优化 */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* 底部导航栏 */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  z-index: 50;
+}
+
+/* 移动端弹窗 */
+.mobile-modal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 90vh;
+  border-radius: 16px 16px 0 0;
+}
