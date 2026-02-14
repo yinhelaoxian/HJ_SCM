@@ -276,3 +276,101 @@ public class TraceIdService {
         return recommendations;
     }
 }
+
+    // === 辅助方法 ===
+
+    /**
+     * 生成 MRP 运行 Trace ID
+     */
+    public String generateRunTraceId() {
+        return "MRP-RUN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    /**
+     * 生成需求 Trace ID
+     */
+    public String generateRequirementTraceId(String materialCode) {
+        return "MRP-REQ-" + materialCode + "-" + 
+            UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+    }
+
+    /**
+     * 生成建议 Trace ID
+     */
+    public String generateSuggestionTraceId(String materialCode) {
+        return "MRP-SUG-" + materialCode + "-" + 
+            UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+    }
+
+    /**
+     * 变更影响分析 - 带数量对比
+     */
+    public ChangeImpactAnalysis analyzeChangeImpact(
+            String documentType, 
+            String documentId, 
+            BigDecimal oldQty,
+            BigDecimal newQty) {
+        
+        Optional<TraceRelation> relation = 
+            traceRelationRepository.findByDocument(documentType, documentId);
+        
+        if (relation.isEmpty()) {
+            return ChangeImpactAnalysis.builder()
+                .sourceDocument(documentType + ":" + documentId)
+                .status("NOT_FOUND")
+                .message("未找到 Trace ID")
+                .build();
+        }
+        
+        String traceId = relation.get().getTraceId();
+        TraceResult backward = traceBackward(traceId);
+        BigDecimal qtyChange = newQty.subtract(oldQty);
+        
+        ChangeImpactAnalysis analysis = ChangeImpactAnalysis.builder()
+            .sourceDocument(documentType + ":" + documentId)
+            .sourceTraceId(traceId)
+            .oldQuantity(oldQty)
+            .newQuantity(newQty)
+            .quantityChange(qtyChange)
+            .affectedDownstream(backward.getTraceChain())
+            .status("ANALYZED")
+            .build();
+        
+        if (qtyChange.abs().compareTo(oldQty.multiply(BigDecimal.valueOf(0.1))) > 0) {
+            analysis.setImpactLevel("HIGH");
+            analysis.setRecommendation("变更超过10%，建议重新运行 MRP");
+        } else {
+            analysis.setImpactLevel("LOW");
+        }
+        
+        return analysis;
+    }
+
+    /**
+     * 获取根节点 Trace ID
+     */
+    public String getRootTraceId(String traceId) {
+        TraceResult forward = traceForward(traceId);
+        if (forward.getTraceChain().isEmpty()) {
+            return traceId;
+        }
+        return forward.getTraceChain().stream()
+            .filter(t -> "ROOT".equals(t.getRelationType()))
+            .findFirst()
+            .map(TraceRelation::getTraceId)
+            .orElse(traceId);
+    }
+
+    /**
+     * 批次追溯查询
+     */
+    public BatchTraceResult traceByBatch(String batchNo) {
+        List<TraceRelation> traces = traceRelationRepository.findByBatchNo(batchNo);
+        traces.sort(Comparator.comparing(TraceRelation::getCreatedAt));
+        
+        return BatchTraceResult.builder()
+            .batchNo(batchNo)
+            .traceChain(traces)
+            .build();
+    }
+}
