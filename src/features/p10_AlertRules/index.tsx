@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Bell, Settings, Play, Edit, Trash2, CheckCircle, AlertTriangle, XCircle, Filter } from 'lucide-react';
+import { Plus, Bell, Settings, Play, Edit, Trash2, CheckCircle, AlertTriangle, XCircle, Filter, Truck, Package } from 'lucide-react';
 
 type RuleStatus = 'enabled' | 'disabled' | 'draft';
 type AlertPriority = 'P0' | 'P1' | 'P2' | 'P3';

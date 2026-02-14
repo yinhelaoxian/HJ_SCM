@@ -68,10 +68,10 @@ const ATPCheck: React.FC = () => {
   };
   
   const getStatusBadge = (status: ATPStatus) => {
-    const colors: Record<ATPStatus, { bg: string; text: string; label: string }> = {
-      available: { bg: 'rgba(0,137,123,0.1)', color: '#00897B', label: '完全可用' },
-      partial: { bg: 'rgba(245,124,0,0.1)', color: '#F57C00', label: '部分可用' },
-      unavailable: { bg: 'rgba(229,57,53,0.1)', color: '#E53935', label: '不可用' }
+    const colors: Record<ATPStatus, { bg: string; text: string; label: string; color: string }> = {
+      available: { bg: 'rgba(0,137,123,0.1)', text: '#00897B', label: '完全可用', color: '#00897B' },
+      partial: { bg: 'rgba(245,124,0,0.1)', text: '#F57C00', label: '部分可用', color: '#F57C00' },
+      unavailable: { bg: 'rgba(229,57,53,0.1)', text: '#E53935', label: '不可用', color: '#E53935' }
     };
     const c = colors[status];
     return (

@@ -1,13 +1,5 @@
 // ATP计算引擎
-interface ATPContext {
-  materialId: string;
-  requestedQty: number;
-  requestedDate: string;
-  onHand: number;
-  incoming: number;
-  reserved: number;
-  safetyStock: number;
-}
+import type { ATPContext } from '../../../core/types';
 
 function calculateATP(context: ATPContext): {
   availableQty: number;

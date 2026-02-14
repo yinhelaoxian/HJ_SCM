@@ -86,3 +86,47 @@ export interface RiskFactor {
   name: string;
   weight: number;
 }
+
+export interface ATPContext {
+  materialId: string;
+  materialName: string;
+  requestedQty: number;
+  requestedDate: string;
+  onHand: number;
+  incoming: number;
+  reserved: number;
+  safetyStock: number;
+}
+
+export interface AlertRule {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  priority: string;
+  status: string;
+  triggerType: string;
+  schedule?: { cron: string; timezone: string };
+  conditionLogic: string;
+  conditions: any[];
+  actions: any[];
+  escalations: any[];
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  version: number;
+}
+
+export interface RuleCondition {
+  id: string;
+  field: string;
+  operator: string;
+  value: any;
+}
+
+export interface RuleAction {
+  id: string;
+  type: string;
+  template: string;
+  recipients?: any;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Lock, AlertTriangle, Edit, Check, History, ChevronRight } from 'lucide-react';
+import { Calendar, Lock, AlertTriangle, AlertCircle, Edit, Check, History, ChevronRight } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
 import { MPS_DATA } from '../../services/mock/mock.data';
 

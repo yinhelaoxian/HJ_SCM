@@ -1,4 +1,4 @@
-import type { AlertRule, RuleCondition, RuleAction } from '../../types';
+import type { AlertRule, RuleCondition, RuleAction } from '../../../core/types';
 
 // 规则模拟数据库
 const ruleDatabase: AlertRule[] = [

@@ -101,13 +101,13 @@ const Variance: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-sm" style={{ 
-                      color: item.value < 0 ? '#E53935' : '#00897B'
+                      color: String(item.value) < '0' ? '#E53935' : '#00897B'
                     }}>
-                      {item.value < 0 ? '' : '+'}{item.value.toLocaleString()}
+                      {String(item.value) < '0' ? '' : '+'}{item.value.toLocaleString()}
                     </span>
                     <span className="text-xs px-2 py-0.5 rounded" 
-                      style={{ background: item.variance < 0 ? 'rgba(229,57,53,0.1)' : 'rgba(0,137,123,0.1)',
-                      color: item.variance < 0 ? '#E53935' : '#00897B' }}>
+                      style={{ background: String(item.variance).startsWith('-') ? 'rgba(229,57,53,0.1)' : 'rgba(0,137,123,0.1)',
+                      color: String(item.variance).startsWith('-') ? '#E53935' : '#00897B' }}>
                       {item.variance}
                     </span>
                     <div className="flex items-center gap-1 text-xs" style={{ color: '#445568' }}>
