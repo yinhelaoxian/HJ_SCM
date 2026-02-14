@@ -29,23 +29,45 @@ http://localhost:3000
 
 ```
 src/
-├── config/demo.config.ts     # 可调参数配置
-├── data/mock.data.ts       # Mock数据
-├── data/ai.suggestions.ts  # AI建议数据
-├── pages/
-│   ├── p1_Dashboard/    # 供应链指挥中心
-│   ├── p2_DemandForecast/ # AI需求预测
-│   ├── p3_SupplyBalance/  # 供需平衡
-│   ├── p4_SupplierRisk/   # 供应商风险
-│   ├── p5_ProcurementAI/  # AI采购建议
-│   ├── p6_SOP/           # S&OP产销协同
-│   ├── p7_MPS/           # MPS主生产计划
-│   ├── p8_OTCFlow/       # 订单全链路追踪
-│   └── p9_KPI/           # SCOR绩效看板
-├── ui/                    # UI组件库
-├── utils/                  # 工具函数
+├── core/                    # 核心配置与类型
+│   ├── config/demo.config.ts # 可调参数配置
+│   ├── types/               # 全局类型定义
+│   └── utils/               # 工具函数
+│
+├── features/                # 功能模块
+│   ├── dashboard/           # 供应链指挥中心
+│   ├── demand-forecast/     # AI需求预测
+│   ├── supply-balance/      # 供需平衡
+│   ├── supplier-risk/       # 供应商风险
+│   ├── procurement-ai/      # AI采购建议
+│   ├── sop/                # S&OP产销协同
+│   ├── mps/                # MPS主生产计划
+│   ├── otc-flow/           # 订单全链路追踪
+│   ├── kpi/                # SCOR绩效看板
+│   └── p10_* - p17_*       # 高级功能模块
+│
+├── ui/                      # UI组件库（原子化）
+│   ├── Button/
+│   ├── Card/
+│   ├── Badge/
+│   ├── Toast/
+│   ├── Skeleton/
+│   └── index.ts
+│
+├── components/             # 业务组件
+│   └── Layout/
+│       └── Sidebar.tsx
+│
+├── services/               # 服务层
+│   └── mock/               # Mock数据
+│       ├── mock.data.ts
+│       └── ai.suggestions.ts
+│
 ├── hooks/                  # React Hooks
-└── types/                 # TypeScript类型
+│   └── useToast.tsx
+│
+├── App.tsx
+└── index.css
 ```
 
 ## 技术栈
