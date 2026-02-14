@@ -84,7 +84,7 @@ const SidebarItem = ({ item, depth = 0 }) => {
             <span>{item.label}</span>
           </div>
           {expanded ? <ChevronDown className="w-3 h-3" style={{ color: '#445568' }} /> : 
-                  <ChevronRight className="w-3 h-3" style={{ color: '#445568' />}
+                  <ChevronRight className="w-3 h-3" style={{ color: '#445568' }} />}
         </button>
         {expanded && (
           <div className="mt-0.5 space-y-0.5 border-l ml-4" style={{ borderColor: '#1E2D45' }}>
