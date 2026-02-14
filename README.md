@@ -119,6 +119,51 @@ src/
 - Tailwind CSS v4 @theme集成
 - 深色主题优先
 
+## 项目文档
+
+```
+docs/
+├── 01_TEAM/              # 团队与角色
+│   ├── TEAM_INTRO.md     # Agent角色定义 ⭐
+│   └── MULTI_AGENT_SETUP.md  # 多Agent协作配置
+│
+├── 02_PMO/               # 项目管理
+│   ├── PMO_PROJECT_MANAGEMENT.md  # 管理制度 ⭐
+│   └── QA_COLLABORATION.md       # QA协作规范
+│
+├── 03_BUSINESS/          # 业务文档
+│   ├── BUSINESS_RESEARCH.md      # 业务调研
+│   ├── BUSINESS_EXPERT.md        # 专家方案
+│   ├── CONSULTING_REPORT.md      # 战略咨询
+│   ├── REMEDIATION_PLAN.md       # 整改计划
+│   └── ACCEPTANCE/               # 验收报告
+│       ├── BUSINESS_ACCEPTANCE.md
+│       ├── BUSINESS_ACCEPTANCE_V2.md
+│       └── QA_REPORT.md
+│
+├── 04_TECHNICAL/         # 技术文档
+│   └── DESIGN_SYSTEM.md  # 设计系统
+│
+└── 06_RELEASES/          # 发布与复盘
+    └── BUG_RETROSPECTIVE.md   # 问题复盘
+```
+
+### 核心文档（必读）
+
+| 优先级 | 文档 | 用途 |
+|--------|------|------|
+| ⭐⭐⭐ | `docs/01_TEAM/TEAM_INTRO.md` | Agent角色定义 |
+| ⭐⭐⭐ | `docs/02_PMO/PMO_PROJECT_MANAGEMENT.md` | 协作流程 |
+| ⭐⭐ | `docs/03_BUSINESS/BUSINESS_RESEARCH.md` | 业务背景 |
+| ⭐⭐ | `docs/03_BUSINESS/CONSULTING_REPORT.md` | 战略规划 |
+
+### 新项目启动
+
+1. 阅读 `docs/01_TEAM/TEAM_INTRO.md` 了解Agent
+2. 阅读 `docs/02_PMO/PMO_PROJECT_MANAGEMENT.md` 熟悉流程
+3. 复制 `docs/02_PMO/` 模板到新项目
+4. 按Agent分工开始协作
+
 ## GitHub
 
 ```
