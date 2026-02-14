@@ -1,0 +1,22 @@
+# HJ_SCM Backend Spring Boot Application
+FROM eclipse-temurin:17-jdk-alpine
+
+WORKDIR /app
+
+# 设置时区
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone
+
+# 复制应用jar
+COPY target/hjscm-backend.jar app.jar
+
+# 暴露端口
+EXPOSE 8080
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget -q --spider http://localhost:8080/actuator/health || exit 1
+
+# 启动命令
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]

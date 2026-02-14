@@ -1,0 +1,56 @@
+# Kubernetes Deployment - Dev Environment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hjscm-backend
+  namespace: hjscm-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hjscm-backend
+  template:
+    metadata:
+      labels:
+        app: hjscm-backend
+    spec:
+      containers:
+      - name: backend
+        image: registry.cn-hangzhou.aliyuncs.com/hjscm:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "dev"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hjscm-backend
+  namespace: hjscm-dev
+spec:
+  selector:
+    app: hjscm-backend
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
