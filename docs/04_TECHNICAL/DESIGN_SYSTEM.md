@@ -242,3 +242,207 @@ src/
 
 *版本: v2.0*
 *参考: Tailwind CSS v4, shadcn/ui*
+
+---
+
+## 14. 异常标签组件（Exception Badge）
+
+用于展示异常状态的专用组件。
+
+### 14.1 标签类型
+
+| 类型 | 样式 | 用法 |
+|------|------|------|
+| CRITICAL | 红底 + 高亮 | 紧急异常 |
+| HIGH | 橙底 | 高风险异常 |
+| MEDIUM | 黄底 | 中等风险 |
+| LOW | 蓝底 | 低风险/提示 |
+
+### 14.2 组件代码
+
+```tsx
+interface ExceptionBadgeProps {
+  level: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  label: string;
+}
+
+const exceptionStyles = {
+  CRITICAL: 'bg-red-900/30 text-red-400 border-red-700',
+  HIGH: 'bg-orange-900/30 text-orange-400 border-orange-700',
+  MEDIUM: 'bg-yellow-900/30 text-yellow-400 border-yellow-700',
+  LOW: 'bg-blue-900/30 text-blue-400 border-blue-700',
+};
+
+export function ExceptionBadge({ level, label }: ExceptionBadgeProps) {
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${exceptionStyles[level]}`}>
+      {label}
+    </span>
+  );
+}
+```
+
+### 14.3 使用示例
+
+```tsx
+<div className="flex gap-2">
+  <ExceptionBadge level="CRITICAL" label="紧急缺料" />
+  <ExceptionBadge level="HIGH" label="高风险" />
+  <ExceptionBadge level="MEDIUM" label="待处理" />
+  <ExceptionBadge level="LOW" label="提示" />
+</div>
+```
+
+---
+
+## 15. 地图组件（Map Component）
+
+用于物流追踪和工厂分布的可视化组件。
+
+### 15.1 地图标记类型
+
+| 类型 | 图标 | 用法 |
+|------|------|------|
+| FACTORY | 🏭 | 工厂位置 |
+| WAREHOUSE | 📦 | 仓库位置 |
+| IN_TRANSIT | 🚚 | 在途物料 |
+| DELIVERY | 📍 | 交付点 |
+| ALERT | ⚠️ | 异常位置 |
+
+### 15.2 组件代码
+
+```tsx
+interface MapMarker {
+  id: string;
+  type: 'FACTORY' | 'WAREHOUSE' | 'IN_TRANSIT' | 'DELIVERY' | 'ALERT';
+  lat: number;
+  lng: number;
+  label: string;
+  info?: string;
+}
+
+interface MapComponentProps {
+  markers: MapMarker[];
+  center?: { lat: number; lng: number };
+  zoom?: number;
+  onMarkerClick?: (marker: MapMarker) => void;
+}
+
+export function SCMMap({ markers, center, zoom, onMarkerClick }: MapComponentProps) {
+  const markerColors = {
+    FACTORY: '#2D7DD2',
+    WAREHOUSE: '#00897B',
+    IN_TRANSIT: '#F57C00',
+    DELIVERY: '#E53935',
+    ALERT: '#E53935',
+  };
+  
+  return (
+    <div className="relative w-full h-96 bg-slate-900 rounded-lg overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center">
+          <span className="text-4xl mb-2 block">🗺️</span>
+          <span className="text-sm text-slate-400">地图组件占位</span>
+        </div>
+      </div>
+      {markers.map(marker => (
+        <button
+          key={marker.id}
+          className="absolute transform -translate-x-1/2 -translate-y-1/2"
+          style={{ left: `${(marker.lng + 180) / 360 * 100}%`, top: `${(90 - marker.lat) / 180 * 100}%` }}
+          onClick={() => onMarkerClick?.(marker)}
+        >
+          <span className="text-2xl filter drop-shadow-lg">
+            {marker.type === 'FACTORY' ? '🏭' : 
+             marker.type === 'WAREHOUSE' ? '📦' : 
+             marker.type === 'IN_TRANSIT' ? '🚚' : 
+             marker.type === 'DELIVERY' ? '📍' : '⚠️'}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+### 15.3 使用示例
+
+```tsx
+const markers: MapMarker[] = [
+  { id: '1', type: 'FACTORY', lat: 36.07, lng: 120.37, label: '青岛总部', info: '利用率 112%' },
+  { id: '2', type: 'FACTORY', lat: 31.23, lng: 121.47, label: '苏州华东', info: '利用率 78%' },
+  { id: '3', type: 'FACTORY', lat: 13.75, lng: 100.50, label: '泰国曼谷', info: '利用率 43%' },
+];
+
+<SCMMap markers={markers} center={{ lat: 25.0, lng: 110.0 }} zoom={4} />
+```
+
+---
+
+## 16. 时间线组件（Timeline）
+
+```tsx
+interface TimelineItem {
+  id: string;
+  title: string;
+  description?: string;
+  date: string;
+  status: 'completed' | 'current' | 'upcoming';
+}
+
+export function Timeline({ items, direction = 'vertical' }: { items: TimelineItem[], direction?: 'horizontal' | 'vertical' }) {
+  return (
+    <div className={direction === 'horizontal' ? 'flex items-center' : 'space-y-4'}>
+      {items.map((item, index) => (
+        <div key={item.id} className="relative">
+          {index < items.length - 1 && (
+            <div className={`absolute bg-slate-700 ${direction === 'horizontal' ? 'w-12 h-0.5 left-full top-1/2' : 'h-12 w-0.5 top-full left-1/2 -translate-x-1/2'}`} />
+          )}
+          <div className={`flex ${direction === 'horizontal' ? 'flex-col items-center' : 'flex-row gap-4'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
+              item.status === 'completed' ? 'bg-green-900 border-green-700 text-green-400' :
+              item.status === 'current' ? 'bg-blue-900 border-blue-500 text-blue-400' :
+              'bg-slate-800 border-slate-700 text-slate-500'
+            }`}>
+              {item.status === 'completed' ? '✓' : item.status === 'current' ? '●' : '○'}
+            </div>
+            <div>
+              <p className="text-sm" style={{ color: '#E8EDF4' }}>{item.title}</p>
+              <p className="text-xs" style={{ color: '#7A8BA8' }}>{item.date}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+---
+
+## 17. 进度条组件（Progress Bar）
+
+```tsx
+interface ProgressBarProps {
+  value: number;
+  max?: number;
+  label?: string;
+  variant?: 'default' | 'success' | 'warning' | 'danger';
+}
+
+export function ProgressBar({ value, max = 100, label, variant = 'default' }: ProgressBarProps) {
+  const percentage = Math.min(100, (value / max) * 100);
+  const colors = { default: '#2D7DD2', success: '#00897B', warning: '#F57C00', danger: '#E53935' };
+  
+  return (
+    <div className="w-full">
+      {label && <div className="flex justify-between mb-1"><span className="text-xs" style={{ color: '#7A8BA8' }}>{label}</span><span className="text-xs" style={{ color: '#E8EDF4' }}>{value}%</span></div>}
+      <div className="w-full h-2 rounded-full bg-slate-800"><div className="h-full rounded-full transition-all duration-500" style={{ width: `${percentage}%`, background: colors[variant] }} /></div>
+    </div>
+  );
+}
+```
+
+---
+
+*版本: v2.1*
