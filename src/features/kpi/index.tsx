@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Activity, TrendingUp, TrendingDown, Clock, DollarSign, Package, Target, AlertTriangle, CheckCircle } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
-import { SCOR_KPI } from '../../data/mock.data';
+import { SCOR_KPI } from '../../services/mock/mock.data';
 
 const KPIDashboard = () => {
   const [activeTab, setActiveTab] = useState('reliability');

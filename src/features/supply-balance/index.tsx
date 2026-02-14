@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Factory, Zap, ArrowRight, Play } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
-import { CHART_COLORS } from '../../config/demo.config';
+import { CHART_COLORS } from '../../core/config/demo.config';
 
 const SCENARIOS = [
   { id: 'base', label: '当前基准', color: '#2D7DD2' },

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, TrendingUp, TrendingDown, DollarSign, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
-import { SOP_DATA, MPS_DATA } from '../../data/mock.data';
+import { SOP_DATA, MPS_DATA } from '../../services/mock/mock.data';
 
 const SOP = () => {
   const [activeTab, setActiveTab] = useState('demand');

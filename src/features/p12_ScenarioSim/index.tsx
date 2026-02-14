@@ -29,9 +29,9 @@ const ScenarioSim: React.FC = () => {
                 key={s.id}
                 onClick={() => setActiveScenario(s.id)}
                 className="w-full p-3 rounded text-left transition-all"
-                style={{ 
+                style={{
                   background: activeScenario === s.id ? `${s.color}20` : 'transparent',
-                  borderLeft: `3px solid ${activeScenario === s.id ? s.color : 'transparent'}
+                  borderLeft: `3px solid ${activeScenario === s.id ? s.color : 'transparent'}`
                 }}
               >
                 <div className="flex items-center justify-between">

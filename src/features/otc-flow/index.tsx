@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GitBranch, CheckCircle, Clock, AlertTriangle, FileText, Package, Truck, DollarSign, ChevronRight } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
-import { OTC_FLOW, SALES_ORDERS } from '../../data/mock.data';
+import { OTC_FLOW, SALES_ORDERS } from '../../services/mock/mock.data';
 
 const OTCFlow = () => {
   const [selectedNode, setSelectedNode] = useState(null);

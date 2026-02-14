@@ -2,18 +2,18 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Bell, User } from 'lucide-react';
 import { ToastProvider } from './hooks/useToast';
-import Sidebar from './components/layout/Sidebar';
-import Dashboard from './pages/p1_Dashboard';
-import DemandForecast from './pages/p2_DemandForecast';
-import SupplyBalance from './pages/p3_SupplyBalance';
-import SupplierRisk from './pages/p4_SupplierRisk';
-import ProcurementAI from './pages/p5_ProcurementAI';
-import SOP from './pages/p6_SOP';
-import MPS from './pages/p7_MPS';
-import OTCFlow from './pages/p8_OTCFlow';
-import KPIDashboard from './pages/p9_KPI';
-import AlertRules from './pages/p10_AlertRules';
-import ATPCheck from './pages/p11_ATPCheck';
+import Sidebar from './components/Layout/Sidebar';
+import Dashboard from './features/dashboard';
+import DemandForecast from './features/demand-forecast';
+import SupplyBalance from './features/supply-balance';
+import SupplierRisk from './features/supplier-risk';
+import ProcurementAI from './features/procurement-ai';
+import SOP from './features/sop';
+import MPS from './features/mps';
+import OTCFlow from './features/otc-flow';
+import KPIDashboard from './features/kpi';
+import AlertRules from './features/p10_AlertRules';
+import ATPCheck from './features/p11_ATPCheck';
 
 const PlaceholderPage = ({ title, desc }: { title: string; desc: string }) => (
   <div className="flex flex-col items-center justify-center h-full" style={{ color: '#445568' }}>

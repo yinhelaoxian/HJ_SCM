@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Lock, AlertTriangle, Edit, Check, History, ChevronRight } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
-import { MPS_DATA } from '../../data/mock.data';
+import { MPS_DATA } from '../../services/mock/mock.data';
 
 const MPS = () => {
   const [selectedCell, setSelectedCell] = useState(null);

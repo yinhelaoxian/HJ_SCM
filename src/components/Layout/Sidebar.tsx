@@ -5,7 +5,7 @@ import {
   ShoppingCart, FileText, Building2, Factory, GitMerge, ClipboardList, Truck, RotateCcw,
   Package, Warehouse, AlertTriangle, Activity, ChevronDown, ChevronRight
 } from 'lucide-react';
-import { DEMO_CONFIG } from '../../config/demo.config';
+import { DEMO_CONFIG } from '../../core/config/demo.config';
 
 const NAV_GROUPS = [
   { section: null, items: [

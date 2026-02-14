@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle, Clock, MapPin, Factory, Activity } from 'lucide-react';
-import { KPI_DATA, ALERTS, PLANT_STATUS, SALES_ORDERS } from '../../data/mock.data';
-import { DEMO_CONFIG } from '../../config/demo.config';
+import { KPI_DATA, ALERTS, PLANT_STATUS, SALES_ORDERS } from '../../services/mock/mock.data';
+import { DEMO_CONFIG } from '../../core/config/demo.config';
 
 function useCountUp(end, duration = 900) {
   const [count, setCount] = useState(0);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Check, Clock, Zap, RefreshCw } from 'lucide-react';
-import { AI_SUGGESTIONS, AI_STATS } from '../../data/ai.suggestions';
+import { AI_SUGGESTIONS, AI_STATS } from '../../services/mock/ai.suggestions';
 
 const SuggestionCard = ({ suggestion }) => {
   const [status, setStatus] = useState(suggestion.status || 'pending');

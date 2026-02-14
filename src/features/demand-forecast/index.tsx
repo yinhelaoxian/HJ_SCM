@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, ArrowRight } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
-import { MATERIALS, KPI_DATA } from '../../data/mock.data';
-import { CHART_COLORS, ECHARTS_THEME } from '../../config/demo.config';
-import { TYPEWRITER_TEXTS } from '../../data/ai.suggestions';
+import { MATERIALS, KPI_DATA } from '../../services/mock/mock.data';
+import { CHART_COLORS, ECHARTS_THEME } from '../../core/config/demo.config';
+import { TYPEWRITER_TEXTS } from '../../services/mock/ai.suggestions';
 
 const Typewriter: React.FC<{ text: string; speed?: number }> = ({ text, speed = 18 }) => {
   const [displayed, setDisplayed] = useState('');
