@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>青岛豪江智能SCM战略咨询报告</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .slide { 
+      min-height: 100vh; 
+      background: linear-gradient(135deg, #0B0F17 0%, #131926 100%);
+      color: #E8EDF4;
+    }
+    .glass {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #2D7DD2, #00897B);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .progress-bar {
+      background: linear-gradient(90deg, #E53935, #F57C00, #2D7DD2, #00897B);
+    }
+    .card { transition: all 0.3s ease; }
+    .card:hover { transform: translateY(-5px); }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .animate-pulse { animation: pulse 2s infinite; }
+  </style>
+</head>
+<body>
+  <div class="slide flex flex-col items-center justify-center relative overflow-hidden" id="cover">
+    <div class="absolute inset-0 opacity-10">
+      <svg viewBox="0 0 400 400" class="w-full h-full">
+        <circle cx="200" cy="200" r="150" stroke="#2D7DD2" stroke-width="0.5" fill="none"/>
+        <circle cx="200" cy="200" r="100" stroke="#00897B" stroke-width="0.5" fill="none"/>
+        <circle cx="200" cy="200" r="50" fill="#2D7DD2" opacity="0.1"/>
+      </svg>
+    </div>
+    <div class="relative z-10 text-center">
+      <p class="text-sm mb-4" style="color:#7A8BA8">战略咨询报告 · V1.0</p>
+      <h1 class="text-5xl font-display font-bold mb-6">青岛豪江智能科技有限公司</h1>
+      <p class="text-3xl mb-2">供应链管理战略咨询报告</p>
+      <p class="text-lg" style="color:#7A8BA8">Supply Chain Management Strategic Consulting</p>
+      <div class="mt-12 flex items-center justify-center gap-8">
+        <div class="text-center">
+          <p class="text-xs" style="color:#445568">项目周期</p>
+          <p class="text-xl font-display">12个月</p>
+        </div>
+        <div class="w-px h-12" style="background:#1E2D45"></div>
+        <div class="text-center">
+          <p class="text-xs" style="color:#445568">投资预算</p>
+          <p class="text-xl font-display" style="color:#2D7DD2">¥330万</p>
+        </div>
+        <div class="w-px h-12" style="background:#1E2D45"></div>
+        <div class="text-center">
+          <p class="text-xs" style="color:#445568">预期ROI</p>
+          <p class="text-xl font-display" style="color:#00897B">4.75x</p>
+        </div>
+      </div>
+      <p class="mt-8 text-sm" style="color:#445568">2026年2月 · 战略规划部</p>
+    </div>
+  </div>
+</div>
+
+  <div class="slide flex flex-col p-12">
+    <h2 class="text-2xl font-display mb-8 border-l-4 pl-4" style="border-color:#2D7DD2">核心发现</h2>
+    <div class="grid grid-cols-4 gap-6">
+      <div class="card glass rounded-xl p-6 text-center">
+        <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(229,57,53,0.2),rgba(245,124,0,0.1)">
+          <span class="text-3xl">📊</span>
+        </div>
+        <h3 class="text-lg mb-2">计划效率</h3>
+        <p class="text-sm mb-2" style="color:#7A8BA8">Excel计划</p>
+        <p class="text-xl font-display" style="color:#E53935">60%</p>
+        <p class="text-xs mt-2" style="color:#445568">自动化程度</p>
+      </div>
+      <div class="card rounded-xl p-6 text-center">
+        <div class="w-16 h-16 rounded-full mx-auto mb-4" style="background:linear-gradient(135deg,rgba(245,124,0,0.2),rgba(45,125,210,0.1)">
+          <span class="text-3xl">📈</span>
+        </div>
+        <h3 class="text-lg mb-2">供应商协同</h3>
+        <p class="text-sm mb-2" style="color:#7A8BA8">协同方式</p>
+        <p class="text-xl font-display" style="color:#F57C00">电话+邮件</p>
+        <p class="text-xs mt-2" style="color:#445568">无平台支撑</p>
+      </div>
+      <div class="card rounded-xl p-6 text-center">
+        <div class="w-16 h-16 rounded-full mx-auto mb-4" style="background:linear-gradient(135deg,rgba(0,137,123,0.2),rgba(45,125,210,0.1)">
+          <span class="text-3xl">📦</span>
+        </div>
+        <h3 class="text-lg mb-2">库存周转</h3>
+        <p class="text-sm mb-2" style="color:#7A8BA8">周转效率</p>
+        <p class="text-xl font-display" style="color:#00897B">9.1次/年</p>
+        <p class="text-xs mt-2" style="color:#445568">目标14次/年</p>
+      </div>
+      <div class="card rounded-xl p-6 text-center">
+        <div class="w-16 h-16 rounded-full mx-auto mb-4" style="background:linear-gradient(135deg,rgba(45,125,210,0.2)">
+          <span class="text-3xl">🎯</span>
+        </div>
+        <h3 class="text-lg mb-2">决策支持</h3>
+        <p class="text-sm mb-2" style="color:#7A8BA8">决策方式</p>
+        <p class="text-xl font-display" style="color:#2D7DD2">经验判断</p>
+        <p class="text-xs mt-2" style="color:#445568">数据支撑弱</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide flex flex-col p-12">
+    <h2 class="text-2xl font-display mb-8 border-l-4 pl-4" style="border-color:#00897B">现状分析</h2>
+    <div class="grid grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center text-sm">🗺️</span>
+          组织架构
+        </h3>
+        <div class="glass rounded-xl p-4 mb-4">
+          <div class="flex items-center justify-between mb-2 pb-2 border-b" style="border-color:#1E2D45">
+            <span>供应链总监</span>
+            <span class="text-xs px-2 py-0.5 rounded" style="background:#2D7DD2">王志远</span>
+          </div>
+          <div class="ml-4 pl-4 border-l" style="border-color:#1E2D45">
+            <div class="text-xs mb-1">计划部 · 5人</div>
+            <div class="text-xs mb-1">采购部 · 8人</div>
+            <div class="text-xs">仓储物流 · 12人</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-lg mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center text-sm">📋</span>
+          核心流程
+        </h3>
+        <div class="glass rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xs px-2 py-1 rounded" style="background:#E53935">S&OP</span>
+            <span class="text-2xl" style="color:#1E2D45">→</span>
+            <span class="text-xs px-2 py-1 rounded" style="background:#F57C00">MPS</span>
+            <span class="text-2xl" style="color:#1E2D45">→</span>
+            <span class="text-xs px-2 py-1 rounded" style="background:#2D7DD2">MRP</span>
+          </div>
+          <div class="text-center text-sm mt-2" style="color:#7A8BA8">订单流 · 信息流 · 资金流</div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 glass rounded-xl p-4 flex items-center gap-4">
+      <span class="text-sm font-bold" style="color:#E53935">核心痛点</span>
+      <span class="text-sm" style="color:#F57C00">计划效率低 · 数据孤岛 · 决策凭经验</span>
+      <span class="text-sm" style="color:#00897B">· 供应商管理粗放</span>
+      <span class="text-sm" style="color:#2D7DD2">· 库存周转慢</span>
+    </div>
+  </div>
+
+  <div class="slide flex flex-col p-12">
+    <h2 class="text-2xl font-display mb-8 border-l-4 pl-4" style="border-color:#F57C00">业务蓝图</h2>
+    <div class="grid grid-cols-3 gap-6">
+      <div class="glass rounded-xl p-6">
+        <h3 class="text-lg mb-4 flex items-center gap-2">
+          <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,rgba(45,125,210,0.2),rgba(0,137,123,0.1)">📊</span>
+          计划域
+        </h3>
+        <div class="space-y-2 text-sm" style="color:#7A8BA8">
+          <p>· S&OP 产销协同</p>
+          <p>· MPS 主生产计划</p>
+          <p>· MRP 物料需求</p>
+          <p>· 需求预测</p>
+        </div>
+        <div class="mt-4 pt-4 border-t" style="border-color:#1E2D45">
+          <p class="text-xs" style="color:#445568">输出：主生产计划、物料需求计划</p>
+        </div>
+      </div>
+      <div class="glass rounded-xl p-6">
+        <h3 class="text-lg mb-4 flex items-center gap-2">
+          <span class="w-10 h-10 rounded-lg" style="background:linear-gradient(135deg,rgba(0,137,123,0.2),rgba(45,125,210,0.1)">🚛</span>
+          执行域
+        </h3>
+        <div class="space-y-2 text-sm" style="color:#7A8BA8">
+          <p>· 采购管理</p>
+          <p>· 生产执行</p>
+          <p>· 物流配送</p>
+          <p>· 仓储作业</p>
+        </div>
+        <div class="mt-4 pt-4 border-t" style="border-color:#1E2D45">
+          <p class="text-xs" style="color:#445568">输出：采购订单、生产工单</p>
+        </div>
+      </div>
+      <div class="glass rounded-xl p-6">
+        <h3 class="text-lg mb-4 flex items-center gap-2">
+          <span class="w-10 h-10 rounded-lg" style="background:linear-gradient(135deg,rgba(229,57,53,0.2),rgba(245,124,0,0.1)">📈</span>
+          监控域
+        </h3>
+        <div class="space-y-2 text-sm" style="color:#7A8BA8">
+          <p>· KPI监控</p>
+          <p>· 异常预警</p>
+          <p>· 绩效分析</p>
+          <p>· 报表中心</p>
+        </div>
+        <div class="mt-4 pt-4 border-t" style="border-color:#1E2D45">
+          <p class="text-xs" style="color:#445568">输出：决策支持、改进建议</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide flex flex-col p-12">
+    <h2 class="text-2xl font-display mb-8 border-l-4 pl-4" style="border-color:#2D7DD2">系统规划</h2>
+    <div class="grid grid-cols-4 gap-4 mb-8">
+      <div class="glass rounded-xl p-4 text-center">
+        <p class="text-xs mb-2" style="color:#7A8BA8">Q1 2026</p>
+        <p class="text-xl font-display mb-2">基础建设</p>
+        <p class="text-sm" style="color:#2D7DD2">指挥中心 + OTC + 预测</p>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <p class="text-xs mb-2" style="color:#7A8BA8">Q2 2026</p>
+        <p class="text-xl font-display mb-2">计划协同</p>
+        <p class="text-sm" style="color:#00897B">S&OP + MPS + MRP</p>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <p class="text-xs mb-2" style="color:#7A8BA8">Q3 2026</p>
+        <p class="text-xl font-display mb-2">执行闭环</p>
+        <p class="text-sm" style="color:#F57C00">采购 + 仓储 + 绩效</p>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <p class="text-xs mb-2" style="color:#7A8BA8">Q4 2026+</p>
+        <p class="text-xl font-display mb-2">智能升级</p>
+        <p class="text-sm" style="color:#E53935">AI预测 + 自动排程</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-6">
+      <div class="glass rounded-xl p-6">
+        <h3 class="text-lg mb-4">技术架构</h3>
+        <div class="space-y-2 text-sm" style="color:#7A8BA8">
+          <p>React 18 + TypeScript</p>
+          <p>FastAPI + PostgreSQL</p>
+          <p>AI/ML 模型集成</p>
+          <p>API Gateway</p>
+        </div>
+      </div>
+      <div class="glass rounded-xl p-6">
+        <h3 class="text-lg mb-4">数据架构</h3>
+        <div class="space-y-2 text-sm" style="color:#7A8BA8">
+          <p>主数据管理 MDM</p>
+          <p>交易数据 DW</p>
+          <p>分析数据 Mart</p>
+          <p>实时数仓 Lakehouse</p>
+        </div>
+      </div>
+      <div class="glass rounded-xl p-6">
+        <h3 class="text-lg mb-4">集成架构</h3>
+        <div class="space-y-2 text-sm" style="color:#7A8BA8">
+          <p>ERP SAP/用友</p>
+          <p>MES 系统对接</p>
+          <p>WMS 仓储管理</p>
+          <p>TMS 物流平台</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide flex flex-col p-12">
+    <h2 class="text-2xl font-display mb-8 border-l-4 pl-4" style="border-color:#00897B">实施保障</h2>
+    <div class="grid grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg mb-4">组织保障</h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm" style="background:#2D7DD2">PM</span>
+            <div>
+              <p class="font-bold">项目经理</p>
+              <p class="text-xs" style="color:#445568">项目管理 · 进度把控</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full flex items-center text-sm" style="background:#00897B">BA</span>
+            <div>
+              <p class="font-bold">业务分析</p>
+              <p class="text-xs" style="color:#445568">需求调研 · 流程设计</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full flex items-center text-sm" style="background:#F57C00">TD</span>
+            <div>
+              <p class="font-bold">技术交付</p>
+              <p class="text-xs" style="color:#445568">开发 · 测试 · 上线</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full flex items-center text-sm" style="background:#E53935">OP</span>
+            <div>
+              <p class="font-bold">运维支持</p>
+              <p class="text-xs" style="color:#445568">日常运维 · 故障处理</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-lg mb-4">变革管理</h3>
+        <div class="space-y-3">
+          <p class="text-sm" style="color:#7A8BA8">🎯 高层承诺 · 定时汇报机制</p>
+          <p class="text-sm">📚 培训赋能 · 岗位认证</p>
+          <p class="text-sm">🔄 持续改进 · 季度复盘</p>
+        </div>
+        <div class="mt-6 glass rounded-lg p-4">
+          <h4 class="text-sm font-bold mb-2">沟通机制</h4>
+          <p class="text-xs" style="color:#7A8BA8">周报 · 月报 · 季度评审</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide flex flex-col items-center justify-center p-12">
+    <h2 class="text-3xl font-display mb-8">Q&A</h2>
+    <p class="text-lg mb-8" style="color:#7A8BA8">感谢聆听</p>
+    <div class="flex items-center gap-4 text-sm" style="color:#445568">
+      <span>项目负责人：王志远</span>
+      <span>|</span>
+      <span>技术顾问：SCM团队</span>
+      <span>|</span>
+      <span>联系方式：项目组</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
