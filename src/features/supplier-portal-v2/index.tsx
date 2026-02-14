@@ -3,9 +3,9 @@ import {
   Package, Truck, FileText, Bell,
   CheckCircle, Clock, AlertCircle, Settings
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/ui/Card';
+import { Button } from '@/ui/Button';
+import { Badge } from '@/ui/Badge';
 
 /**
  * 供应商门户2.0

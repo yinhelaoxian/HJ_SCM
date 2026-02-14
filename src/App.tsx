@@ -14,6 +14,14 @@ import OTCFlow from './features/otc-flow';
 import KPIDashboard from './features/kpi';
 import AlertRules from './features/p10_AlertRules';
 import ATPCheck from './features/p11_ATPCheck';
+import InventoryWorkbench from './features/p05_Inventory';
+import ScenarioSim from './features/p12_ScenarioSim';
+import Variance from './features/p13_Variance';
+import Meeting from './features/p14_Meeting';
+import RCCP from './features/p15_RCCP';
+import SupplierScore from './features/p16_SupplierScore';
+import Decision from './features/p17_Decision';
+import SupplierPortal from './features/supplier-portal';
 
 const PlaceholderPage = ({ title, desc }: { title: string; desc: string }) => (
   <div className="flex flex-col items-center justify-center h-full" style={{ color: '#445568' }}>
@@ -30,12 +38,21 @@ const PlaceholderPage = ({ title, desc }: { title: string; desc: string }) => (
   </div>
 );
 
-const Header = () => (
-  <header className="h-14 flex items-center justify-between px-6" 
-    style={{ background: '#0B0F17', borderBottom: '1px solid #1E2D45' }}>
-    <div className="flex items-center gap-4">
-      <h2 className="text-sm" style={{ color: '#7A8BA8' }}>2026年10月8日 · 周三</h2>
-    </div>
+const Header = () => {
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+  });
+  
+  return (
+    <header className="h-14 flex items-center justify-between px-6" 
+      style={{ background: '#0B0F17', borderBottom: '1px solid #1E2D45' }}>
+      <div className="flex items-center gap-4">
+        <h2 className="text-sm" style={{ color: '#7A8BA8' }}>{dateStr}</h2>
+      </div>
     <div className="flex items-center gap-4">
       <button className="relative p-2" style={{ color: '#7A8BA8' }}>
         <Bell className="w-5 h-5" />
@@ -73,8 +90,15 @@ const App: React.FC = () => (
               <Route path="/alert-rules" element={<AlertRules />} />
               <Route path="/atp-check" element={<ATPCheck />} />
               <Route path="/kpi" element={<KPIDashboard />} />
+              <Route path="/inventory" element={<InventoryWorkbench />} />
+              <Route path="/scenario" element={<ScenarioSim />} />
+              <Route path="/variance" element={<Variance />} />
+              <Route path="/sop-meeting" element={<Meeting />} />
+              <Route path="/rccp" element={<RCCP />} />
+              <Route path="/supplier-score" element={<SupplierScore />} />
+              <Route path="/decision" element={<Decision />} />
               <Route path="/supplier" element={<SupplierRisk />} />
-              <Route path="/inventory" element={<PlaceholderPage title="库存管理" desc="安全库存 · ABC分析 · 呆滞处置" />} />
+              <Route path="/supplier-portal" element={<SupplierPortal />} />
             </Routes>
           </div>
         </main>

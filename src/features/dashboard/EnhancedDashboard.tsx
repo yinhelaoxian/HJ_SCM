@@ -3,8 +3,8 @@ import {
   Sun, Moon, Monitor, RefreshCw, Bell,
   Search, User, Settings
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { Card } from '@/ui/Card';
+import { Button } from '@/ui/Button';
 
 /**
  * 仪表盘增强：主题切换/实时数据/快捷入口

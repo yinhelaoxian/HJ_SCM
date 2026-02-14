@@ -3,9 +3,9 @@ import {
   GanttChart, Calendar, Download, RefreshCw,
   AlertTriangle, CheckCircle, Clock
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/ui/Card';
+import { Button } from '@/ui/Button';
+import { Badge } from '@/ui/Badge';
 
 /**
  * MPS 主生产计划甘特图

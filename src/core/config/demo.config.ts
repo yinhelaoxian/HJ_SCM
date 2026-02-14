@@ -8,8 +8,10 @@ export const DEMO_CONFIG = {
     shortName: "豪江智能",
     industry: "线性驱动系统制造",
     plants: ["青岛总部", "苏州华东", "泰国曼谷"],
-    demoDate: "2026年10月8日",
-    daysToChristmasSeason: 47,
+    demoDate: new Date().toLocaleDateString('zh-CN'),
+    daysToChristmasSeason: Math.ceil(
+      (new Date(new Date().getFullYear(), 11, 25).getTime() - Date.now()) / 86400000
+    ),
   },
   
   // KPI基准值

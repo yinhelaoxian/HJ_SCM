@@ -22,7 +22,22 @@ const NAV_GROUPS = [
   { section: '采购与供应商', items: [
     { path: '/supplier', icon: Building2, label: '供应商管理', badge: 0, children: [
       { path: '/supplier', label: '风险全景图' },
+      { path: '/supplier-portal', label: '供应商协同门户' },
+      { path: '/supplier-score', label: '供应商绩效管理' },
     ]},
+  ]},
+  { section: '库存与仓储', items: [
+    { path: '/inventory', icon: Package, label: '库存工作台', badge: 2 },
+  ]},
+  { section: 'S&OP 流程', items: [
+    { path: '/sop-meeting', icon: CalendarRange, label: 'S&OP 会议管理', badge: 0 },
+    { path: '/variance', icon: BarChart3, label: '差异分析报告', badge: 0 },
+  ]},
+  { section: '高级分析', items: [
+    { path: '/scenario', icon: GitMerge, label: '情景模拟工作台', badge: 0 },
+    { path: '/rccp', icon: Factory, label: 'RCCP 粗能力核查', badge: 1 },
+    { path: '/supplier-score', icon: Building2, label: '供应商绩效管理', badge: 0 },
+    { path: '/decision', icon: ClipboardList, label: '决策支持系统', badge: 0 },
   ]},
   { section: '风险与绩效', items: [
     { path: '/kpi', icon: Activity, label: 'SCOR绩效看板', badge: 0 },

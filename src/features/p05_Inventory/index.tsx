@@ -7,9 +7,9 @@ import {
   Package, AlertTriangle, TrendingDown, RefreshCw,
   Search, Filter, Download, ChevronDown
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/ui/Card';
+import { Button } from '@/ui/Button';
+import { Badge } from '@/ui/Badge';
 
 /**
  * 库存工作台页面
@@ -28,15 +28,15 @@ export default function InventoryWorkbench() {
   
   // 模拟数据
   const mockInventoryData = [
-    { materialId: 'MED-MOTOR-001', name: '医养电机', factory: 5200, inTransit: 1200, consignment: 300, return: 50, total: 6750 },
-    { materialId: 'MED-CONTROL-001', name: '控制模块', factory: 8500, inTransit: 2000, consignment: 800, return: 120, total: 11420 },
-    { materialId: 'STD-FRAME-001', name: '标准框架', factory: 12000, inTransit: 3500, consignment: 0, return: 200, total: 15700 },
-    { materialId: 'IMP-ELECTRONIC', name: '进口电子件', factory: 3200, inTransit: 800, consignment: 1500, return: 0, total: 5500 },
+    { materialId: 'HJ-LA23', name: 'HJ-LA23 线性推杆（35mm）', factory: 3840, inTransit: 1200, consignment: 800, return: 0, total: 5840 },
+    { materialId: 'HJ-LA15', name: 'HJ-LA15 线性推杆（20mm）', factory: 6200, inTransit: 0, consignment: 2000, return: 120, total: 8320 },
+    { materialId: 'HJ-M05', name: 'HJ-M05 DC电机总成（Bühler）', factory: 1240, inTransit: 0, consignment: 0, return: 0, total: 1240 },
+    { materialId: 'HJ-SP03', name: 'HJ-SP03 精密弹簧件', factory: 18000, inTransit: 5000, consignment: 0, return: 300, total: 23300 },
   ];
   
   const mockStagnationData = [
-    { materialId: 'OLD-MOTOR-001', name: '老款电机', batch: 'B20250101', quantity: 1200, daysInStock: 120, turnoverRate: 0.5, riskLevel: 'HIGH', riskScore: 85 },
-    { materialId: 'STD-CABLE-001', name: '标准电缆', batch: 'B20241215', quantity: 3500, daysInStock: 95, turnoverRate: 0.8, riskLevel: 'MEDIUM', riskScore: 55 },
+    { materialId: 'HJ-M05-OLD', name: 'HJ-M05 旧规格电机（停产）', batch: 'B20250615', quantity: 860, daysInStock: 183, turnoverRate: 0.3, riskLevel: 'HIGH', riskScore: 88 },
+    { materialId: 'HJ-LA15-EX', name: 'LA15 圣诞前过剩备货', batch: 'B20251001', quantity: 2400, daysInStock: 47, turnoverRate: 0.7, riskLevel: 'MEDIUM', riskScore: 52 },
   ];
   
   const mockATPData = [

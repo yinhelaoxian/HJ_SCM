@@ -7,9 +7,9 @@ import {
   TrendingUp, TrendingDown, Calendar, Download, RefreshCw,
   Target, AlertTriangle, Filter, Settings
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/ui/Card';
+import { Button } from '@/ui/Button';
+import { Badge } from '@/ui/Badge';
 
 /**
  * 需求预测工作台
@@ -274,7 +274,7 @@ export default function DemandForecastWorkbench() {
                 </td>
                 <td className="px-4 py-3 text-center">
                   <Badge variant={row.quantity > 600 ? 'warning' : 'default'}>
-                    {Math.round((95 - i * 3)}%
+                    {Math.round(95 - i * 3)}%
                   </Badge>
                 </td>
                 <td className="px-4 py-3 text-center">

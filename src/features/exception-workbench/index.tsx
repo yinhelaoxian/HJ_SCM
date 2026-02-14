@@ -4,9 +4,9 @@ import {
   Filter, Search, ChevronRight, User, CheckCircle,
   ArrowUp, MoreHorizontal
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/ui/Card';
+import { Button } from '@/ui/Button';
+import { Badge } from '@/ui/Badge';
 
 /**
  * 异常驱动工作台
