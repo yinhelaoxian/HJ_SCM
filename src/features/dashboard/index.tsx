@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, Clock, MapPin, Factory, Activity } from 'lucide-react';
+import { AlertTriangle, Clock, MapPin, Factory, Activity, Zap, Package, Users, Globe } from 'lucide-react';
 import { KPI_DATA, ALERTS, PLANT_STATUS, SALES_ORDERS } from '../../services/mock/mock.data';
 import { DEMO_CONFIG } from '../../core/config/demo.config';
 
@@ -103,6 +103,29 @@ const PlantMap = () => (
   </div>
 );
 
+const DEMO_PATHS = [
+  { emoji: '🔴', title: 'Bühler断供危机', desc: '从预警→风险分析→采购决策', path: '/exceptions', color: '#E53935' },
+  { emoji: '📦', title: '圣诞旺季备货', desc: '需求预测→ATP检查→MPS调整', path: '/demand', color: '#F57C00' },
+  { emoji: '🏭', title: '产销协同评审', desc: 'S&OP产销平衡→会议决策', path: '/sop', color: '#2D7DD2' },
+  { emoji: '🇹🇭', title: '泰国产能爬坡', desc: 'RCCP核查→多工厂协同', path: '/rccp', color: '#00897B' },
+];
+
+const DemoPathCard = ({ demo, onClick }) => (
+  <button 
+    onClick={onClick}
+    className="flex items-center gap-3 p-3 rounded border transition-all hover:scale-[1.02]"
+    style={{ 
+      background: 'rgba(45,125,210,0.04)', 
+      borderColor: `${demo.color}30` 
+    }}>
+    <span className="text-2xl">{demo.emoji}</span>
+    <div className="text-left">
+      <p className="text-sm font-medium" style={{ color: '#E8EDF4' }}>{demo.title}</p>
+      <p className="text-xs" style={{ color: '#7A8BA8' }}>{demo.desc}</p>
+    </div>
+  </button>
+);
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(DEMO_CONFIG.company.daysToChristmasSeason);
@@ -189,6 +212,18 @@ const Dashboard = () => {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* 典型演示路径快捷入口 */}
+      <div className="mt-6 p-4 rounded border" style={{ background: 'rgba(45,125,210,0.04)', borderColor: 'rgba(45,125,210,0.15)' }}>
+        <h3 className="text-sm font-medium mb-3 flex items-center gap-2" style={{ color: '#7A8BA8' }}>
+          <Zap className="w-4 h-4" style={{ color: '#F57C00' }} /> 典型演示路径
+        </h3>
+        <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          {DEMO_PATHS.map((demo, idx) => (
+            <DemoPathCard key={idx} demo={demo} onClick={() => navigate(demo.path)} />
+          ))}
         </div>
       </div>
     </div>
