@@ -15,8 +15,8 @@ export default {
         danger: '#E53935',
         warning: '#F57C00',
         success: '#00897B',
-        'primary': '#E8EDF4',
-        'secondary': '#7A8BA8',
+        primary: '#E8EDF4',
+        secondary: '#7A8BA8',
         muted: '#445568',
         'blue-light': '#3D9BE9'
       },
