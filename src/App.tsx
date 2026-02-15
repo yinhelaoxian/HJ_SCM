@@ -29,6 +29,13 @@ import ProductionPage from './features/production';
 import LogisticsPage from './features/logistics';
 import ShipmentPage from './features/shipment';
 import FreightPage from './features/freight';
+import StrategyPage from './features/strategy';
+import RiskDashboardPage from './features/risk-dashboard';
+import SCORDashboardPage from './features/kpi-scor';
+// MDM 模块
+import MaterialManagementPage from './features/mdm-material';
+import BOMManagementPage from './features/mdm-bom';
+import SupplierManagementPage from './features/mdm-supplier';
 
 /**
  * 占位符页面组件
@@ -85,9 +92,10 @@ const Header = () => {
 };
 
 /**
- * App 根组件 v2.0
+ * App 根组件 v3.0
  * 
- * 路由结构遵循端到端流程：
+ * 路由结构：
+ * - MDM 主数据管理（新增）
  * - 需求管理 → S&OP → MPS → MRP → 采购 → 库存 → 生产 → 物流 → 绩效 → 异常
  */
 const App: React.FC = () => (
@@ -99,15 +107,20 @@ const App: React.FC = () => (
           <Header />
           <div className="flex-1 overflow-auto p-6">
             <Routes>
-              {/* === 1. 指挥中心 === */}
+              {/* === 指挥中心 === */}
               <Route path="/" element={<Dashboard />} />
               
-              {/* === 2. 需求管理 === */}
+              {/* === MDM 主数据管理（新增）=== */}
+              <Route path="/mdm/material" element={<MaterialManagementPage />} />
+              <Route path="/mdm/bom" element={<BOMManagementPage />} />
+              <Route path="/mdm/supplier" element={<SupplierManagementPage />} />
+              
+              {/* === 需求管理 === */}
               <Route path="/demand" element={<DemandForecast />} />
               <Route path="/demand-sense" element={<DemandSensePage />} />
               <Route path="/promotions" element={<PromotionsPage />} />
               
-              {/* === 3. S&OP 产销协同 === */}
+              {/* === S&OP 产销协同 === */}
               <Route path="/sop" element={<SOP />} />
               <Route path="/sop/balance" element={<SOP />} />
               <Route path="/sop/whatif" element={<ScenarioSim />} />
@@ -116,12 +129,12 @@ const App: React.FC = () => (
               <Route path="/variance" element={<Variance />} />
               <Route path="/sop-meeting" element={<Meeting />} />
               
-              {/* === 4. MPS 主生产计划 === */}
+              {/* === MPS 主生产计划 === */}
               <Route path="/mps" element={<MPS />} />
               <Route path="/mps/gantt" element={<MPS />} />
               <Route path="/mps/atp" element={<ATPCheck />} />
               
-              {/* === 5. MRP 物料计划 === */}
+              {/* === MRP 物料计划 === */}
               <Route path="/mrp" element={<MRPPage />} />
               <Route path="/mrp/suggestions" element={
                 <PlaceholderPage title="采购建议" desc="智能建议、历史对比" emoji="📝" />
@@ -131,13 +144,11 @@ const App: React.FC = () => (
               } />
               <Route path="/kitting" element={<KittingPage />} />
               
-              {/* === 6. 采购与供应 === */}
+              {/* === 采购与供应 === */}
               <Route path="/procurement" element={
                 <PlaceholderPage title="AI 采购建议" desc="智能建议、历史对比" emoji="🤖" />
               } />
-              <Route path="/supplier" element={
-                <PlaceholderPage title="供应商管理" desc="风险全景、绩效评分" emoji="🏢" />
-              } />
+              <Route path="/supplier" element={<SupplierScore />} />
               <Route path="/supplier/risk" element={
                 <PlaceholderPage title="供应商风险" desc="风险雷达、传播链分析" emoji="⚠️" />
               } />
@@ -147,13 +158,13 @@ const App: React.FC = () => (
                 <PlaceholderPage title="合同管理" desc="供应商合同管理" emoji="📄" />
               } />
               
-              {/* === 7. 库存管理 === */}
+              {/* === 库存管理 === */}
               <Route path="/inventory" element={<InventoryWorkbench />} />
               <Route path="/inventory/safety" element={<SafetyStockPage />} />
               <Route path="/inventory/abc" element={<ABCXYZPage />} />
               <Route path="/inventory/stagnation" element={<StagnationPage />} />
               
-              {/* === 8. 生产执行 === */}
+              {/* === 生产执行 === */}
               <Route path="/production" element={<ProductionPage />} />
               <Route path="/production/schedule" element={<ProductionPage />} />
               <Route path="/production/issue" element={
@@ -166,23 +177,39 @@ const App: React.FC = () => (
                 <PlaceholderPage title="订单追踪" desc="全链路进度可视化" emoji="🔗" />
               } />
               
-              {/* === 9. 物流交付 === */}
+              {/* === 物流交付 === */}
               <Route path="/logistics" element={<LogisticsPage />} />
               <Route path="/logistics/shipment" element={<ShipmentPage />} />
               <Route path="/logistics/freight" element={<FreightPage />} />
               
-              {/* === 10. 绩效监控 === */}
+              {/* === 战略层 === */}
+              <Route path="/strategy" element={<StrategyPage />} />
+              
+              {/* === 风险监控 === */}
+              <Route path="/risk/dashboard" element={<RiskDashboardPage />} />
+              <Route path="/risk/forecast" element={
+                <PlaceholderPage title="预测风险" desc="第一道防线" emoji="📈" />
+              } />
+              <Route path="/risk/inventory" element={
+                <PlaceholderPage title="库存风险" desc="第二道防线" emoji="📦" />
+              } />
+              <Route path="/risk/execution" element={
+                <PlaceholderPage title="执行风险" desc="第三道防线" emoji="🏭" />
+              } />
+              
+              {/* === 绩效分析 === */}
               <Route path="/kpi" element={<KPIDashboard />} />
               <Route path="/kpi/trend" element={<KPIDashboard />} />
               <Route path="/kpi/benchmark" element={
                 <PlaceholderPage title="对标分析" desc="行业对标、趋势对比" emoji="🎯" />
               } />
+              <Route path="/kpi/pyramid" element={<SCORDashboardPage />} />
               <Route path="/reports" element={
                 <PlaceholderPage title="自助报表" desc="多维分析、数据导出" emoji="📈" />
               } />
               <Route path="/decision" element={<Decision />} />
               
-              {/* === 11. 异常工作台 === */}
+              {/* === 异常工作台 === */}
               <Route path="/exceptions" element={
                 <PlaceholderPage title="智能异常" desc="跨模块异常聚合" emoji="🚨" />
               } />
