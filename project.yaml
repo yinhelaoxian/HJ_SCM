@@ -1,0 +1,102 @@
+# 项目配置文件
+# OpenCLAW 自动更新此文件
+
+project:
+  name: "HJ SCM 供应链管理系统"
+  version: "1.0.0"
+  last_updated: "2026-02-14T23:47:00Z"
+  status: "active"
+
+development:
+  sprint_current: 9
+  sprint_progress: 75
+  completed_sprints: [1, 2, 3, 4, 5, 6, 7, 8]
+  
+sprints:
+  - id: 1
+    name: "基础功能"
+    status: "completed"
+    progress: 100
+    features: ["Dashboard", "DemandForecast", "Inventory", "ATP"]
+    
+  - id: 2
+    name: "S&OP流程"
+    status: "completed"
+    progress: 100
+    features: ["SOPWorkflow", "SupplierPortal", "ProcurementAI"]
+    
+  - id: 3
+    name: "MPS计划"
+    status: "completed"
+    progress: 100
+    features: ["MPS", "DataLineage", "SCORReports"]
+    
+  - id: 6
+    name: "MRP引擎"
+    status: "completed"
+    progress: 100
+    features: ["BOM展开", "净需求计算", "齐套检查", "TraceID"]
+    
+  - id: 7
+    name: "库存模块"
+    status: "completed"
+    progress: 100
+    features: ["ATP计算", "安全库存", "ABC-XYZ", "呆滞检测"]
+    
+  - id: 8
+    name: "生产执行"
+    status: "completed"
+    progress: 100
+    features: ["工单管理", "投料汇报", "完工入库", "批次追溯"]
+    
+  - id: 9
+    name: "测试发布"
+    status: "in_progress"
+    progress: 75
+    features: ["单元测试", "集成测试", "性能测试", "文档完善"]
+    pending: ["运行Maven测试", "Docker部署生产"]
+
+documents:
+  total: 20
+  completed: 20
+  percentage: 100
+  last_updated: "2026-02-14T23:45:00Z"
+
+testing:
+  test_classes_written: 5
+  test_methods: 17
+  tests_run: 0
+  tests_passed: 0
+  coverage: 0
+  status: "pending_execution"
+
+deployment:
+  local:
+    status: "running"
+    url: "http://localhost:3000"
+  docker_dev:
+    status: "configured"
+  docker_prod:
+    status: "pending"
+  k8s:
+    status: "pending"
+
+git:
+  local_commits: 12
+  remote_synced: true
+  branch: "main"
+
+quick_actions:
+  - command: "./quick-status.sh"
+    description: "查看项目状态概览"
+  - command: "cat PROJECT_STATUS.md"
+    description: "查看详细状态"
+  - command: "./start-dev.sh all"
+    description: "启动完整开发环境"
+  - command: "git pull"
+    description: "同步最新代码"
+
+next_steps:
+  - "运行 Maven 测试: docker compose run backend mvn test"
+  - "部署到生产环境"
+  - "执行性能测试"
