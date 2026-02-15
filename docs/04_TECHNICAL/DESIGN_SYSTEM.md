@@ -446,3 +446,121 @@ export function ProgressBar({ value, max = 100, label, variant = 'default' }: Pr
 ---
 
 *版本: v2.1*
+
+---
+
+## 18. 菜单规范 v1.0
+
+### 18.1 菜单设计原则
+
+**端到端业务流**：菜单遵循 SCM 核心流程
+
+| 阶段 | 菜单 | 说明 |
+|------|------|
+| 需求输入 | 需求管理 | AI 预测、感知、促销 |
+| 战略协同 | S&OP 产销协同 | 平衡、情景模拟、产能规划 |
+| 战术排程 | MPS 主生产计划 | 滚动计划、ATP 承诺 |
+| 执行分解 | MRP 物料计划 | 每日运算、齐套检查 |
+| 供应协同 | 采购与供应商 | AI 建议、供应商管理、协同门户 |
+| 物流执行 | 库存管理 | 安全库存、ABC-XYZ、呆滞检测 |
+| 执行落地 | 订单履行 | 全链路追踪、生产排产、完工入库 |
+| 交付物流 | 物流运输 | 在途可视化、路径优化、运费对账 |
+| 反馈闭环 | 绩效监控 | SCOR 看板、自助报表、决策支持 |
+
+### 18.2 一级菜单清单
+
+```typescript
+const NAV_GROUPS = [
+  { section: null, items: [
+    { path: '/', label: '供应链指挥中心' },
+    { path: '/exceptions', label: '智能异常工作台' },
+  ]},
+  { section: '需求管理 · DEMAND', items: [
+    { path: '/demand', label: 'AI 需求预测' },
+    { path: '/demand-sense', label: '需求感知' },
+    { path: '/promotions', label: '促销管理' },
+  ]},
+  { section: 'S&OP 产销协同 · SOP', items: [
+    { path: '/sop', label: '产销平衡总览' },
+    { path: '/supply-balance', label: '供需平衡工作台' },
+    { path: '/whatif', label: 'What-if 情景模拟' },
+    { path: '/capacity', label: '产能规划' },
+  ]},
+  // ... 更多菜单
+];
+```
+
+### 18.3 子菜单折叠规范
+
+```tsx
+// 子菜单组件
+const SidebarItem = ({ item }) => {
+  if (item.children) {
+    return (
+      <button onClick={() => setExpanded(!expanded}>
+        {/* 展开/收起图标 */}
+      </button>
+    );
+  }
+  return <NavLink to={item.path}>{item.label}</NavLink>;
+};
+```
+
+### 18.4 菜单交互规范
+
+| 交互 | 行为 |
+|------|------|
+| 父菜单点击 | 展开/收起子菜单 |
+| 子菜单点击 | 页面跳转 |
+| 异常菜单 | 红色徽章标记 |
+| 选中状态 | 高亮背景色 |
+
+### 18.5 菜单配置示例
+
+```typescript
+// 一级菜单配置
+const MAIN_MENU = [
+  { id: 'demand', label: '需求管理', icon: TrendingUp },
+  { id: 'sop', label: 'S&OP 产销协同', icon: CalendarRange },
+  { id: 'mps', label: 'MPS 主生产计划', icon: BarChart3 },
+  // ...
+];
+
+// 子菜单配置
+const SUB_MENU = {
+  sop: [
+    { path: '/sop', label: '产销平衡' },
+    { path: '/supply-balance', label: '供需平衡' },
+    { path: '/whatif', label: '情景模拟' },
+  ],
+};
+```
+
+---
+
+### 18.6 菜单权限控制
+
+```typescript
+// 权限配置
+const MENU_PERMISSIONS = {
+  '/demand': ['PLANNER', 'MANAGER'],
+  '/procurement': ['BUYER', 'MANAGER'],
+  '/admin': ['ADMIN'],
+};
+```
+
+### 18.7 异常驱动菜单
+
+```tsx
+// 异常菜单高亮
+{ALERTS.map(alert => (
+  <NavLink 
+    to={alert.path}
+    className={({ isActive }) => 
+      isActive ? 'menu-item-active' : 'menu-item'
+  >
+    <Badge variant="danger">{alert.count}</Badge>
+  </NavLink>
+))}
+```
+
