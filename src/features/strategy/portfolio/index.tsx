@@ -49,25 +49,26 @@ const PortfolioAnalysisPage: React.FC = () => {
     totalRevenue: '¥89M'
   };
 
-  // 豪江智能多产品线数据
+  // 豪江智能多产品线数据 - 电子/智能制造
   const products = [
-    { id: 1, name: '智能家电系列', category: '智能家电', sales: '¥35.2M', margin: 42, growth: 18, risk: '低', riskLevel: 1 },
-    { id: 2, name: '电子产品系列', category: '电子产品', sales: '¥28.6M', margin: 28, growth: 12, risk: '中', riskLevel: 2 },
-    { id: 3, name: '传统家电系列', category: '传统家电', sales: '¥25.2M', margin: 15, growth: -8, risk: '高', riskLevel: 3 }
+    { id: 1, name: '智能传感器系列', category: '智能传感器', sales: '¥35.2M', margin: 45, growth: 18, risk: '低', riskLevel: 1 },
+    { id: 2, name: '电子控制器系列', category: '电子控制器', sales: '¥28.6M', margin: 28, growth: 12, risk: '中', riskLevel: 2 },
+    { id: 3, name: '传统电子组件', category: '传统电子', sales: '¥25.2M', margin: 12, growth: -8, risk: '高', riskLevel: 3 }
   ];
 
-  // 利润率 vs 风险平衡分析
+  // 利润率 vs 风险平衡分析 - 豪江智能产品组合
   const portfolioAnalysis = [
-    { category: '智能家电', margin: 42, risk: '低', allocation: 40, recommendation: '重点发展' },
-    { category: '电子产品', margin: 28, risk: '中', allocation: 35, recommendation: '稳定经营' },
-    { category: '传统家电', margin: 15, risk: '高', allocation: 25, recommendation: '逐步收缩' }
+    { category: '智能传感器', margin: 45, risk: '低', allocation: 35, recommendation: '重点发展' },
+    { category: '电子控制器', margin: 28, risk: '中', allocation: 40, recommendation: '稳定经营' },
+    { category: '传统电子', margin: 12, risk: '高', allocation: 25, recommendation: '逐步收缩' }
   ];
 
   const recommendations = [
-    { id: 1, title: '提升智能家电占比至50%', description: '高利润低风险产品线，应加大投入和推广力度', priority: 'high', potential: '+25%' },
-    { id: 2, title: '优化电子产品组合结构', description: '保持中等利润，控制库存风险，建议引入新品类', priority: 'medium', potential: '+12%' },
-    { id: 3, title: '收缩传统家电业务规模', description: '低利润高风险，建议逐步降低产品SKU数量', priority: 'medium', potential: '+8%' },
-    { id: 4, title: '建立风险预警机制', description: '对高风险产品线实施动态监控，提前调整库存', priority: 'low', potential: '+5%' }
+    { id: 1, title: '重点发展智能传感器业务', description: '高利润(45%)低滞销风险，应加大研发投入与产能扩张', priority: 'high', potential: '+25%' },
+    { id: 2, title: '优化电子控制器产品结构', description: '中利润中风险，需控制库存深度，聚焦高周转型号', priority: 'medium', potential: '+15%' },
+    { id: 3, title: '收缩传统电子组件线', description: '低利润(12%)高滞销风险，建议逐步削减SKU并清库存', priority: 'high', potential: '+12%' },
+    { id: 4, title: '建立多产品线风险联动机制', description: '跨产品线滞销风险预警，统一财务资源调配', priority: 'medium', potential: '+8%' },
+    { id: 5, title: '财务约束下的组合优化', description: '在资金有限时优先保障高利润产品线，降低低效产品占比', priority: 'low', potential: '+10%' }
   ];
 
   return (
@@ -126,7 +127,7 @@ const PortfolioAnalysisPage: React.FC = () => {
 
       {/* 产品组合列表 */}
       <Card className="p-4 mb-4">
-        <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>产品组合管理</h3>
+        <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>豪江智能产品组合（电子/智能制造）</h3>
         <div className="space-y-3">
           {products.map((product) => (
             <div key={product.id} className="flex items-center justify-between p-4 rounded border"
@@ -134,14 +135,20 @@ const PortfolioAnalysisPage: React.FC = () => {
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded flex items-center justify-center text-lg"
                   style={{ background: 'rgba(45,125,210,0.1)' }}>
-                  📱
+                  {product.category === '智能传感器' ? '📡' : product.category === '电子控制器' ? '🔲' : '⚙️'}
                 </div>
                 <div>
                   <div className="font-medium" style={{ color: '#E8EDF4' }}>
                     {product.name}
                   </div>
                   <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                    {product.category} · 增长率: {product.growth > 0 ? `+${product.growth}%` : `${product.growth}%`}
+                    {product.category} · 滞销风险: 
+                    <span style={{ 
+                      color: product.risk === '低' ? '#00897B' : product.risk === '中' ? '#F57C00' : '#E53935',
+                      marginLeft: '4px'
+                    }}>
+                      {product.risk}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -162,6 +169,14 @@ const PortfolioAnalysisPage: React.FC = () => {
                     毛利率
                   </div>
                 </div>
+                <div className="text-right">
+                  <div className="text-sm" style={{ color: '#E8EDF4' }}>
+                    {product.growth > 0 ? `+${product.growth}%` : `${product.growth}%`}
+                  </div>
+                  <div className="text-xs mt-1" style={{ color: '#445568' }}>
+                    增长率
+                  </div>
+                </div>
                 <Button variant="outline" size="sm">分析</Button>
               </div>
             </div>
@@ -169,9 +184,63 @@ const PortfolioAnalysisPage: React.FC = () => {
         </div>
       </Card>
 
-      {/* 优化建议 */}
+      {/* 利润率 vs 风险平衡分析 */}
+      <Card className="p-4 mb-4">
+        <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>利润率 vs 风险平衡分析</h3>
+        <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          {portfolioAnalysis.map((item, index) => (
+            <div key={index} className="p-4 rounded border"
+              style={{ background: '#131926', borderColor: '#1E2D45' }}>
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-medium" style={{ color: '#E8EDF4' }}>{item.category}</span>
+                <span className={`text-xs px-2 py-0.5 rounded ${
+                  item.risk === '低' ? 'bg-green-900 text-green-400' :
+                  item.risk === '中' ? 'bg-orange-900 text-orange-400' :
+                  'bg-red-900 text-red-400'
+                }`}>
+                  风险: {item.risk}
+                </span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span style={{ color: '#7A8BA8' }}>利润率</span>
+                  <span style={{ color: '#E8EDF4' }}>{item.margin}%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span style={{ color: '#7A8BA8' }}>当前占比</span>
+                  <span style={{ color: '#E8EDF4' }}>{item.allocation}%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span style={{ color: '#7A8BA8' }}>优化建议</span>
+                  <span style={{ 
+                    color: item.recommendation === '重点发展' ? '#00897B' :
+                    item.recommendation === '稳定经营' ? '#F57C00' : '#E53935'
+                  }}>
+                    {item.recommendation}
+                  </span>
+                </div>
+              </div>
+              {/* 可视化进度条 */}
+              <div className="mt-3 h-1.5 rounded-full" style={{ background: '#1E2D45' }}>
+                <div 
+                  className="h-1.5 rounded-full"
+                  style={{ 
+                    width: `${item.margin}%`,
+                    background: item.margin >= 40 ? '#00897B' : item.margin >= 20 ? '#F57C00' : '#E53935'
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* 产品组合优化建议 */}
       <Card className="p-4">
         <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>产品组合优化建议</h3>
+        <p className="text-xs mb-4" style={{ color: '#7A8BA8' }}>
+          基于利润率与风险平衡分析，建议优化方向如下：
+        </p>
         <div className="space-y-3">
           {recommendations.map((rec) => (
             <div key={rec.id} className="flex items-start gap-3 p-3 rounded"

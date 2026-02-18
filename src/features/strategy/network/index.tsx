@@ -5,6 +5,34 @@ import { Button } from '@/ui/Button';
 import { fetchNetworkData } from '@/services/api/strategy';
 import { NetworkNode, NetworkOptimization, NetworkStats, RiskAlert } from './types';
 
+// 风险提示数据（保持静态，后续可接入 API）
+const riskAlerts: RiskAlert[] = [
+  {
+    id: '1',
+    type: 'logistics',
+    title: '跨国物流风险',
+    description: '汇率波动（泰铢/人民币）+ 地缘政治不确定性可能影响跨境运输成本与时效',
+    severity: 'high',
+    mitigation: '建议建立双币种结算机制，增加国内备货缓冲',
+  },
+  {
+    id: '2',
+    type: 'capacity',
+    title: '产能不均预警',
+    description: '青岛总部(112%)超载 vs 泰国工厂(43%)低负荷，产能利用率差距达69%',
+    severity: 'high',
+    mitigation: '建议加速订单转移，提升泰国工厂至65%以上利用率',
+  },
+  {
+    id: '3',
+    type: 'supply',
+    title: '供应链中断风险',
+    description: '单一供应源依赖度过高，关键零部件库存仅维持15天',
+    severity: 'medium',
+    mitigation: '建立多元化供应商体系，增加安全库存至30天',
+  },
+];
+
 /**
  * 网络规划页面
  *
@@ -19,7 +47,6 @@ const NetworkPlanningPage: React.FC = () => {
     totalCost: '¥0万',
     coverage: 0,
   });
-  const [riskAlerts, setRiskAlerts] = useState<RiskAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

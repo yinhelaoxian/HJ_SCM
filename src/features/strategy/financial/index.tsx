@@ -207,7 +207,7 @@ const FinancialConstraintsPage: React.FC = () => {
       </Card>
 
       {/* 投资约束设置 */}
-      <Card className="p-4">
+      <Card className="p-4 mb-4">
         <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>投资约束条件</h3>
         <div className="space-y-3">
           {investmentConstraints.map((constraint) => (
@@ -240,6 +240,49 @@ const FinancialConstraintsPage: React.FC = () => {
                 <div className="text-xs" style={{ color: '#445568' }}>
                   影响程度
                 </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* 财务风险提示模块 */}
+      <Card className="p-4" style={{ background: 'linear-gradient(135deg, rgba(229,57,53,0.1) 0%, rgba(245,124,0,0.08) 100%)' }}>
+        <h3 className="text-sm font-medium mb-4 flex items-center gap-2" style={{ color: '#F57C00' }}>
+          <AlertCircle className="w-4 h-4" />
+          财务风险提示
+        </h3>
+        <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          {financialRisks.map((risk) => (
+            <div key={risk.id} className="p-4 rounded border"
+              style={{
+                background: risk.severity === 'danger' ? 'rgba(229,57,53,0.12)' :
+                  risk.severity === 'warning' ? 'rgba(245,124,0,0.12)' : 'rgba(45,125,210,0.12)',
+                borderColor: risk.severity === 'danger' ? '#E53935' :
+                  risk.severity === 'warning' ? '#F57C00' : '#2D7DD2'
+              }}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium"
+                  style={{
+                    color: risk.severity === 'danger' ? '#E53935' :
+                      risk.severity === 'warning' ? '#F57C00' : '#2D7DD2'
+                  }}>
+                  {risk.title}
+                </span>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                  risk.severity === 'danger' ? 'bg-red-900/50 text-red-300' :
+                    risk.severity === 'warning' ? 'bg-orange-900/50 text-orange-300' : 'bg-blue-900/50 text-blue-300'
+                }`}>
+                  {risk.severity === 'danger' ? '高风险' : risk.severity === 'warning' ? '中风险' : '关注'}
+                </span>
+              </div>
+              <p className="text-xs mb-3" style={{ color: '#B8C5D3' }}>
+                {risk.description}
+              </p>
+              <div className="p-2 rounded text-xs"
+                style={{ background: 'rgba(0,0,0,0.2)' }}>
+                <div className="font-medium mb-1" style={{ color: '#7A8BA8' }}>建议措施</div>
+                <div style={{ color: '#E8EDF4' }}>{risk.suggestion}</div>
               </div>
             </div>
           ))}
