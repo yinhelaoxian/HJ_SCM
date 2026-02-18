@@ -41,67 +41,155 @@ const CapacityPlanningPage: React.FC = () => {
     </div>
   );
 
-  // 模拟数据
+  // 产能不均风险提示组件
+  const CapacityRiskAlert = () => {
+    const maxUtilization = Math.max(...capacityItems.map(item => item.utilization));
+    const minUtilization = Math.min(...capacityItems.map(item => item.utilization));
+    const gap = maxUtilization - minUtilization;
+
+    return (
+      <Card className="p-4 mb-4" style={{ background: 'linear-gradient(135deg, rgba(229,57,53,0.12) 0%, rgba(245,124,0,0.08) 100%)', border: '1px solid rgba(229,57,53,0.3)' }}>
+        <div className="flex items-start gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">⚠️</span>
+            <h3 className="text-sm font-medium" style={{ color: '#E53935' }}>
+              产能不均风险预警
+            </h3>
+          </div>
+          <div className="flex-1 grid gap-3" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
+            {/* 产能差距分析 */}
+            <div className="p-3 rounded" style={{ background: 'rgba(0,0,0,0.2)' }}>
+              <div className="text-xs mb-2" style={{ color: '#7A8BA8' }}>产能差距分析</div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-xl font-bold" style={{ color: '#E53935' }}>{maxUtilization}%</span>
+                <span className="text-xs" style={{ color: '#7A8BA8' }}>vs</span>
+                <span className="text-xl font-bold" style={{ color: '#00897B' }}>{minUtilization}%</span>
+              </div>
+              <div className="text-sm mt-1" style={{ color: '#E8EDF4' }}>
+                差距: <span className="font-medium" style={{ color: '#F57C00' }}>{gap}%</span>
+              </div>
+            </div>
+
+            {/* ROI 评估 */}
+            <div className="p-3 rounded" style={{ background: 'rgba(0,0,0,0.2)' }}>
+              <div className="text-xs mb-2" style={{ color: '#7A8BA8' }}>投资建议 ROI 评估</div>
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span style={{ color: '#7A8BA8' }}>扩建青岛</span>
+                  <span style={{ color: '#00897B' }}>+25%</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span style={{ color: '#7A8BA8' }}>提升泰国</span>
+                  <span style={{ color: '#00897B' }}>+18%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 投资建议 */}
+        <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(229,57,53,0.2)' }}>
+          <div className="text-xs mb-2" style={{ color: '#7A8BA8' }}>投资建议</div>
+          <div className="flex gap-3">
+            <div className="flex-1 p-2 rounded text-xs" style={{ background: 'rgba(229,57,53,0.1)' }}>
+              <div className="font-medium" style={{ color: '#E8EDF4' }}>🏭 扩建青岛总部</div>
+              <div style={{ color: '#7A8BA8' }}>产能超载 12%，需扩建</div>
+              <div className="mt-1" style={{ color: '#F57C00' }}>投资 ¥1.5亿</div>
+            </div>
+            <div className="flex-1 p-2 rounded text-xs" style={{ background: 'rgba(0,137,123,0.1)' }}>
+              <div className="font-medium" style={{ color: '#E8EDF4' }}>🌏 提升泰国产能</div>
+              <div style={{ color: '#7A8BA8' }}>利用率仅 43%，可优化</div>
+              <div className="mt-1" style={{ color: '#F57C00' }}>投资 ¥5000万</div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    );
+  };
+
+  // 真实工厂数据
   const stats = {
-    totalCapacity: '12.5万件',
+    totalCapacity: '15.8万件',
     utilization: '78%',
-    investmentNeeded: '¥2.3亿',
-    roi: '18.5%'
+    investmentNeeded: '¥4.5亿',
+    roi: '16.8%'
   };
 
   const capacityItems = [
     {
       id: 1,
-      name: '华东生产基地',
-      location: '上海',
+      name: '青岛总部工厂',
+      location: '山东青岛',
       type: 'factory',
-      capacity: '5.2万件',
-      utilization: 85,
-      cost: '¥1.2亿'
+      capacity: '6.5万件',
+      utilization: 112,
+      cost: '¥2.8亿',
+      status: 'overloaded'
     },
     {
       id: 2,
-      name: '华南制造中心',
-      location: '深圳',
+      name: '苏州华东工厂',
+      location: '江苏苏州',
       type: 'factory',
-      capacity: '4.8万件',
-      utilization: 92,
-      cost: '¥9500万'
+      capacity: '5.8万件',
+      utilization: 78,
+      cost: '¥2.1亿',
+      status: 'normal'
     },
     {
       id: 3,
-      name: '华北装配厂',
-      location: '天津',
-      type: 'assembly',
-      capacity: '2.5万件',
-      utilization: 65,
-      cost: '¥4200万'
+      name: '泰国曼谷工厂',
+      location: '泰国曼谷',
+      type: 'factory',
+      capacity: '3.5万件',
+      utilization: 43,
+      cost: '¥1.2亿',
+      status: 'underloaded'
     }
   ];
+
+  // 产能不均风险分析
+  const riskAnalysis = {
+    gap: 69, // 青岛 112% vs 泰国 43%
+    suggestions: [
+      {
+        action: '扩建青岛总部工厂',
+        reason: '现有产能超载 12%，建议扩建以满足需求',
+        investment: '¥1.5亿',
+        expectedRoi: '25%'
+      },
+      {
+        action: '提升泰国产能利用率',
+        reason: '产能利用率仅 43%，可通过转移订单提高至 70%',
+        investment: '¥5000万',
+        expectedRoi: '18%'
+      }
+    ]
+  };
 
   const investments = [
     {
       id: 1,
-      title: '新增自动化生产线',
-      description: '引入机器人自动化生产线，提升产能30%',
-      cost: '¥8500万',
-      roi: '22.3%',
+      title: '扩建青岛总部工厂',
+      description: '新增两条自动化生产线，缓解产能超载压力',
+      cost: '¥1.5亿',
+      roi: '25.0%',
       priority: 'high'
     },
     {
       id: 2,
-      title: '扩建华南制造中心',
-      description: '新增厂房面积20000平方米，增加两条生产线',
-      cost: '¥1.2亿',
-      roi: '15.8%',
-      priority: 'medium'
+      title: '提升泰国曼谷工厂产能利用率',
+      description: '优化生产排程，转移华东订单至泰国工厂',
+      cost: '¥5000万',
+      roi: '18.0%',
+      priority: 'high'
     },
     {
       id: 3,
-      title: '设备升级改造',
-      description: '升级现有设备，提高生产效率15%',
-      cost: '¥3200万',
-      roi: '19.2%',
+      title: '苏州工厂设备升级',
+      description: '升级现有设备，提高生产效率12%',
+      cost: '¥3500万',
+      roi: '16.5%',
       priority: 'medium'
     }
   ];
@@ -166,11 +254,18 @@ const CapacityPlanningPage: React.FC = () => {
         <div className="space-y-3">
           {capacityItems.map((item) => (
             <div key={item.id} className="flex items-center justify-between p-4 rounded border"
-              style={{ background: '#131926', borderColor: '#1E2D45' }}>
+              style={{ 
+                background: '#131926', 
+                borderColor: item.status === 'overloaded' ? 'rgba(229,57,53,0.4)' : 
+                           item.status === 'underloaded' ? 'rgba(0,137,123,0.3)' : '#1E2D45'
+              }}>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded flex items-center justify-center text-lg"
-                  style={{ background: 'rgba(45,125,210,0.1)' }}>
-                  🏭
+                  style={{ 
+                    background: item.status === 'overloaded' ? 'rgba(229,57,53,0.15)' : 
+                               item.status === 'underloaded' ? 'rgba(0,137,123,0.15)' : 'rgba(45,125,210,0.1)'
+                  }}>
+                  {item.status === 'overloaded' ? '🔴' : item.status === 'underloaded' ? '🟢' : '🏭'}
                 </div>
                 <div>
                   <div className="font-medium" style={{ color: '#E8EDF4' }}>
@@ -185,16 +280,21 @@ const CapacityPlanningPage: React.FC = () => {
                 <div className="w-32">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs" style={{ color: '#7A8BA8' }}>利用率</span>
-                    <span className="text-xs" style={{ color: '#E8EDF4' }}>
-                      {item.utilization}%
+                    <span className="text-xs" style={{ 
+                      color: item.utilization > 100 ? '#E53935' : 
+                             item.utilization < 50 ? '#00897B' : '#E8EDF4'
+                    }}>
+                      {item.utilization > 100 ? `${item.utilization}% (超载)` : `${item.utilization}%`}
                     </span>
                   </div>
                   <div className="h-2 rounded bg-slate-800">
                     <div
                       className="h-full rounded"
                       style={{
-                        width: `${item.utilization}%`,
-                        background: item.utilization > 90 ? '#E53935' : item.utilization > 80 ? '#F57C00' : '#00897B'
+                        width: `${Math.min(item.utilization, 100)}%`,
+                        background: item.utilization > 100 ? '#E53935' : 
+                                   item.utilization < 50 ? '#00897B' : 
+                                   item.utilization > 80 ? '#F57C00' : '#00897B'
                       }}
                     />
                   </div>
@@ -213,6 +313,9 @@ const CapacityPlanningPage: React.FC = () => {
           ))}
         </div>
       </Card>
+
+      {/* 产能不均风险提示 */}
+      <CapacityRiskAlert />
 
       {/* 投资建议 */}
       <Card className="p-4">
