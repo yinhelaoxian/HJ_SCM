@@ -1,8 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Settings, Factory, TrendingUp, DollarSign } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
 import { CapacityTypes } from './types';
+import axios from 'axios';
+import { getCapacityData } from '@/services/api/strategy';
+
+// 定义 CapacityData 类型
+interface CapacityData {
+  id: number;
+  name: string;
+  location: string;
+  type: string;
+  capacity: string;
+  utilization: number;
+  cost: string;
+  status: 'overloaded' | 'normal' | 'underloaded';
+}
+
+interface CapacityOptimization {
+  id: number;
+  title: string;
+  description: string;
+  cost: string;
+  roi: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+interface CapacityForecast {
+  year: number;
+  capacity: number;
+  demand: number;
+}
 
 /**
  * 产能投资规划页面
@@ -10,6 +39,28 @@ import { CapacityTypes } from './types';
  * 功能：产能分析、投资规划、设备管理、产能优化
  */
 const CapacityPlanningPage: React.FC = () => {
+  // API 数据状态
+  const [data, setData] = useState<CapacityData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 从 API 获取数据
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const result = await getCapacityData();
+        setData(result.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '获取数据失败');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   // 面包屑组件
   const Breadcrumb = () => (
     <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
@@ -41,8 +92,29 @@ const CapacityPlanningPage: React.FC = () => {
     </div>
   );
 
+  // Loading Spinner
+  const LoadingSpinner = () => (
+    <div className="flex items-center justify-center py-12">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#2D7DD2' }}></div>
+      <span className="ml-3" style={{ color: '#7A8BA8' }}>加载中...</span>
+    </div>
+  );
+
+  // Error Alert
+  const ErrorAlert = ({ message }: { message: string }) => (
+    <div className="p-4 mb-4 rounded border" style={{ background: 'rgba(229,57,53,0.1)', borderColor: 'rgba(229,57,53,0.3)' }}>
+      <div className="flex items-center gap-2">
+        <span className="text-lg">❌</span>
+        <span className="text-sm font-medium" style={{ color: '#E53935' }}>错误</span>
+      </div>
+      <p className="text-xs mt-2" style={{ color: '#7A8BA8' }}>{message}</p>
+    </div>
+  );
+
   // 产能不均风险提示组件
-  const CapacityRiskAlert = () => {
+  const CapacityRiskAlert = ({ capacityItems }: { capacityItems: CapacityData[] }) => {
+    if (capacityItems.length === 0) return null;
+    
     const maxUtilization = Math.max(...capacityItems.map(item => item.utilization));
     const minUtilization = Math.min(...capacityItems.map(item => item.utilization));
     const gap = maxUtilization - minUtilization;
@@ -107,50 +179,19 @@ const CapacityPlanningPage: React.FC = () => {
     );
   };
 
-  // 真实工厂数据
+  // 计算统计数据
   const stats = {
-    totalCapacity: '15.8万件',
-    utilization: '78%',
+    totalCapacity: data.length > 0 ? `${(data.reduce((sum, item) => sum + parseFloat(item.capacity.replace(/[^\d.]/g, '')), 0) / 10000).toFixed(1)}万件` : '0万件',
+    utilization: data.length > 0 ? `${Math.round(data.reduce((sum, item) => sum + item.utilization, 0) / data.length)}%` : '0%',
     investmentNeeded: '¥4.5亿',
     roi: '16.8%'
   };
 
-  const capacityItems = [
-    {
-      id: 1,
-      name: '青岛总部工厂',
-      location: '山东青岛',
-      type: 'factory',
-      capacity: '6.5万件',
-      utilization: 112,
-      cost: '¥2.8亿',
-      status: 'overloaded'
-    },
-    {
-      id: 2,
-      name: '苏州华东工厂',
-      location: '江苏苏州',
-      type: 'factory',
-      capacity: '5.8万件',
-      utilization: 78,
-      cost: '¥2.1亿',
-      status: 'normal'
-    },
-    {
-      id: 3,
-      name: '泰国曼谷工厂',
-      location: '泰国曼谷',
-      type: 'factory',
-      capacity: '3.5万件',
-      utilization: 43,
-      cost: '¥1.2亿',
-      status: 'underloaded'
-    }
-  ];
+  const capacityItems = data;
 
   // 产能不均风险分析
   const riskAnalysis = {
-    gap: 69, // 青岛 112% vs 泰国 43%
+    gap: data.length > 0 ? Math.max(...data.map(item => item.utilization)) - Math.min(...data.map(item => item.utilization)) : 0,
     suggestions: [
       {
         action: '扩建青岛总部工厂',
@@ -174,7 +215,7 @@ const CapacityPlanningPage: React.FC = () => {
       description: '新增两条自动化生产线，缓解产能超载压力',
       cost: '¥1.5亿',
       roi: '25.0%',
-      priority: 'high'
+      priority: 'high' as const
     },
     {
       id: 2,
@@ -182,7 +223,7 @@ const CapacityPlanningPage: React.FC = () => {
       description: '优化生产排程，转移华东订单至泰国工厂',
       cost: '¥5000万',
       roi: '18.0%',
-      priority: 'high'
+      priority: 'high' as const
     },
     {
       id: 3,
@@ -190,9 +231,26 @@ const CapacityPlanningPage: React.FC = () => {
       description: '升级现有设备，提高生产效率12%',
       cost: '¥3500万',
       roi: '16.5%',
-      priority: 'medium'
+      priority: 'medium' as const
     }
   ];
+
+  // 显示 Loading 或 Error
+  if (loading) {
+    return (
+      <PageLayout>
+        <LoadingSpinner />
+      </PageLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageLayout>
+        <ErrorAlert message={error} />
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>
@@ -315,7 +373,7 @@ const CapacityPlanningPage: React.FC = () => {
       </Card>
 
       {/* 产能不均风险提示 */}
-      <CapacityRiskAlert />
+      <CapacityRiskAlert capacityItems={capacityItems} />
 
       {/* 投资建议 */}
       <Card className="p-4">
