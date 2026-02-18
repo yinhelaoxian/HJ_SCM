@@ -41,29 +41,61 @@ const FinancialConstraintsPage: React.FC = () => {
     </div>
   );
 
-  // 模拟数据
+  // 豪江智能财务约束数据
   const financialStats = {
-    totalBudget: '¥120,000,000',
-    usedBudget: '¥85,600,000',
-    budgetUtilization: 71.3,
-    costSavings: '¥3,200,000',
-    investmentConstraints: 5,
-    riskLevel: '中等'
+    totalBudget: '¥1,500,000,000',
+    usedBudget: '¥850,000,000',
+    pendingInvestment: '¥320,000,000',
+    budgetUtilization: 56.7,
+    costSavings: '¥68,500,000',
+    investmentConstraints: 8,
+    riskLevel: '较高'
   };
 
   const budgetItems = [
-    { id: 1, name: '运输成本', budget: '¥45,000,000', used: '¥32,400,000', utilization: 72, trend: -2.5 },
-    { id: 2, name: '仓储成本', budget: '¥30,000,000', used: '¥24,600,000', utilization: 82, trend: 1.8 },
-    { id: 3, name: '人力成本', budget: '¥25,000,000', used: '¥18,900,000', utilization: 75.6, trend: 0.5 },
-    { id: 4, name: '设备投资', budget: '¥20,000,000', used: '¥9,700,000', utilization: 48.5, trend: -5.2 }
+    { id: 1, name: '研发投入', budget: '¥500,000,000', used: '¥320,000,000', utilization: 64, trend: 2.3 },
+    { id: 2, name: '生产基地建设', budget: '¥450,000,000', used: '¥280,000,000', utilization: 62.2, trend: 1.5 },
+    { id: 3, name: '智能制造升级', budget: '¥300,000,000', used: '¥180,000,000', utilization: 60, trend: -1.2 },
+    { id: 4, name: '市场拓展', budget: '¥250,000,000', used: '¥70,000,000', utilization: 28, trend: 5.8 }
   ];
 
   const investmentConstraints = [
-    { id: 1, title: '资本支出限制', description: '年度资本支出不得超过¥50,000,000', priority: 'high', impact: '严重' },
-    { id: 2, title: 'ROI要求', description: '新投资项目ROI需≥12%', priority: 'medium', impact: '中等' },
-    { id: 3, title: '现金流约束', description: '月度净现金流需保持正数', priority: 'high', impact: '严重' },
-    { id: 4, title: '成本控制目标', description: '物流成本占营收比例需≤8%', priority: 'medium', impact: '中等' },
-    { id: 5, title: '预算偏差控制', description: '季度预算偏差需控制在±5%以内', priority: 'low', impact: '轻微' }
+    { id: 1, title: '年度预算上限', description: '年度总预算不得超过¥15亿元', priority: 'high', impact: '硬性约束' },
+    { id: 2, title: '资本支出限制', description: '已分配资本支出¥8.5亿元', priority: 'high', impact: '已占用' },
+    { id: 3, title: '待审批投资', description: '待审批投资¥3.2亿元', priority: 'medium', impact: '审批中' },
+    { id: 4, title: 'ROI要求', description: '新投资项目ROI需≥15%', priority: 'high', impact: '严格' },
+    { id: 5, title: '现金流约束', description: '季度净现金流需保持正数', priority: 'high', impact: '关键' },
+    { id: 6, title: '成本控制目标', description: '研发成本占营收比例需≤12%', priority: 'medium', impact: '重要' },
+    { id: 7, title: '预算偏差控制', description: '季度预算偏差需控制在±3%以内', priority: 'low', impact: '监控' },
+    { id: 8, title: '投资回报周期', description: '项目投资回收期需≤3年', priority: 'medium', impact: '评估' }
+  ];
+
+  // 财务风险提示数据
+  const financialRisks = [
+    {
+      id: 1,
+      type: 'budget',
+      title: '预算超支风险',
+      description: '当前预算利用率56.7%，需关注Q3-Q4支出增长趋势',
+      severity: 'warning',
+      suggestion: '建议加强预算审批流程，严格控制非必要支出'
+    },
+    {
+      id: 2,
+      type: 'roi',
+      title: 'ROI不达标风险',
+      description: '部分研发项目ROI偏低，需优化资源配置',
+      severity: 'danger',
+      suggestion: '建议建立ROI动态评估机制，及时调整投资组合'
+    },
+    {
+      id: 3,
+      type: 'capex',
+      title: '资本支出vs回报评估',
+      description: '已投入¥8.5亿资本支出，预计回报周期2.5-3年',
+      severity: 'info',
+      suggestion: '建议定期追踪资本支出回报率，确保投资效益最大化'
+    }
   ];
 
   return (
