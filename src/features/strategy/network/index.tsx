@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Settings, MapPin, TrendingUp, DollarSign } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
-import { NetworkTypes } from './types';
+import { NetworkNode, NetworkOptimization, NetworkStats } from './types';
 
 /**
  * 网络规划页面
@@ -10,23 +10,39 @@ import { NetworkTypes } from './types';
  * 功能：网络节点管理、配送中心布局、成本优化、覆盖范围分析
  */
 const NetworkPlanningPage: React.FC = () => {
-  // 面包屑组件
-  const Breadcrumb = () => (
-    <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-      <span>战略管理</span>
-      <span>/</span>
-      <span className="text-white">网络规划</span>
-    </div>
-  );
+  const [nodes] = useState<NetworkNode[]>([
+    { id: '1', name: '华东配送中心', type: 'dc', capacity: 1000, utilization: 85, cost: '¥2.5M', location: '上海' },
+    { id: '2', name: '华南配送中心', type: 'dc', capacity: 800, utilization: 72, cost: '¥1.8M', location: '广州' },
+    { id: '3', name: '华北配送中心', type: 'dc', capacity: 600, utilization: 91, cost: '¥1.2M', location: '北京' },
+    { id: '4', name: '西南配送中心', type: 'dc', capacity: 400, utilization: 58, cost: '¥0.9M', location: '成都' },
+  ]);
 
-  // 页面布局组件
-  const PageLayout = ({ children }: { children: React.ReactNode }) => (
+  const [optimizations] = useState<NetworkOptimization[]>([
+    { id: '1', title: '华北仓扩容', description: '利用率达 91%，建议扩建 30% 产能', cost: '¥3.5M', roi: '18个月', priority: 'high' },
+    { id: '2', title: '新增东北节点', description: '东北地区覆盖不足，建议在沈阳建立配送中心', cost: '¥4.2M', roi: '24个月', priority: 'medium' },
+  ]);
+
+  const stats: NetworkStats = {
+    totalNodes: nodes.length,
+    averageUtilization: Math.round(nodes.reduce((sum, node) => sum + node.utilization, 0) / nodes.length),
+    totalCost: '¥6.4M',
+    coverage: 8,
+  };
+
+  return (
     <div className="page-enter">
-      <Breadcrumb />
+      {/* 面包屑 */}
+      <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#7A8BA8' }}>
+        <span>战略管理</span>
+        <span>/</span>
+        <span style={{ color: '#E8EDF4' }}>网络规划</span>
+      </div>
+
+      {/* 标题栏 */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-display" style={{ color: '#E8EDF4' }}>
-            网络规划
+            🌐 网络规划
           </h1>
           <p className="text-sm mt-0.5" style={{ color: '#7A8BA8' }}>配送网络布局优化与成本控制</p>
         </div>
@@ -37,9 +53,6 @@ const NetworkPlanningPage: React.FC = () => {
           </Button>
         </div>
       </div>
-      {children}
-    </div>
-  );
 
       {/* 网络统计 */}
       <div className="grid gap-4 mb-6" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
@@ -88,7 +101,7 @@ const NetworkPlanningPage: React.FC = () => {
             {nodes.filter(node => node.utilization > 90).length}
           </div>
           <div className="text-xs mt-1" style={{ color: '#445568' }}>
-            利用率 > 90%
+            利用率 &gt; 90%
           </div>
         </Card>
       </div>
@@ -155,7 +168,7 @@ const NetworkPlanningPage: React.FC = () => {
             <div key={opt.id} className="flex items-start gap-3 p-3 rounded"
               style={{
                 background: opt.priority === 'high' ? 'rgba(229,57,53,0.08)' :
-                  opt.priority === 'medium' ? 'rgba(245,124,0.08)' : 'rgba(0,137,123,0.08)'
+                  opt.priority === 'medium' ? 'rgba(245,124,0,08)' : 'rgba(0,137,123,0.08)'
               }}>
               <TrendingUp className="w-4 h-4 mt-0.5"
                 style={{
