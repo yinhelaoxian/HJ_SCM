@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Settings, MapPin, TrendingUp, DollarSign } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
 import { NetworkNode, NetworkOptimization, NetworkStats } from './types';
+import { fetchNetworkData } from '@/services/api/strategy';
 
 /**
  * 网络规划页面
@@ -10,24 +11,79 @@ import { NetworkNode, NetworkOptimization, NetworkStats } from './types';
  * 功能：网络节点管理、配送中心布局、成本优化、覆盖范围分析
  */
 const NetworkPlanningPage: React.FC = () => {
-  const [nodes] = useState<NetworkNode[]>([
-    { id: '1', name: '华东配送中心', type: 'dc', capacity: 1000, utilization: 85, cost: '¥2.5M', location: '上海' },
-    { id: '2', name: '华南配送中心', type: 'dc', capacity: 800, utilization: 72, cost: '¥1.8M', location: '广州' },
-    { id: '3', name: '华北配送中心', type: 'dc', capacity: 600, utilization: 91, cost: '¥1.2M', location: '北京' },
-    { id: '4', name: '西南配送中心', type: 'dc', capacity: 400, utilization: 58, cost: '¥0.9M', location: '成都' },
-  ]);
+  const [nodes, setNodes] = useState<NetworkNode[]>([]);
+  const [optimizations, setOptimizations] = useState<NetworkOptimization[]>([]);
+  const [stats, setStats] = useState<NetworkStats>({
+    totalNodes: 0,
+    averageUtilization: 0,
+    totalCost: '¥0',
+    coverage: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [optimizations] = useState<NetworkOptimization[]>([
-    { id: '1', title: '华北仓扩容', description: '利用率达 91%，建议扩建 30% 产能', cost: '¥3.5M', roi: '18个月', priority: 'high' },
-    { id: '2', title: '新增东北节点', description: '东北地区覆盖不足，建议在沈阳建立配送中心', cost: '¥4.2M', roi: '24个月', priority: 'medium' },
-  ]);
+  useEffect(() => {
+    const loadNetworkData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchNetworkData();
+        setNodes(data.nodes);
+        setOptimizations(data.optimizations);
+        setStats(data.stats);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '获取数据失败');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const stats: NetworkStats = {
-    totalNodes: nodes.length,
-    averageUtilization: Math.round(nodes.reduce((sum, node) => sum + node.utilization, 0) / nodes.length),
-    totalCost: '¥6.4M',
-    coverage: 8,
-  };
+    loadNetworkData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="page-enter">
+        <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#7A8BA8' }}>
+          <span>战略管理</span>
+          <span>/</span>
+          <span style={{ color: '#E8EDF4' }}>网络规划</span>
+        </div>
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4" style={{ borderColor: '#2D7DD2' }} />
+            <p style={{ color: '#7A8BA8' }}>加载中...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="page-enter">
+        <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#7A8BA8' }}>
+          <span>战略管理</span>
+          <span>/</span>
+          <span style={{ color: '#E8EDF4' }}>网络规划</span>
+        </div>
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <p className="text-lg mb-2" style={{ color: '#E53935' }}>数据加载失败</p>
+            <p className="text-sm" style={{ color: '#7A8BA8' }}>{error}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4"
+              onClick={() => window.location.reload()}
+            >
+              重试
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="page-enter">
