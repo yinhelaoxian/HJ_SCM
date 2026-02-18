@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Settings, MapPin, TrendingUp, DollarSign, AlertTriangle, Globe, BarChart3, RefreshCw } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
-import { fetchNetworkData } from '@/services/api/strategy';
+import axios from 'axios';
+import { getNetworkData } from '@/services/api/strategy';
 import { NetworkNode, NetworkOptimization, NetworkStats, RiskAlert } from './types';
 
 // 风险提示数据（保持静态，后续可接入 API）
@@ -54,7 +55,7 @@ const NetworkPlanningPage: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchNetworkData();
+      const data = await getNetworkData();
       setNodes(data.nodes);
       setOptimizations(data.optimizations);
       setStats(data.stats);
