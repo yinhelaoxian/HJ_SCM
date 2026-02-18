@@ -98,7 +98,7 @@ const NetworkPlanningPage: React.FC = () => {
             <span className="text-sm" style={{ color: '#7A8BA8' }}>高负荷节点</span>
           </div>
           <div className="text-2xl font-display font-bold" style={{ color: '#E53935' }}>
-            {nodes.filter(node => node.utilization > 90).length}
+            {nodes.filter((node) => node.utilization > 90).length}
           </div>
           <div className="text-xs mt-1" style={{ color: '#445568' }}>
             利用率 &gt; 90%
@@ -111,11 +111,16 @@ const NetworkPlanningPage: React.FC = () => {
         <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>网络节点管理</h3>
         <div className="space-y-3">
           {nodes.map((node) => (
-            <div key={node.id} className="flex items-center justify-between p-4 rounded border"
-              style={{ background: '#131926', borderColor: '#1E2D45' }}>
+            <div
+              key={node.id}
+              className="flex items-center justify-between p-4 rounded border"
+              style={{ background: '#131926', borderColor: '#1E2D45' }}
+            >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded flex items-center justify-center text-lg"
-                  style={{ background: 'rgba(45,125,210,0.1)' }}>
+                <div
+                  className="w-10 h-10 rounded flex items-center justify-center text-lg"
+                  style={{ background: 'rgba(45,125,210,0.1)' }}
+                >
                   🏭
                 </div>
                 <div>
@@ -140,7 +145,12 @@ const NetworkPlanningPage: React.FC = () => {
                       className="h-full rounded"
                       style={{
                         width: `${node.utilization}%`,
-                        background: node.utilization > 90 ? '#E53935' : node.utilization > 80 ? '#F57C00' : '#00897B'
+                        background:
+                          node.utilization > 90
+                            ? '#E53935'
+                            : node.utilization > 80
+                              ? '#F57C00'
+                              : '#00897B',
                       }}
                     />
                   </div>
@@ -153,7 +163,9 @@ const NetworkPlanningPage: React.FC = () => {
                     年化成本
                   </div>
                 </div>
-                <Button variant="outline" size="sm">优化</Button>
+                <Button variant="outline" size="sm">
+                  优化
+                </Button>
               </div>
             </div>
           ))}
@@ -165,22 +177,41 @@ const NetworkPlanningPage: React.FC = () => {
         <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>网络优化建议</h3>
         <div className="space-y-3">
           {optimizations.map((opt) => (
-            <div key={opt.id} className="flex items-start gap-3 p-3 rounded"
+            <div
+              key={opt.id}
+              className="flex items-start gap-3 p-3 rounded"
               style={{
-                background: opt.priority === 'high' ? 'rgba(229,57,53,0.08)' :
-                  opt.priority === 'medium' ? 'rgba(245,124,0,08)' : 'rgba(0,137,123,0.08)'
-              }}>
-              <TrendingUp className="w-4 h-4 mt-0.5"
+                background:
+                  opt.priority === 'high'
+                    ? 'rgba(229,57,53,0.08)'
+                    : opt.priority === 'medium'
+                      ? 'rgba(245,124,0,0.08)'
+                      : 'rgba(0,137,123,0.08)',
+              }}
+            >
+              <TrendingUp
+                className="w-4 h-4 mt-0.5"
                 style={{
-                  color: opt.priority === 'high' ? '#E53935' :
-                    opt.priority === 'medium' ? '#F57C00' : '#00897B'
-                }} />
+                  color:
+                    opt.priority === 'high'
+                      ? '#E53935'
+                      : opt.priority === 'medium'
+                        ? '#F57C00'
+                        : '#00897B',
+                }}
+              />
               <div className="flex-1">
-                <div className="font-medium"
+                <div
+                  className="font-medium"
                   style={{
-                    color: opt.priority === 'high' ? '#E53935' :
-                      opt.priority === 'medium' ? '#F57C00' : '#00897B'
-                  }}>
+                    color:
+                      opt.priority === 'high'
+                        ? '#E53935'
+                        : opt.priority === 'medium'
+                          ? '#F57C00'
+                          : '#00897B',
+                  }}
+                >
                   {opt.title}
                 </div>
                 <div className="text-xs mt-1" style={{ color: '#7A8BA8' }}>
