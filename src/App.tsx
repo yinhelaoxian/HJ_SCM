@@ -30,6 +30,10 @@ import LogisticsPage from './features/logistics';
 import ShipmentPage from './features/shipment';
 import FreightPage from './features/freight';
 import StrategyPage from './features/strategy';
+import CapacityPage from './features/strategy/capacity';
+import FinancialPage from './features/strategy/financial';
+import NetworkPage from './features/strategy/network';
+import PortfolioPage from './features/strategy/portfolio';
 import RiskDashboardPage from './features/risk-dashboard';
 import SCORDashboardPage from './features/kpi-scor';
 // MDM 模块
@@ -184,6 +188,10 @@ const App: React.FC = () => (
               
               {/* === 战略层 === */}
               <Route path="/strategy" element={<StrategyPage />} />
+              <Route path="/strategy/capacity" element={<CapacityPage />} />
+              <Route path="/strategy/financial" element={<FinancialPage />} />
+              <Route path="/strategy/network" element={<NetworkPage />} />
+              <Route path="/strategy/portfolio" element={<PortfolioPage />} />
               
               {/* === 风险监控 === */}
               <Route path="/risk/dashboard" element={<RiskDashboardPage />} />
