@@ -49,18 +49,25 @@ const PortfolioAnalysisPage: React.FC = () => {
     totalRevenue: '¥89M'
   };
 
+  // 豪江智能多产品线数据
   const products = [
-    { id: 1, name: '智能手表 Pro', category: '智能穿戴', sales: '¥12.5M', margin: 45, growth: 18 },
-    { id: 2, name: '无线耳机 Air', category: '音频设备', sales: '¥8.9M', margin: 38, growth: 12 },
-    { id: 3, name: '智能音箱 Mini', category: '智能家居', sales: '¥5.6M', margin: 32, growth: 8 },
-    { id: 4, name: '运动手环 Lite', category: '智能穿戴', sales: '¥4.2M', margin: 28, growth: -5 },
-    { id: 5, name: '智能灯泡套装', category: '智能家居', sales: '¥3.8M', margin: 42, growth: 25 }
+    { id: 1, name: '智能家电系列', category: '智能家电', sales: '¥35.2M', margin: 42, growth: 18, risk: '低', riskLevel: 1 },
+    { id: 2, name: '电子产品系列', category: '电子产品', sales: '¥28.6M', margin: 28, growth: 12, risk: '中', riskLevel: 2 },
+    { id: 3, name: '传统家电系列', category: '传统家电', sales: '¥25.2M', margin: 15, growth: -8, risk: '高', riskLevel: 3 }
+  ];
+
+  // 利润率 vs 风险平衡分析
+  const portfolioAnalysis = [
+    { category: '智能家电', margin: 42, risk: '低', allocation: 40, recommendation: '重点发展' },
+    { category: '电子产品', margin: 28, risk: '中', allocation: 35, recommendation: '稳定经营' },
+    { category: '传统家电', margin: 15, risk: '高', allocation: 25, recommendation: '逐步收缩' }
   ];
 
   const recommendations = [
-    { id: 1, title: '重点推广智能手表 Pro', description: '高利润率产品，市场需求增长迅速', priority: 'high', potential: '+25%' },
-    { id: 2, title: '优化运动手环 Lite', description: '销量下滑，需改进产品功能或降低成本', priority: 'medium', potential: '+10%' },
-    { id: 3, title: '扩展智能音箱系列', description: '智能家居市场前景广阔，可增加产品线', priority: 'low', potential: '+15%' }
+    { id: 1, title: '提升智能家电占比至50%', description: '高利润低风险产品线，应加大投入和推广力度', priority: 'high', potential: '+25%' },
+    { id: 2, title: '优化电子产品组合结构', description: '保持中等利润，控制库存风险，建议引入新品类', priority: 'medium', potential: '+12%' },
+    { id: 3, title: '收缩传统家电业务规模', description: '低利润高风险，建议逐步降低产品SKU数量', priority: 'medium', potential: '+8%' },
+    { id: 4, title: '建立风险预警机制', description: '对高风险产品线实施动态监控，提前调整库存', priority: 'low', potential: '+5%' }
   ];
 
   return (
