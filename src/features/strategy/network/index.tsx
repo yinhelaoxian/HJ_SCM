@@ -1,111 +1,9 @@
-import React, { useState } from 'react';
-import { Settings, MapPin, TrendingUp, DollarSign, AlertTriangle, Globe, BarChart3 } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Settings, MapPin, TrendingUp, DollarSign, AlertTriangle, Globe, BarChart3, RefreshCw } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
+import { fetchNetworkData } from '@/services/api/strategy';
 import { NetworkNode, NetworkOptimization, NetworkStats, RiskAlert } from './types';
-
-// 豪江智能真实业务场景数据
-const mockNodes: NetworkNode[] = [
-  {
-    id: '1',
-    name: '青岛总部工厂',
-    location: '山东省青岛市',
-    type: 'factory',
-    utilization: 112,
-    cost: '¥1,850万',
-    capacity: 120,
-  },
-  {
-    id: '2',
-    name: '苏州华东工厂',
-    location: '江苏省苏州市',
-    type: 'factory',
-    utilization: 78,
-    cost: '¥920万',
-    capacity: 100,
-  },
-  {
-    id: '3',
-    name: '泰国曼谷工厂',
-    location: '泰国曼谷市',
-    type: 'factory',
-    utilization: 43,
-    cost: '¥480万',
-    capacity: 80,
-  },
-  {
-    id: '4',
-    name: '华北配送中心',
-    location: '天津市',
-    type: 'dc',
-    utilization: 91,
-    cost: '¥720万',
-    capacity: 95,
-  },
-];
-
-const mockOptimizations: NetworkOptimization[] = [
-  {
-    id: '1',
-    title: '产能调配优化',
-    description: '将华东订单转移部分至泰国工厂，利用其闲置产能',
-    priority: 'high',
-    cost: '¥120万',
-    roi: '18%',
-  },
-  {
-    id: '2',
-    title: '青岛工厂产能扩张',
-    description: '新增生产线缓解总部超负荷状态',
-    priority: 'high',
-    cost: '¥2,500万',
-    roi: '25%',
-  },
-  {
-    id: '3',
-    title: '跨国物流成本优化',
-    description: '整合海运与空运渠道，降低运输成本15%',
-    priority: 'medium',
-    cost: '¥80万',
-    roi: '22%',
-  },
-  {
-    id: '4',
-    title: '仓储自动化升级',
-    description: '天津配送中心引入自动化分拣系统',
-    priority: 'medium',
-    cost: '¥450万',
-    roi: '30%',
-  },
-];
-
-// 风险提示数据
-const riskAlerts: RiskAlert[] = [
-  {
-    id: '1',
-    type: 'logistics',
-    title: '跨国物流风险',
-    description: '汇率波动（泰铢/人民币）+ 地缘政治不确定性可能影响跨境运输成本与时效',
-    severity: 'high',
-    mitigation: '建议建立双币种结算机制，增加国内备货缓冲',
-  },
-  {
-    id: '2',
-    type: 'capacity',
-    title: '产能不均预警',
-    description: '青岛总部(112%)超载 vs 泰国工厂(43%)低负荷，产能利用率差距达69%',
-    severity: 'high',
-    mitigation: '建议加速订单转移，提升泰国工厂至65%以上利用率',
-  },
-  {
-    id: '3',
-    type: 'supply',
-    title: '供应链中断风险',
-    description: '单一供应源依赖度过高，关键零部件库存仅维持15天',
-    severity: 'medium',
-    mitigation: '建立多元化供应商体系，增加安全库存至30天',
-  },
-];
 
 /**
  * 网络规划页面
@@ -113,66 +11,36 @@ const riskAlerts: RiskAlert[] = [
  * 功能：网络节点管理、配送中心布局、成本优化、覆盖范围分析
  */
 const NetworkPlanningPage: React.FC = () => {
-  const [nodes] = useState<NetworkNode[]>(mockNodes);
-  const [optimizations] = useState<NetworkOptimization[]>(mockOptimizations);
-  const [stats] = useState<NetworkStats>(() => {
-    const totalNodes = mockNodes.length;
-    const avgUtilization = Math.round(mockNodes.reduce((sum, n) => sum + n.utilization, 0) / totalNodes);
-    const totalCost = mockNodes.reduce((sum, n) => {
-      const costNum = parseFloat(n.cost.replace(/[¥,]/g, ''));
-      return sum + costNum;
-    }, 0);
-    return {
-      totalNodes,
-      averageUtilization: avgUtilization,
-      totalCost: `¥${(totalCost / 10000).toFixed(0)}万`,
-      coverage: 8,
-    };
+  const [nodes, setNodes] = useState<NetworkNode[]>([]);
+  const [optimizations, setOptimizations] = useState<NetworkOptimization[]>([]);
+  const [stats, setStats] = useState<NetworkStats>({
+    totalNodes: 0,
+    averageUtilization: 0,
+    totalCost: '¥0万',
+    coverage: 0,
   });
+  const [riskAlerts, setRiskAlerts] = useState<RiskAlert[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (loading) {
-    return (
-      <div className="page-enter">
-        <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#7A8BA8' }}>
-          <span>战略管理</span>
-          <span>/</span>
-          <span style={{ color: '#E8EDF4' }}>网络规划</span>
-        </div>
-        <div className="flex items-center justify-center py-20">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4" style={{ borderColor: '#2D7DD2' }} />
-            <p style={{ color: '#7A8BA8' }}>加载中...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const loadData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchNetworkData();
+      setNodes(data.nodes);
+      setOptimizations(data.optimizations);
+      setStats(data.stats);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '获取数据失败');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  if (error) {
-    return (
-      <div className="page-enter">
-        <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#7A8BA8' }}>
-          <span>战略管理</span>
-          <span>/</span>
-          <span style={{ color: '#E8EDF4' }}>网络规划</span>
-        </div>
-        <div className="flex items-center justify-center py-20">
-          <div className="text-center">
-            <p className="text-lg mb-2" style={{ color: '#E53935' }}>数据加载失败</p>
-            <p className="text-sm" style={{ color: '#7A8BA8' }}>{error}</p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-4"
-              onClick={() => window.location.reload()}
-            >
-              重试
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   return (
     <div className="page-enter">
@@ -192,12 +60,49 @@ const NetworkPlanningPage: React.FC = () => {
           <p className="text-sm mt-0.5" style={{ color: '#7A8BA8' }}>配送网络布局优化与成本控制</p>
         </div>
         <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={loadData}
+            disabled={loading}
+          >
+            <RefreshCw className={`w-4 h-4 mr-1 ${loading ? 'animate-spin' : ''}`} />
+            刷新
+          </Button>
           <Button variant="outline" size="sm">
             <Settings className="w-4 h-4 mr-1" />
             配置
           </Button>
         </div>
       </div>
+
+      {/* Loading 状态 */}
+      {loading && (
+        <div className="flex items-center justify-center py-12" style={{ color: '#7A8BA8' }}>
+          <RefreshCw className="w-6 h-6 mr-2 animate-spin" />
+          <span>加载数据中...</span>
+        </div>
+      )}
+
+      {/* Error 状态 */}
+      {error && (
+        <Card className="p-4 mb-4" style={{ background: 'rgba(229,57,53,0.1)', borderColor: '#E53935' }}>
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5" style={{ color: '#E53935' }} />
+            <span style={{ color: '#E53935' }}>加载失败</span>
+          </div>
+          <p className="text-sm mt-2" style={{ color: '#B0BEC5' }}>{error}</p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="mt-3"
+            onClick={loadData}
+          >
+            <RefreshCw className="w-4 h-4 mr-1" />
+            重试
+          </Button>
+        </Card>
+      )}
 
       {/* 网络统计 */}
       <div className="grid gap-4 mb-6" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
@@ -318,7 +223,7 @@ const NetworkPlanningPage: React.FC = () => {
       </Card>
 
       {/* 优化建议 */}
-      <Card className="p-4">
+      <Card className="p-4 mb-4">
         <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>网络优化建议</h3>
         <div className="space-y-3">
           {optimizations.map((opt) => (
@@ -369,6 +274,87 @@ const NetworkPlanningPage: React.FC = () => {
                 </div>
                 <div className="text-xs" style={{ color: '#445568' }}>
                   ROI: {opt.roi}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* 风险提示模块 */}
+      <Card className="p-4 mb-4" style={{ borderLeft: '4px solid #E53935' }}>
+        <div className="flex items-center gap-2 mb-4">
+          <AlertTriangle className="w-4 h-4" style={{ color: '#E53935' }} />
+          <h3 className="text-sm font-medium" style={{ color: '#E8EDF4' }}>风险预警提示</h3>
+        </div>
+        <div className="space-y-3">
+          {riskAlerts.map((risk) => (
+            <div
+              key={risk.id}
+              className="p-3 rounded border"
+              style={{
+                background: 'rgba(229,57,53,0.05)',
+                borderColor: risk.severity === 'high' ? 'rgba(229,57,53,0.3)' : 'rgba(245,124,0,0.3)',
+              }}
+            >
+              <div className="flex items-start gap-3">
+                <div
+                  className="w-8 h-8 rounded flex items-center justify-center"
+                  style={{
+                    background:
+                      risk.type === 'logistics'
+                        ? 'rgba(33,150,243,0.2)'
+                        : risk.type === 'capacity'
+                          ? 'rgba(255,152,0,0.2)'
+                          : 'rgba(156,39,176,0.2)',
+                  }}
+                >
+                  {risk.type === 'logistics' ? (
+                    <Globe className="w-4 h-4" style={{ color: '#2196F3' }} />
+                  ) : risk.type === 'capacity' ? (
+                    <BarChart3 className="w-4 h-4" style={{ color: '#FF9800' }} />
+                  ) : (
+                    <AlertTriangle className="w-4 h-4" style={{ color: '#9C27B0' }} />
+                  )}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span
+                      className="font-medium text-sm"
+                      style={{
+                        color:
+                          risk.severity === 'high'
+                            ? '#E53935'
+                            : risk.severity === 'medium'
+                              ? '#F57C00'
+                              : '#FF9800',
+                      }}
+                    >
+                      {risk.title}
+                    </span>
+                    <span
+                      className="text-xs px-2 py-0.5 rounded"
+                      style={{
+                        background:
+                          risk.severity === 'high'
+                            ? 'rgba(229,57,53,0.2)'
+                            : 'rgba(245,124,0,0.2)',
+                        color:
+                          risk.severity === 'high'
+                            ? '#E53935'
+                            : '#F57C00',
+                      }}
+                    >
+                      {risk.severity === 'high' ? '高风险' : '中风险'}
+                    </span>
+                  </div>
+                  <div className="text-xs" style={{ color: '#B0BEC5' }}>
+                    {risk.description}
+                  </div>
+                  <div className="mt-2 p-2 rounded text-xs" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                    <span className="font-medium" style={{ color: '#4CAF50' }}>应对建议：</span>
+                    <span style={{ color: '#B0BEC5' }}>{risk.mitigation}</span>
+                  </div>
                 </div>
               </div>
             </div>
