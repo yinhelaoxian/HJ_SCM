@@ -221,6 +221,80 @@ Docker: 27.2.2
 
 ---
 
+## 工具调用规范（2026-02-18 更新）
+
+### 1. 推荐调用方式：sessions_spawn
+
+**从 2026-02-18 起，所有 Claude Code 开发任务优先使用 sessions_spawn 模式**
+
+**使用方式**:
+```javascript
+// 在 OpenClaw 会话中使用 sessions_spawn 工具
+sessions_spawn({
+  agentId: "claude-code",
+  task: "在 src/features/strategy 下创建 todo-next.md，内容为 '下一步：对接真实 API'",
+  cleanup: "keep"  // 可选：keep（默认）或 delete
+})
+```
+
+**优势**:
+- ✅ 文件系统共享（与主工作区同一目录）
+- ✅ 认证自动继承（无需手动配置 token）
+- ✅ 进程可监控（子代理会话独立记录）
+- ✅ 支持并行子代理（可同时启动多个任务）
+
+### 2. CLI 模式（备选）
+
+当 sessions_spawn 不可用时，可使用 CLI 模式：
+
+```bash
+cd /home/ubuntu/.openclaw/workspace/HJ_SCM
+claude --dangerously-skip-permissions \
+  --settings '{"env":{"ANTHROPIC_AUTH_TOKEN":"xxx","ANTHROPIC_BASE_URL":"https://ark.cn-beijing.volces.com/api/coding","ANTHROPIC_MODEL":"ark-code-latest"}}' \
+  --print "任务指令"
+```
+
+**注意**: CLI 模式需要 `--dangerously-skip-permissions` 参数才能写入文件。
+
+### 3. Spawn 模式配置步骤
+
+**步骤 1: 创建 claude-code agent**
+```bash
+openclaw agents add claude-code \
+  --model ark-code-latest \
+  --workspace /home/ubuntu/.openclaw/workspace/HJ_SCM
+```
+
+**步骤 2: 配置权限**
+在 `~/.openclaw/openclaw.json` 中添加：
+```json
+{
+  "agents": {
+    "list": [{
+      "id": "main",
+      "subagents": {
+        "allowAgents": ["claude-code"]
+      }
+    }]
+  }
+}
+```
+
+**步骤 3: 验证可用性**
+```bash
+openclaw agents list
+# 应显示 claude-code agent
+```
+
+### 4. 测试验证
+
+**Spawn 模式测试结果**:
+- ✅ 文件创建成功：`spawn-test-success.md`
+- ✅ 内容正确：`"Spawn 模式测试成功，时间：2026-02-18 22:46"`
+- ✅ Git 提交：`95b75bb`
+
+---
+
 ## 文件信息
 
 - **文件名**: AI-Agent-Collaboration-Process.md
