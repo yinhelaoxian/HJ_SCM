@@ -1,10 +1,34 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Settings, MapPin, TrendingUp, DollarSign, AlertTriangle, Globe, BarChart3, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Settings, MapPin, TrendingUp, DollarSign, AlertTriangle, Globe, BarChart3, RefreshCw, Search, Filter, ArrowUp, ArrowDown } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
+import { Select } from '@/ui/Select';
 import axios from 'axios';
 import { getNetworkData } from '@/services/api/strategy';
 import { NetworkNode, NetworkOptimization, NetworkStats, RiskAlert } from './types';
+
+// 筛选选项类型定义
+interface FilterOptions {
+  type: 'all' | 'factory' | 'dc' | 'warehouse';
+  location: 'all' | 'qingdao' | 'su' | 'thailand' | 'north';
+  sortUtilization: 'none' | 'high' | 'low';
+  search: string;
+}
+
+// 地域映射
+const locationMap: Record<string, string> = {
+  qingdao: '青岛',
+  su: '苏州',
+  thailand: '泰国',
+  north: '华北',
+};
+
+// 类型映射
+const typeMap: Record<string, string> = {
+  factory: '工厂',
+  dc: '配送中心',
+  warehouse: '仓库',
+};
 
 // 风险提示数据（保持静态，后续可接入 API）
 const riskAlerts: RiskAlert[] = [
@@ -50,6 +74,71 @@ const NetworkPlanningPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // 筛选状态
+  const [filters, setFilters] = useState<FilterOptions>({
+    type: 'all',
+    location: 'all',
+    sortUtilization: 'none',
+    search: '',
+  });
+
+  // 使用 useMemo 计算筛选后的节点
+  const filteredNodes = useMemo(() => {
+    let result = [...nodes];
+
+    // 类型筛选
+    if (filters.type !== 'all') {
+      result = result.filter((node) => node.type === filters.type);
+    }
+
+    // 地域筛选
+    if (filters.location !== 'all') {
+      const locationNames: Record<string, string[]> = {
+        qingdao: ['青岛'],
+        su: ['苏州'],
+        thailand: ['泰国'],
+        north: ['华北'],
+      };
+      const targetLocations = locationNames[filters.location] || [];
+      result = result.filter((node) => 
+        targetLocations.some((loc) => node.location.includes(loc))
+      );
+    }
+
+    // 搜索筛选（节点名称）
+    if (filters.search.trim()) {
+      const searchLower = filters.search.toLowerCase();
+      result = result.filter((node) =>
+        node.name.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // 利用率排序
+    if (filters.sortUtilization !== 'none') {
+      result.sort((a, b) => 
+        filters.sortUtilization === 'high' 
+          ? b.utilization - a.utilization 
+          : a.utilization - b.utilization
+      );
+    }
+
+    return result;
+  }, [nodes, filters]);
+
+  // 筛选后的统计
+  const filteredStats = useMemo(() => {
+    const utilizationValues = filteredNodes.map((n) => n.utilization);
+    const avgUtilization = utilizationValues.length > 0
+      ? Math.round(utilizationValues.reduce((a, b) => a + b, 0) / utilizationValues.length)
+      : 0;
+
+    return {
+      totalNodes: filteredNodes.length,
+      averageUtilization: avgUtilization,
+      highLoadNodes: filteredNodes.filter((n) => n.utilization > 90).length,
+    };
+  }, [filteredNodes]);
 
   const loadData = useCallback(async () => {
     try {
@@ -104,6 +193,87 @@ const NetworkPlanningPage: React.FC = () => {
         </div>
       </div>
 
+      {/* 筛选栏 */}
+      <div className="flex items-center gap-4 mb-6 p-4 rounded border" style={{ background: '#131926', borderColor: '#1E2D45' }}>
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4" style={{ color: '#7A8BA8' }} />
+          <span className="text-sm font-medium" style={{ color: '#E8EDF4' }}>筛选条件</span>
+        </div>
+        
+        {/* 类型筛选 */}
+        <div className="flex items-center gap-2">
+          <label className="text-sm" style={{ color: '#7A8BA8' }}>类型</label>
+          <Select
+            value={filters.type}
+            onChange={(e) => setFilters({ ...filters, type: e.target.value as FilterOptions['type'] })}
+            style={{ minWidth: 120 }}
+          >
+            <option value="all">全部</option>
+            <option value="factory">工厂</option>
+            <option value="dc">配送中心</option>
+            <option value="warehouse">仓库</option>
+          </Select>
+        </div>
+
+        {/* 地域筛选 */}
+        <div className="flex items-center gap-2">
+          <label className="text-sm" style={{ color: '#7A8BA8' }}>地域</label>
+          <Select
+            value={filters.location}
+            onChange={(e) => setFilters({ ...filters, location: e.target.value as FilterOptions['location'] })}
+            style={{ minWidth: 100 }}
+          >
+            <option value="all">全部</option>
+            <option value="qingdao">青岛</option>
+            <option value="su">苏州</option>
+            <option value="thailand">泰国</option>
+            <option value="north">华北</option>
+          </Select>
+        </div>
+
+        {/* 利用率排序 */}
+        <div className="flex items-center gap-2">
+          <label className="text-sm" style={{ color: '#7A8BA8' }}>利用率</label>
+          <Select
+            value={filters.sortUtilization}
+            onChange={(e) => setFilters({ ...filters, sortUtilization: e.target.value as FilterOptions['sortUtilization'] })}
+            style={{ minWidth: 120 }}
+          >
+            <option value="none">全部</option>
+            <option value="high">高到低</option>
+            <option value="low">低到高</option>
+          </Select>
+        </div>
+
+        {/* 搜索框 */}
+        <div className="flex-1 flex items-center gap-2">
+          <div className="relative flex-1 max-w-xs">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#7A8BA8' }} />
+            <input
+              type="text"
+              placeholder="搜索节点名称..."
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              className="w-full pl-9 pr-3 py-2 text-sm rounded border bg-[#0D1421] placeholder-[#445568]"
+              style={{ 
+                borderColor: '#1E2D45', 
+                color: '#E8EDF4',
+                outline: 'none',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* 重置按钮 */}
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => setFilters({ type: 'all', location: 'all', sortUtilization: 'none', search: '' })}
+        >
+          重置
+        </Button>
+      </div>
+
       {/* Loading 状态 */}
       {loading && (
         <div className="flex items-center justify-center py-12" style={{ color: '#7A8BA8' }}>
@@ -140,7 +310,7 @@ const NetworkPlanningPage: React.FC = () => {
             <span className="text-sm" style={{ color: '#7A8BA8' }}>网络节点</span>
           </div>
           <div className="text-2xl font-display font-bold" style={{ color: '#E8EDF4' }}>
-            {stats.totalNodes}
+            {filteredStats.totalNodes}
           </div>
           <div className="text-xs mt-1" style={{ color: '#445568' }}>
             覆盖 {stats.coverage} 省市
@@ -152,7 +322,7 @@ const NetworkPlanningPage: React.FC = () => {
             <span className="text-sm" style={{ color: '#7A8BA8' }}>平均利用率</span>
           </div>
           <div className="text-2xl font-display font-bold" style={{ color: '#00897B' }}>
-            {stats.averageUtilization}%
+            {filteredStats.averageUtilization}%
           </div>
           <div className="text-xs mt-1" style={{ color: '#445568' }}>
             目标 85%
@@ -172,11 +342,11 @@ const NetworkPlanningPage: React.FC = () => {
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-2">
-            <MapPin className="w-4 h-4" style={{ color: '#E53935' }} />
+            <AlertTriangle className="w-4 h-4" style={{ color: '#E53935' }} />
             <span className="text-sm" style={{ color: '#7A8BA8' }}>高负荷节点</span>
           </div>
           <div className="text-2xl font-display font-bold" style={{ color: '#E53935' }}>
-            {nodes.filter((node) => node.utilization > 90).length}
+            {filteredStats.highLoadNodes}
           </div>
           <div className="text-xs mt-1" style={{ color: '#445568' }}>
             利用率 &gt; 90%
@@ -186,9 +356,89 @@ const NetworkPlanningPage: React.FC = () => {
 
       {/* 网络节点列表 */}
       <Card className="p-4 mb-4">
-        <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>网络节点管理</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-medium" style={{ color: '#E8EDF4' }}>网络节点管理</h3>
+          <span className="text-xs px-2 py-1 rounded" style={{ background: 'rgba(45,125,210,0.1)', color: '#2D7DD2' }}>
+            筛选 {filteredStats.totalNodes} / {nodes.length} 节点
+          </span>
+        </div>
         <div className="space-y-3">
-          {nodes.map((node) => (
+          {filteredNodes.length === 0 ? (
+            <div className="text-center py-8" style={{ color: '#7A8BA8' }}>
+              <Filter className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p>没有符合条件的节点</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-2"
+                onClick={() => setFilters({ type: 'all', location: 'all', sortUtilization: 'none', search: '' })}
+              >
+                重置筛选
+              </Button>
+            </div>
+          ) : (
+            filteredNodes.map((node) => (
+              <div
+                key={node.id}
+                className="flex items-center justify-between p-4 rounded border"
+                style={{ background: '#131926', borderColor: '#1E2D45' }}
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className="w-10 h-10 rounded flex items-center justify-center text-lg"
+                    style={{ background: 'rgba(45,125,210,0.1)' }}
+                  >
+                    {node.type === 'factory' ? '🏭' : node.type === 'dc' ? '🏬' : '📦'}
+                  </div>
+                  <div>
+                    <div className="font-medium" style={{ color: '#E8EDF4' }}>
+                      {node.name}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: '#445568' }}>
+                      {node.location} · {typeMap[node.type]}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="w-32">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs" style={{ color: '#7A8BA8' }}>利用率</span>
+                      <span className="text-xs" style={{ color: '#E8EDF4' }}>
+                        {node.utilization}%
+                      </span>
+                    </div>
+                    <div className="h-2 rounded bg-slate-800">
+                      <div
+                        className="h-full rounded"
+                        style={{
+                          width: `${node.utilization}%`,
+                          background:
+                            node.utilization > 90
+                              ? '#E53935'
+                              : node.utilization > 80
+                                ? '#F57C00'
+                                : '#00897B',
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm" style={{ color: '#E8EDF4' }}>
+                      {node.cost}
+                    </div>
+                    <div className="text-xs" style={{ color: '#445568' }}>
+                      年化成本
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    优化
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </Card>
             <div
               key={node.id}
               className="flex items-center justify-between p-4 rounded border"
