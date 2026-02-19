@@ -664,4 +664,4 @@ const PortfolioAnalysisPage: React.FC = () => {
   );
 };
 
-export default PortfolioAnalysisPage;
+export default PortfolioPage;

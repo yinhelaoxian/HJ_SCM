@@ -338,4 +338,4 @@ const CapacityPlanningPage: React.FC = () => {
   );
 };
 
-export default CapacityPlanningPage;
+export default CapacityPage;
