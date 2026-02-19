@@ -426,6 +426,90 @@ const FinancialConstraintsPage: React.FC = () => {
         </div>
       )}
 
+      {/* 筛选栏 */}
+      {!loading && (
+        <div className="flex items-center gap-4 mb-6 p-4 rounded border" style={{ background: '#131926', borderColor: '#1E2D45' }}>
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4" style={{ color: '#7A8BA8' }} />
+            <span className="text-sm font-medium" style={{ color: '#E8EDF4' }}>筛选条件</span>
+          </div>
+          
+          {/* 预算状态筛选 */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm" style={{ color: '#7A8BA8' }}>预算状态</label>
+            <Select
+              value={filters.budgetStatus}
+              onChange={(e) => setFilters({ ...filters, budgetStatus: e.target.value as FilterOptions['budgetStatus'] })}
+              style={{ minWidth: 100 }}
+            >
+              <option value="all">全部</option>
+              <option value="used">已用</option>
+              <option value="remaining">剩余</option>
+            </Select>
+          </div>
+
+          {/* 支出类型筛选 */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm" style={{ color: '#7A8BA8' }}>支出类型</label>
+            <Select
+              value={filters.expenseType}
+              onChange={(e) => setFilters({ ...filters, expenseType: e.target.value as FilterOptions['expenseType'] })}
+              style={{ minWidth: 100 }}
+            >
+              <option value="all">全部</option>
+              <option value="equipment">设备</option>
+              <option value="labor">人力</option>
+              <option value="logistics">物流</option>
+              <option value="rd">研发</option>
+            </Select>
+          </div>
+
+          {/* 季度筛选 */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm" style={{ color: '#7A8BA8' }}>季度</label>
+            <Select
+              value={filters.quarter}
+              onChange={(e) => setFilters({ ...filters, quarter: e.target.value as FilterOptions['quarter'] })}
+              style={{ minWidth: 80 }}
+            >
+              <option value="all">全部</option>
+              <option value="q1">Q1</option>
+              <option value="q2">Q2</option>
+              <option value="q3">Q3</option>
+              <option value="q4">Q4</option>
+            </Select>
+          </div>
+
+          {/* 搜索框 */}
+          <div className="flex-1 flex items-center gap-2">
+            <div className="relative flex-1 max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#7A8BA8' }} />
+              <input
+                type="text"
+                placeholder="搜索项目名称..."
+                value={filters.search}
+                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                className="w-full pl-9 pr-3 py-2 text-sm rounded border bg-[#0D1421] placeholder-[#445568]"
+                style={{ 
+                  borderColor: '#1E2D45', 
+                  color: '#E8EDF4',
+                  outline: 'none',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* 重置按钮 */}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setFilters({ budgetStatus: 'all', expenseType: 'all', quarter: 'all', search: '' })}
+          >
+            重置
+          </Button>
+        </div>
+      )}
+
       {/* Loading 状态 */}
       {loading ? (
         <LoadingState />
@@ -439,10 +523,10 @@ const FinancialConstraintsPage: React.FC = () => {
                 <span className="text-sm" style={{ color: '#7A8BA8' }}>总预算</span>
               </div>
               <div className="text-2xl font-display font-bold" style={{ color: '#E8EDF4' }}>
-                {financialStats.totalBudget}
+                {filteredStats.totalBudget}
               </div>
               <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                年度财务预算
+                筛选 {filteredStats.count} 个项目
               </div>
             </Card>
             <Card className="p-4">
@@ -451,10 +535,10 @@ const FinancialConstraintsPage: React.FC = () => {
                 <span className="text-sm" style={{ color: '#7A8BA8' }}>预算利用率</span>
               </div>
               <div className="text-2xl font-display font-bold" style={{ color: '#00897B' }}>
-                {financialStats.budgetUtilization}%
+                {filteredStats.budgetUtilization}%
               </div>
               <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                已使用 {financialStats.usedBudget}
+                已使用 {filteredStats.usedBudget}
               </div>
             </Card>
             <Card className="p-4">
@@ -485,55 +569,75 @@ const FinancialConstraintsPage: React.FC = () => {
 
           {/* 预算项目管理 */}
           <Card className="p-4 mb-4">
-            <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>预算项目管理</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-medium" style={{ color: '#E8EDF4' }}>预算项目管理</h3>
+              <span className="text-xs px-2 py-1 rounded" style={{ background: 'rgba(45,125,210,0.1)', color: '#2D7DD2' }}>
+                筛选 {filteredBudgetItems.length} / {budgetItems.length} 项目
+              </span>
+            </div>
             <div className="space-y-3">
-              {budgetItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between p-4 rounded border"
-                  style={{ background: '#131926', borderColor: '#1E2D45' }}>
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded flex items-center justify-center text-lg"
-                      style={{ background: 'rgba(45,125,210,0.1)' }}>
-                      💰
-                    </div>
-                    <div>
-                      <div className="font-medium" style={{ color: '#E8EDF4' }}>
-                        {item.name}
-                      </div>
-                      <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                        预算: {item.budget} · 已使用: {item.used}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-6">
-                    <div className="w-32">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs" style={{ color: '#7A8BA8' }}>利用率</span>
-                        <span className="text-xs" style={{ color: '#E8EDF4' }}>
-                          {item.utilization}%
-                        </span>
-                      </div>
-                      <div className="h-2 rounded bg-slate-800">
-                        <div
-                          className="h-full rounded"
-                          style={{
-                            width: `${item.utilization}%`,
-                            background: item.utilization > 90 ? '#E53935' : item.utilization > 80 ? '#F57C00' : '#00897B'
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm" style={{ color: item.trend < 0 ? '#00897B' : '#E53935' }}>
-                        {item.trend > 0 ? '+' : ''}{item.trend}%
-                      </div>
-                      <div className="text-xs" style={{ color: '#445568' }}>
-                        环比趋势
-                      </div>
-                    </div>
-                    <Button variant="outline" size="sm">调整</Button>
-                  </div>
+              {filteredBudgetItems.length === 0 ? (
+                <div className="text-center py-8" style={{ color: '#7A8BA8' }}>
+                  <Filter className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>没有符合条件的项目</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-2"
+                    onClick={() => setFilters({ budgetStatus: 'all', expenseType: 'all', quarter: 'all', search: '' })}
+                  >
+                    重置筛选
+                  </Button>
                 </div>
-              ))}
+              ) : (
+                filteredBudgetItems.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between p-4 rounded border"
+                    style={{ background: '#131926', borderColor: '#1E2D45' }}>
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded flex items-center justify-center text-lg"
+                        style={{ background: 'rgba(45,125,210,0.1)' }}>
+                        💰
+                      </div>
+                      <div>
+                        <div className="font-medium" style={{ color: '#E8EDF4' }}>
+                          {item.name}
+                        </div>
+                        <div className="text-xs mt-1" style={{ color: '#445568' }}>
+                          {expenseTypeMap[item.type]} · {quarterMap[item.quarter]} · {budgetStatusMap[item.status]}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-6">
+                      <div className="w-32">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs" style={{ color: '#7A8BA8' }}>利用率</span>
+                          <span className="text-xs" style={{ color: '#E8EDF4' }}>
+                            {item.utilization}%
+                          </span>
+                        </div>
+                        <div className="h-2 rounded bg-slate-800">
+                          <div
+                            className="h-full rounded"
+                            style={{
+                              width: `${item.utilization}%`,
+                              background: item.utilization > 90 ? '#E53935' : item.utilization > 80 ? '#F57C00' : '#00897B'
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm" style={{ color: item.trend < 0 ? '#00897B' : '#E53935' }}>
+                          {item.trend > 0 ? '+' : ''}{item.trend}%
+                        </div>
+                        <div className="text-xs" style={{ color: '#445568' }}>
+                          环比趋势
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">调整</Button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </Card>
 

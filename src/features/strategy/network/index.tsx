@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Settings, MapPin, TrendingUp, DollarSign, AlertTriangle, Globe, BarChart3, RefreshCw, Search, Filter, ArrowUp, ArrowDown } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
 import { Select } from '@/ui/Select';
+import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
 import { getNetworkData } from '@/services/api/strategy';
 import { NetworkNode, NetworkOptimization, NetworkStats, RiskAlert } from './types';
@@ -83,6 +84,34 @@ const NetworkPlanningPage: React.FC = () => {
     search: '',
   });
 
+  // 高亮节点状态
+  const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null);
+  const nodeRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  // 处理图表点击事件
+  const handleChartClick = useCallback(
+    (params: any) => {
+      const chartData = filteredNodes.slice(0, 12);
+      const nodeIndex = params.dataIndex;
+      const node = chartData[nodeIndex];
+      if (!node) return;
+
+      setHighlightedNodeId(node.id);
+
+      // 滚动到对应节点
+      const nodeElement = nodeRefs.current[node.id];
+      if (nodeElement) {
+        nodeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      // 3秒后取消高亮
+      setTimeout(() => {
+        setHighlightedNodeId(null);
+      }, 3000);
+    },
+    [filteredNodes]
+  );
+
   // 使用 useMemo 计算筛选后的节点
   const filteredNodes = useMemo(() => {
     let result = [...nodes];
@@ -139,6 +168,125 @@ const NetworkPlanningPage: React.FC = () => {
       highLoadNodes: filteredNodes.filter((n) => n.utilization > 90).length,
     };
   }, [filteredNodes]);
+
+  // ECharts 图表配置
+  const utilizationChartOption = useMemo(() => {
+    const chartData = filteredNodes.slice(0, 12); // 最多显示12个节点
+    return {
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#1A2235',
+        borderColor: '#2D7DD2',
+        textStyle: { color: '#E8EDF4' },
+        formatter: (params: any) => {
+          const dataIndex = params[0].dataIndex;
+          const node = chartData[dataIndex];
+          if (!node) return '';
+          return `
+            <div style="padding: 8px;">
+              <div style="font-weight: 600; margin-bottom: 4px;">${node.name}</div>
+              <div style="color: #7A8BA8; font-size: 12px;">${node.location} · ${typeMap[node.type]}</div>
+              <div style="margin-top: 8px;">
+                <span style="color: #7A8BA8;">利用率：</span>
+                <span style="color: ${node.utilization > 90 ? '#E53935' : node.utilization > 80 ? '#F57C00' : '#00897B'}; font-weight: 600;">
+                  ${node.utilization}%
+                </span>
+              </div>
+              <div>
+                <span style="color: #7A8BA8;">成本：</span>
+                <span style="color: #F57C00;">${node.cost}</span>
+              </div>
+            </div>
+          `;
+        },
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        top: '15%',
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        data: chartData.map((n) => n.name),
+        axisLabel: {
+          color: '#7A8BA8',
+          fontSize: 11,
+          rotate: 30,
+          interval: 0,
+          formatter: (value: string) => (value.length > 6 ? value.slice(0, 6) + '...' : value),
+        },
+        axisLine: { lineStyle: { color: '#1E2D45' } },
+      },
+      yAxis: {
+        type: 'value',
+        max: 120,
+        axisLabel: { color: '#7A8BA8', formatter: '{value}%' },
+        axisLine: { show: false },
+        splitLine: { lineStyle: { color: '#1E2D45', type: 'dashed' } },
+      },
+      series: [
+        {
+          name: '利用率',
+          type: 'bar',
+          barWidth: '50%',
+          data: chartData.map((n) => ({
+            value: n.utilization,
+            itemStyle: {
+              color:
+                n.utilization > 90
+                  ? '#E53935'
+                  : n.utilization > 80
+                    ? '#F57C00'
+                    : '#00897B',
+              borderRadius: [4, 4, 0, 0],
+            },
+          })),
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowColor: 'rgba(45, 125, 210, 0.5)',
+              borderColor: '#2D7DD2',
+              borderWidth: 2,
+            },
+          },
+          select: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowColor: 'rgba(45, 125, 210, 0.5)',
+              borderColor: '#2D7DD2',
+              borderWidth: 2,
+            },
+          },
+        },
+      ],
+    };
+  }, [filteredNodes]);
+
+  // 处理图表点击事件
+  const handleChartClick = useCallback(
+    (params: any) => {
+      const chartData = filteredNodes.slice(0, 12);
+      const nodeIndex = params.dataIndex;
+      const node = chartData[nodeIndex];
+      if (!node) return;
+
+      setHighlightedNodeId(node.id);
+
+      // 滚动到对应节点
+      const nodeElement = nodeRefs.current[node.id];
+      if (nodeElement) {
+        nodeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      // 3秒后取消高亮
+      setTimeout(() => {
+        setHighlightedNodeId(null);
+      }, 3000);
+    },
+    [filteredNodes]
+  );
 
   const loadData = useCallback(async () => {
     try {
@@ -354,6 +502,24 @@ const NetworkPlanningPage: React.FC = () => {
         </Card>
       </div>
 
+      {/* 节点利用率图表 */}
+      <Card className="p-4 mb-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-medium flex items-center gap-2" style={{ color: '#E8EDF4' }}>
+            <BarChart3 className="w-4 h-4" style={{ color: '#2D7DD2' }} />
+            节点利用率分布
+          </h3>
+          <span className="text-xs" style={{ color: '#7A8BA8' }}>
+            点击柱状图可定位到对应节点
+          </span>
+        </div>
+        <ReactECharts
+          option={utilizationChartOption}
+          style={{ height: 280 }}
+          onEvents={{ click: handleChartClick }}
+        />
+      </Card>
+
       {/* 网络节点列表 */}
       <Card className="p-4 mb-4">
         <div className="flex items-center justify-between mb-4">
@@ -367,9 +533,9 @@ const NetworkPlanningPage: React.FC = () => {
             <div className="text-center py-8" style={{ color: '#7A8BA8' }}>
               <Filter className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p>没有符合条件的节点</p>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="mt-2"
                 onClick={() => setFilters({ type: 'all', location: 'all', sortUtilization: 'none', search: '' })}
               >
@@ -380,8 +546,14 @@ const NetworkPlanningPage: React.FC = () => {
             filteredNodes.map((node) => (
               <div
                 key={node.id}
-                className="flex items-center justify-between p-4 rounded border"
-                style={{ background: '#131926', borderColor: '#1E2D45' }}
+                ref={(el) => (nodeRefs.current[node.id] = el)}
+                className="flex items-center justify-between p-4 rounded border transition-all duration-300"
+                style={{
+                  background: highlightedNodeId === node.id ? 'rgba(45, 125, 210, 0.15)' : '#131926',
+                  borderColor: highlightedNodeId === node.id ? '#2D7DD2' : '#1E2D45',
+                  borderWidth: highlightedNodeId === node.id ? '2px' : '1px',
+                  boxShadow: highlightedNodeId === node.id ? '0 0 20px rgba(45, 125, 210, 0.3)' : 'none',
+                }}
               >
                 <div className="flex items-center gap-4">
                   <div
@@ -437,66 +609,6 @@ const NetworkPlanningPage: React.FC = () => {
               </div>
             ))
           )}
-        </div>
-      </Card>
-            <div
-              key={node.id}
-              className="flex items-center justify-between p-4 rounded border"
-              style={{ background: '#131926', borderColor: '#1E2D45' }}
-            >
-              <div className="flex items-center gap-4">
-                <div
-                  className="w-10 h-10 rounded flex items-center justify-center text-lg"
-                  style={{ background: 'rgba(45,125,210,0.1)' }}
-                >
-                  🏭
-                </div>
-                <div>
-                  <div className="font-medium" style={{ color: '#E8EDF4' }}>
-                    {node.name}
-                  </div>
-                  <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                    {node.location} · 类型: {node.type === 'dc' ? '配送中心' : '仓库'}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-6">
-                <div className="w-32">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs" style={{ color: '#7A8BA8' }}>利用率</span>
-                    <span className="text-xs" style={{ color: '#E8EDF4' }}>
-                      {node.utilization}%
-                    </span>
-                  </div>
-                  <div className="h-2 rounded bg-slate-800">
-                    <div
-                      className="h-full rounded"
-                      style={{
-                        width: `${node.utilization}%`,
-                        background:
-                          node.utilization > 90
-                            ? '#E53935'
-                            : node.utilization > 80
-                              ? '#F57C00'
-                              : '#00897B',
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm" style={{ color: '#E8EDF4' }}>
-                    {node.cost}
-                  </div>
-                  <div className="text-xs" style={{ color: '#445568' }}>
-                    年化成本
-                  </div>
-                </div>
-                <Button variant="outline" size="sm">
-                  优化
-                </Button>
-              </div>
-            </div>
-          ))}
         </div>
       </Card>
 

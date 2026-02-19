@@ -272,14 +272,6 @@ const CapacityPlanningPage: React.FC = () => {
     );
   };
 
-  // 计算统计数据
-  const stats = {
-    totalCapacity: data.length > 0 ? `${(data.reduce((sum, item) => sum + parseFloat(item.capacity.replace(/[^\d.]/g, '')), 0) / 10000).toFixed(1)}万件` : '0万件',
-    utilization: data.length > 0 ? `${Math.round(data.reduce((sum, item) => sum + item.utilization, 0) / data.length)}%` : '0%',
-    investmentNeeded: '¥4.5亿',
-    roi: '16.8%'
-  };
-
   const capacityItems = filteredData;
 
   // 产能不均风险分析
@@ -427,48 +419,6 @@ const CapacityPlanningPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* Loading 状态 */}
-      {loading && (
-        <div className="flex items-center justify-center py-12" style={{ color: '#7A8BA8' }}>
-          <RefreshCw className="w-6 h-6 mr-2 animate-spin" />
-          <span>加载数据中...</span>
-        </div>
-      )}
-
-      {/* Error 状态 */}
-      {error && (
-        <Card className="p-4 mb-4" style={{ background: 'rgba(229,57,53,0.1)', borderColor: '#E53935' }}>
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5" style={{ color: '#E53935' }} />
-            <span style={{ color: '#E53935' }}>加载失败</span>
-          </div>
-          <p className="text-sm mt-2" style={{ color: '#B0BEC5' }}>{error}</p>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="mt-3"
-            onClick={() => {
-              const fetchData = async () => {
-                try {
-                  setLoading(true);
-                  setError(null);
-                  const result = await getCapacityData();
-                  setData(result.data);
-                } catch (err) {
-                  setError(err instanceof Error ? err.message : '获取数据失败');
-                } finally {
-                  setLoading(false);
-                }
-              };
-              fetchData();
-            }}
-          >
-            <RefreshCw className="w-4 h-4 mr-1" />
-            重试
-          </Button>
-        </Card>
-      )}
-
       {/* 产能统计 */}
       <div className="grid gap-4 mb-6" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
         <Card className="p-4">
@@ -607,7 +557,7 @@ const CapacityPlanningPage: React.FC = () => {
       </Card>
 
       {/* 产能不均风险提示 */}
-      <CapacityRiskAlert capacityItems={capacityItems} />
+      <CapacityRiskAlert capacityItems={filteredData} />
 
       {/* 投资建议 */}
       <Card className="p-4">

@@ -1,39 +1,31 @@
 import axios from 'axios';
-import type { 
+
+// Network types
+import { 
   NetworkNode, 
   NetworkOptimization, 
   NetworkStats, 
-  RiskAlert,
+  RiskAlert 
+} from '@/features/strategy/network/types';
+
+// Capacity types
+import { 
   CapacityData,
   CapacityOptimization,
-  CapacityForecast,
+  CapacityForecast
+} from '@/features/strategy/capacity/types';
+
+// Portfolio types
+import {
   PortfolioItem,
-  PortfolioOptimization,
+  PortfolioOptimization
+} from '@/features/strategy/portfolio/types';
+
+// Financial types
+import {
   FinancialMetric,
   FinancialProjection,
   FinancialConstraint
-} from '@/features/strategy/types';
-
-// Network types are also imported from individual modules
-import { 
-  NetworkNode as NetworkNodeType, 
-  NetworkOptimization as NetworkOptimizationType, 
-  NetworkStats as NetworkStatsType, 
-  RiskAlert as RiskAlertType 
-} from '@/features/strategy/network/types';
-import { 
-  CapacityData as CapacityDataType,
-  CapacityOptimization as CapacityOptimizationType,
-  CapacityForecast as CapacityForecastType
-} from '@/features/strategy/capacity/types';
-import {
-  PortfolioItem as PortfolioItemType,
-  PortfolioOptimization as PortfolioOptimizationType
-} from '@/features/strategy/portfolio/types';
-import {
-  FinancialMetric as FinancialMetricType,
-  FinancialProjection as FinancialProjectionType,
-  FinancialConstraint as FinancialConstraintType
 } from '@/features/strategy/financial/types';
 
 const api = axios.create({
@@ -41,12 +33,15 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Network API
+/**
+ * 获取网络规划数据
+ * 包含节点信息、优化建议、统计信息和风险预警
+ */
 export async function getNetworkData(): Promise<{
-  nodes: NetworkNodeType[];
-  optimizations: NetworkOptimizationType[];
-  stats: NetworkStatsType;
-  risks: RiskAlertType[];
+  nodes: NetworkNode[];
+  optimizations: NetworkOptimization[];
+  stats: NetworkStats;
+  risks: RiskAlert[];
 }> {
   try {
     const response = await api.get('/network');
@@ -57,11 +52,14 @@ export async function getNetworkData(): Promise<{
   }
 }
 
-// Capacity API
+/**
+ * 获取产能规划数据
+ * 包含产能数据、优化建议和预测
+ */
 export async function getCapacityData(): Promise<{
-  data: CapacityDataType[];
-  optimizations: CapacityOptimizationType[];
-  forecasts: CapacityForecastType[];
+  data: CapacityData[];
+  optimizations: CapacityOptimization[];
+  forecasts: CapacityForecast[];
 }> {
   try {
     const response = await api.get('/capacity');
@@ -72,10 +70,13 @@ export async function getCapacityData(): Promise<{
   }
 }
 
-// Portfolio API
+/**
+ * 获取产品组合数据
+ * 包含产品项和组合优化建议
+ */
 export async function getPortfolioData(): Promise<{
-  items: PortfolioItemType[];
-  optimizations: PortfolioOptimizationType[];
+  items: PortfolioItem[];
+  optimizations: PortfolioOptimization[];
 }> {
   try {
     const response = await api.get('/portfolio');
@@ -86,11 +87,14 @@ export async function getPortfolioData(): Promise<{
   }
 }
 
-// Financial API
+/**
+ * 获取财务约束数据
+ * 包含财务指标、预测和约束条件
+ */
 export async function getFinancialData(): Promise<{
-  metrics: FinancialMetricType[];
-  projections: FinancialProjectionType[];
-  constraints: FinancialConstraintType[];
+  metrics: FinancialMetric[];
+  projections: FinancialProjection[];
+  constraints: FinancialConstraint[];
 }> {
   try {
     const response = await api.get('/financial');

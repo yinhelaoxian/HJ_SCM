@@ -427,6 +427,8 @@ const PortfolioAnalysisPage: React.FC = () => {
 
     return (
       <>
+        <FilterBar />
+
         {/* 产品组合统计 */}
         <div className="grid gap-4 mb-6" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
           <Card className="p-4">
@@ -435,7 +437,7 @@ const PortfolioAnalysisPage: React.FC = () => {
               <span className="text-sm" style={{ color: '#7A8BA8' }}>产品总数</span>
             </div>
             <div className="text-2xl font-display font-bold" style={{ color: '#E8EDF4' }}>
-              {stats.totalProducts}
+              {filteredStats.totalProducts}
             </div>
             <div className="text-xs mt-1" style={{ color: '#445568' }}>
               覆盖 5 个产品类别
@@ -447,7 +449,7 @@ const PortfolioAnalysisPage: React.FC = () => {
               <span className="text-sm" style={{ color: '#7A8BA8' }}>热销产品</span>
             </div>
             <div className="text-2xl font-display font-bold" style={{ color: '#00897B' }}>
-              {stats.topProducts}
+              {filteredStats.topProducts}
             </div>
             <div className="text-xs mt-1" style={{ color: '#445568' }}>
               销售额占比 65%
@@ -459,7 +461,7 @@ const PortfolioAnalysisPage: React.FC = () => {
               <span className="text-sm" style={{ color: '#7A8BA8' }}>平均毛利率</span>
             </div>
             <div className="text-2xl font-display font-bold" style={{ color: '#F57C00' }}>
-              {stats.averageMargin}%
+              {filteredStats.averageMargin}%
             </div>
             <div className="text-xs mt-1" style={{ color: '#445568' }}>
               目标 35%
@@ -471,7 +473,7 @@ const PortfolioAnalysisPage: React.FC = () => {
               <span className="text-sm" style={{ color: '#7A8BA8' }}>总营收</span>
             </div>
             <div className="text-2xl font-display font-bold" style={{ color: '#E53935' }}>
-              {stats.totalRevenue}
+              {filteredStats.totalRevenue}
             </div>
             <div className="text-xs mt-1" style={{ color: '#445568' }}>
               本年度累计销售额
@@ -481,61 +483,81 @@ const PortfolioAnalysisPage: React.FC = () => {
 
         {/* 产品组合列表 */}
         <Card className="p-4 mb-4">
-          <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>豪江智能产品组合（电子/智能制造）</h3>
-          <div className="space-y-3">
-            {products.map((product) => (
-              <div key={product.id} className="flex items-center justify-between p-4 rounded border"
-                style={{ background: '#131926', borderColor: '#1E2D45' }}>
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded flex items-center justify-center text-lg"
-                    style={{ background: 'rgba(45,125,210,0.1)' }}>
-                    {product.category === '智能传感器' ? '📡' : product.category === '电子控制器' ? '🔲' : '⚙️'}
-                  </div>
-                  <div>
-                    <div className="font-medium" style={{ color: '#E8EDF4' }}>
-                      {product.name}
-                    </div>
-                    <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                      {product.category} · 滞销风险: 
-                      <span style={{ 
-                        color: product.risk === '低' ? '#00897B' : product.risk === '中' ? '#F57C00' : '#E53935',
-                        marginLeft: '4px'
-                      }}>
-                        {product.risk}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <div className="text-sm" style={{ color: '#E8EDF4' }}>
-                      {product.sales}
-                    </div>
-                    <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                      销售额
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm" style={{ color: '#E8EDF4' }}>
-                      {product.margin}%
-                    </div>
-                    <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                      毛利率
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm" style={{ color: '#E8EDF4' }}>
-                      {product.growth > 0 ? `+${product.growth}%` : `${product.growth}%`}
-                    </div>
-                    <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                      增长率
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm">分析</Button>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-medium" style={{ color: '#E8EDF4' }}>豪江智能产品组合（电子/智能制造）</h3>
+            <span className="text-xs px-2 py-1 rounded" style={{ background: 'rgba(45,125,210,0.1)', color: '#2D7DD2' }}>
+              筛选 {filteredProducts.length} / {products.length} 产品
+            </span>
           </div>
+          {filteredProducts.length === 0 ? (
+            <div className="text-center py-8" style={{ color: '#7A8BA8' }}>
+              <Filter className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p>没有符合条件的产品</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-2"
+                onClick={() => setFilters({ type: 'all', margin: 'all', risk: 'all', search: '' })}
+              >
+                重置筛选
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="flex items-center justify-between p-4 rounded border"
+                  style={{ background: '#131926', borderColor: '#1E2D45' }}>
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded flex items-center justify-center text-lg"
+                      style={{ background: 'rgba(45,125,210,0.1)' }}>
+                      {product.category === '智能传感器' ? '📡' : product.category === '电子控制器' ? '🔲' : '⚙️'}
+                    </div>
+                    <div>
+                      <div className="font-medium" style={{ color: '#E8EDF4' }}>
+                        {product.name}
+                      </div>
+                      <div className="text-xs mt-1" style={{ color: '#445568' }}>
+                        {product.category} · 滞销风险: 
+                        <span style={{ 
+                          color: product.risk === '低' ? '#00897B' : product.risk === '中' ? '#F57C00' : '#E53935',
+                          marginLeft: '4px'
+                        }}>
+                          {product.risk}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <div className="text-sm" style={{ color: '#E8EDF4' }}>
+                        {product.sales}
+                      </div>
+                      <div className="text-xs mt-1" style={{ color: '#445568' }}>
+                        销售额
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm" style={{ color: '#E8EDF4' }}>
+                        {product.margin}%
+                      </div>
+                      <div className="text-xs mt-1" style={{ color: '#445568' }}>
+                        毛利率
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm" style={{ color: '#E8EDF4' }}>
+                        {product.growth > 0 ? `+${product.growth}%` : `${product.growth}%`}
+                      </div>
+                      <div className="text-xs mt-1" style={{ color: '#445568' }}>
+                        增长率
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm">分析</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
 
         {/* 利润率 vs 风险平衡分析 */}
