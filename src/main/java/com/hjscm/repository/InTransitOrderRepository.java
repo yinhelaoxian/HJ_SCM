@@ -54,4 +54,17 @@ public interface InTransitOrderRepository extends JpaRepository<InTransitOrderEn
      * 根据供应商查询在途订单
      */
     List<InTransitOrderEntity> findBySupplierCode(String supplierCode);
+
+    /**
+     * 查询指定日期后预计到货的在途订单（MRPEngineService 需要）
+     */
+    @Query("SELECT i FROM InTransitOrderEntity i WHERE i.materialCode = :materialCode AND i.estimatedArrivalDate > :date AND i.status = 'PENDING'")
+    List<InTransitOrderEntity> findByMaterialCodeAndArrivalDateAfter(
+        @Param("materialCode") String materialCode,
+        @Param("date") LocalDate date);
+
+    /**
+     * 根据物料编码和状态查询
+     */
+    List<InTransitOrderEntity> findByMaterialCodeAndStatus(String materialCode, String status);
 }

@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
  * - 齐套检查
  * - 采购建议生成
  * - Trace ID 关联
+ * 
+ * @Updated 2026-02-19: 引入 MrpDataService 提供数据层抽象
  */
 @Slf4j
 @Service
@@ -37,6 +39,7 @@ public class MRPEngineService {
     private final BomRepository bomRepository;
     private final TraceIdService traceIdService;
     private final ProcurementSuggestionRepository procurementRepository;
+    private final MrpDataService mrpDataService;
 
     // 默认配置
     private static final int DEFAULT_LEAD_TIME = 7;
@@ -56,8 +59,8 @@ public class MRPEngineService {
             request.getPlanToDate(), traceId);
         
         try {
-            // 1. 获取 MPS 需求
-            List<MpsRequirement> mpsRequirements = getMpsRequirements(request);
+            // 1. 获取 MPS 需求（通过 MrpDataService）
+            List<MpsRequirement> mpsRequirements = mrpDataService.getMpsRequirements(request);
             
             // 2. BOM 展开
             List<MrpRequirement> explodedRequirements = new ArrayList<>();
@@ -80,10 +83,7 @@ public class MRPEngineService {
                 generateSuggestions(kitResult.getShortages());
             
             // 6. 保存结果
-            saveMrpResults(netRequirements, kitResult, suggestions);
-            
-            // 7. 发布事件
-            publishMrpCompletedEvent(traceId, netRequirements, kitResult);
+            mrpDataService.saveMrpResults(traceId, netRequirements, kitResult, suggestions);
             
             long duration = System.currentTimeMillis() - startTime;
             
@@ -182,21 +182,21 @@ public class MRPEngineService {
             .collect(Collectors.groupingBy(
                 MrpRequirement::getItemCode,
                 Collectors.reducing(
-                    new MrpRequirement(),
+                    MrpRequirement.builder().build(),
                     (a, b) -> MrpRequirement.builder()
-                        .itemCode(a.getItemCode())
-                        .requiredQty(a.getRequiredQty().add(b.getRequiredQty()))
-                        .level(Math.min(a.getLevel(), b.getLevel()))
+                        .itemCode(a.getItemCode() != null ? a.getItemCode() : b.getItemCode())
+                        .requiredQty(a.getRequiredQty() != null ? a.getRequiredQty().add(b.getRequiredQty()) : b.getRequiredQty())
+                        .level(Math.min(a.getLevel() != null ? a.getLevel() : 0, b.getLevel() != null ? b.getLevel() : 0))
                         .build()
                 )
             ));
         
         for (MrpRequirement req : requirementMap.values()) {
-            // 获取库存数据
-            BigDecimal onHand = getOnHand(req.getItemCode(), fromDate);
-            BigDecimal inTransit = getInTransit(req.getItemCode(), fromDate);
-            BigDecimal allocated = getAllocated(req.getItemCode(), fromDate);
-            BigDecimal safetyStock = getSafetyStock(req.getItemCode());
+            // 获取库存数据（通过 MrpDataService）
+            BigDecimal onHand = mrpDataService.getOnHand(req.getItemCode(), fromDate);
+            BigDecimal inTransit = mrpDataService.getInTransit(req.getItemCode(), fromDate);
+            BigDecimal allocated = mrpDataService.getAllocated(req.getItemCode(), fromDate);
+            BigDecimal safetyStock = mrpDataService.getSafetyStock(req.getItemCode());
             
             // 计算可用量
             BigDecimal available = onHand.add(inTransit).subtract(allocated);
@@ -212,7 +212,7 @@ public class MRPEngineService {
                     .safetyStock(safetyStock)
                     .netRequirement(netReq)
                     .requiredDate(fromDate.plusWeeks(2))
-                    .leadTime(getLeadTime(req.getItemCode()))
+                    .leadTime(mrpDataService.getLeadTime(req.getItemCode()))
                     .traceId(traceIdService.generateRequirementTraceId(req.getItemCode()))
                     .build();
                 
@@ -233,7 +233,7 @@ public class MRPEngineService {
         result.setCheckDate(LocalDate.now());
         
         for (MrpNetRequirement req : requirements) {
-            BigDecimal available = getAvailable(req.getItemCode());
+            BigDecimal available = mrpDataService.getAvailable(req.getItemCode());
             double fillRate = req.getNetRequirement().doubleValue() > 0 
                 ? Math.min(1.0, available.doubleValue() / req.getNetRequirement().doubleValue())
                 : 1.0;
@@ -249,6 +249,7 @@ public class MRPEngineService {
                     .urgencyLevel(fillRate < 0.3 ? "CRITICAL" : 
                         fillRate < 0.6 ? "HIGH" : "MEDIUM")
                     .traceId(req.getTraceId())
+                    .requiredDate(req.getRequiredDate())
                     .build();
                 
                 result.addShortage(shortage);
@@ -279,7 +280,7 @@ public class MRPEngineService {
         
         for (KitShortage shortage : shortages) {
             // 匹配供应商
-            List<SupplierInfo> suppliers = findActiveSuppliers(shortage.getItemCode());
+            List<SupplierInfo> suppliers = mrpDataService.findActiveSuppliers(shortage.getItemCode());
             
             if (suppliers.isEmpty()) {
                 log.warn("[MRP] No supplier found for {}", shortage.getItemCode());
@@ -318,10 +319,10 @@ public class MRPEngineService {
      */
     private BigDecimal calculateSuggestedQty(KitShortage shortage) {
         BigDecimal shortageQty = shortage.getShortageQty();
-        BigDecimal moq = getMoq(shortage.getItemCode());
-        BigDecimal packQty = getPackageQty(shortage.getItemCode());
+        BigDecimal moq = mrpDataService.getMoq(shortage.getItemCode());
+        BigDecimal packQty = BigDecimal.ONE;
         
-        BigDecimal withLoss = shortageQty; // 可添加损耗率
+        BigDecimal withLoss = shortageQty;
         
         // 取整到包装量
         if (packQty.compareTo(BigDecimal.ONE) > 0) {
@@ -341,82 +342,10 @@ public class MRPEngineService {
         return suppliers.stream()
             .filter(s -> s.getMoq() == null || s.getMoq().compareTo(qty) <= 0)
             .min(Comparator
-                .comparingDouble((SupplierInfo s) -> s.getPrice() != null ? s.getPrice() : Double.MAX_VALUE)
+                .comparingDouble((SupplierInfo s) -> s.getPrice() != null ? s.getPrice().doubleValue() : Double.MAX_VALUE)
                 .thenComparingInt(s -> s.getLeadTime() != null ? s.getLeadTime() : DEFAULT_LEAD_TIME)
-                .thenComparingDouble(s -> s.getOtdRate() != null ? -s.getOtdRate() : 0)) // OTD 越高越好
+                .thenComparingDouble(s -> s.getOtdRate() != null ? -s.getOtdRate() : 0))
             .orElse(suppliers.get(0));
-    }
-
-    // === 查询方法 ===
-
-    private List<MpsRequirement> getMpsRequirements(MrpRunRequest request) {
-        // TODO: 从 MPS 模块获取需求
-        return Collections.emptyList();
-    }
-
-    private BigDecimal getOnHand(String itemCode, LocalDate date) {
-        return inventoryRepository
-            .findByMaterialCodeAndAsOfDate(itemCode, date)
-            .map(InventoryBalance::getQuantity)
-            .orElse(BigDecimal.ZERO);
-    }
-
-    private BigDecimal getInTransit(String itemCode, LocalDate date) {
-        return inTransitRepository
-            .findByMaterialCodeAndArrivalDateAfter(itemCode, date)
-            .stream()
-            .map(InTransitOrder::getQuantity)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private BigDecimal getAllocated(String itemCode, LocalDate date) {
-        return BigDecimal.ZERO; // TODO: 从预留表查询
-    }
-
-    private BigDecimal getAvailable(String itemCode) {
-        return inventoryRepository
-            .findByMaterialCode(itemCode)
-            .map(b -> b.getQuantity().subtract(b.getReservedQty()))
-            .orElse(BigDecimal.ZERO);
-    }
-
-    private BigDecimal getSafetyStock(String itemCode) {
-        return inventoryRepository
-            .findByMaterialCode(itemCode)
-            .map(InventoryBalance::getSafetyStock)
-            .orElse(BigDecimal.valueOf(100));
-    }
-
-    private int getLeadTime(String itemCode) {
-        return constraintRepository
-            .findByMaterialCode(itemCode)
-            .map(c -> c.getLeadTime() != null ? c.getLeadTime() : DEFAULT_LEAD_TIME)
-            .orElse(DEFAULT_LEAD_TIME);
-    }
-
-    private BigDecimal getMoq(String itemCode) {
-        return constraintRepository
-            .findByMaterialCode(itemCode)
-            .map(c -> c.getMoq() != null ? c.getMoq() : BigDecimal.valueOf(DEFAULT_MOQ))
-            .orElse(BigDecimal.valueOf(DEFAULT_MOQ));
-    }
-
-    private BigDecimal getPackageQty(String itemCode) {
-        return BigDecimal.ONE;
-    }
-
-    private List<SupplierInfo> findActiveSuppliers(String itemCode) {
-        return Collections.emptyList(); // TODO: 从供应商模块查询
-    }
-
-    private void saveMrpResults(List<MrpNetRequirement> requirements,
-            KitCheckResult kitResult, List<ProcurementSuggestion> suggestions) {
-        // TODO: 保存到数据库
-    }
-
-    private void publishMrpCompletedEvent(String traceId,
-            List<MrpNetRequirement> requirements, KitCheckResult kitResult) {
-        // TODO: 发布领域事件
     }
 
     /**
