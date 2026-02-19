@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Settings, BarChart3, TrendingUp, DollarSign, Target, AlertCircle, RefreshCw } from 'lucide-react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Settings, BarChart3, TrendingUp, DollarSign, Target, AlertCircle, RefreshCw, Search, Filter } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
+import { Select } from '@/ui/Select';
 import { getPortfolioData } from '@/services/api/strategy';
 
 interface PortfolioItem {
@@ -43,6 +44,21 @@ interface PortfolioData {
   optimizations: PortfolioOptimization[];
 }
 
+// 筛选选项类型定义
+interface FilterOptions {
+  type: 'all' | 'sensor' | 'controller' | 'traditional';
+  margin: 'all' | 'high' | 'medium' | 'low';
+  risk: 'all' | 'high' | 'medium' | 'low';
+  search: string;
+}
+
+// 产品类型映射
+const productTypeMap: Record<string, string> = {
+  sensor: '智能传感器',
+  controller: '电子控制器',
+  traditional: '传统电子组件',
+};
+
 /**
  * 产品组合分析页面
  *
@@ -60,6 +76,80 @@ const PortfolioAnalysisPage: React.FC = () => {
   const [products, setProducts] = useState<PortfolioItem[]>([]);
   const [portfolioAnalysis, setPortfolioAnalysis] = useState<PortfolioOptimization[]>([]);
   const [recommendations, setRecommendations] = useState<PortfolioRecommendation[]>([]);
+
+  // 筛选状态
+  const [filters, setFilters] = useState<FilterOptions>({
+    type: 'all',
+    margin: 'all',
+    risk: 'all',
+    search: '',
+  });
+
+  // 使用 useMemo 计算筛选后的产品
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    // 产品类型筛选
+    if (filters.type !== 'all') {
+      const typeMap: Record<string, string> = {
+        sensor: '智能传感器',
+        controller: '电子控制器',
+        traditional: '传统电子组件',
+      };
+      result = result.filter((product) => product.category === typeMap[filters.type]);
+    }
+
+    // 利润率筛选
+    if (filters.margin !== 'all') {
+      const marginRanges: Record<string, (margin: number) => boolean> = {
+        high: (m) => m >= 35,
+        medium: (m) => m >= 20 && m < 35,
+        low: (m) => m < 20,
+      };
+      result = result.filter((product) => marginRanges[filters.margin](product.margin));
+    }
+
+    // 风险等级筛选
+    if (filters.risk !== 'all') {
+      const riskMap: Record<string, string> = {
+        high: '高',
+        medium: '中',
+        low: '低',
+      };
+      result = result.filter((product) => product.risk === riskMap[filters.risk]);
+    }
+
+    // 搜索筛选（产品名称）
+    if (filters.search.trim()) {
+      const searchLower = filters.search.toLowerCase();
+      result = result.filter((product) =>
+        product.name.toLowerCase().includes(searchLower)
+      );
+    }
+
+    return result;
+  }, [products, filters]);
+
+  // 筛选后的统计
+  const filteredStats = useMemo(() => {
+    const totalProducts = filteredProducts.length;
+    const topProducts = filteredProducts.filter((p) => p.growth > 0).length;
+    const averageMargin = filteredProducts.length > 0
+      ? Math.round(filteredProducts.reduce((sum, p) => sum + p.margin, 0) / filteredProducts.length * 10) / 10
+      : 0;
+    const totalRevenue = filteredProducts.reduce((sum, p) => {
+      const numStr = p.sales.replace(/[^\d.-]/g, '');
+      return sum + parseFloat(numStr) || 0;
+    }, 0);
+    const formattedRevenue = `¥${Math.round(totalRevenue / 1000000)}M`;
+
+    return {
+      totalProducts,
+      topProducts,
+      averageMargin,
+      totalRevenue: formattedRevenue,
+    };
+  }, [filteredProducts]);
 
   useEffect(() => {
     const fetchPortfolioData = async () => {
@@ -183,6 +273,89 @@ const PortfolioAnalysisPage: React.FC = () => {
         </div>
       </div>
       {children}
+    </div>
+  );
+
+  // 筛选栏组件
+  const FilterBar = () => (
+    <div className="flex items-center gap-4 mb-6 p-4 rounded border" style={{ background: '#131926', borderColor: '#1E2D45' }}>
+      <div className="flex items-center gap-2">
+        <Filter className="w-4 h-4" style={{ color: '#7A8BA8' }} />
+        <span className="text-sm font-medium" style={{ color: '#E8EDF4' }}>筛选条件</span>
+      </div>
+      
+      {/* 产品类型筛选 */}
+      <div className="flex items-center gap-2">
+        <label className="text-sm" style={{ color: '#7A8BA8' }}>产品类型</label>
+        <Select
+          value={filters.type}
+          onChange={(value) => setFilters({ ...filters, type: value as FilterOptions['type'] })}
+          style={{ minWidth: 140 }}
+        >
+          <option value="all">全部</option>
+          <option value="sensor">智能传感器</option>
+          <option value="controller">电子控制器</option>
+          <option value="traditional">传统电子组件</option>
+        </Select>
+      </div>
+
+      {/* 利润率筛选 */}
+      <div className="flex items-center gap-2">
+        <label className="text-sm" style={{ color: '#7A8BA8' }}>利润率</label>
+        <Select
+          value={filters.margin}
+          onChange={(value) => setFilters({ ...filters, margin: value as FilterOptions['margin'] })}
+          style={{ minWidth: 100 }}
+        >
+          <option value="all">全部</option>
+          <option value="high">高</option>
+          <option value="medium">中</option>
+          <option value="low">低</option>
+        </Select>
+      </div>
+
+      {/* 风险等级筛选 */}
+      <div className="flex items-center gap-2">
+        <label className="text-sm" style={{ color: '#7A8BA8' }}>风险等级</label>
+        <Select
+          value={filters.risk}
+          onChange={(value) => setFilters({ ...filters, risk: value as FilterOptions['risk'] })}
+          style={{ minWidth: 100 }}
+        >
+          <option value="all">全部</option>
+          <option value="high">高</option>
+          <option value="medium">中</option>
+          <option value="low">低</option>
+        </Select>
+      </div>
+
+      {/* 搜索框 */}
+      <div className="flex-1 flex items-center gap-2">
+        <div className="relative flex-1 max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#7A8BA8' }} />
+          <input
+            type="text"
+            placeholder="搜索产品名称..."
+            value={filters.search}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            className="w-full pl-9 pr-3 py-2 text-sm rounded border bg-[#0D1421] placeholder-[#445568]"
+            style={{ 
+              borderColor: '#1E2D45', 
+              color: '#E8EDF4',
+              outline: 'none',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* 重置按钮 */}
+      <Button 
+        variant="outline" 
+        size="sm"
+        onClick={() => setFilters({ type: 'all', margin: 'all', risk: 'all', search: '' })}
+      >
+        重置
+      </Button>
     </div>
   );
 
