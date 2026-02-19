@@ -1,14 +1,19 @@
 version: '3.8'
 
+# 敏感配置说明：
+# - 开发环境：复制 .env.example 为 .env 并填写真实值
+# - 生产环境：使用 Kubernetes Secret 或配置中心注入环境变量
+# - 禁止将明文密码提交到版本控制！
+
 services:
   # PostgreSQL 数据库
   postgres:
     image: postgres:14-alpine
     container_name: hjscm-postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: hjscm
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-hjscm}
     ports:
       - "5432:5432"
     volumes:
@@ -40,14 +45,19 @@ services:
       dockerfile: Dockerfile.backend
     container_name: hjscm-backend
     environment:
-      SPRING_PROFILES_ACTIVE: dev
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_NAME: hjscm
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      # 数据库配置 - 从环境变量读取
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-hjscm}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      # Redis 配置 - 从环境变量读取
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      # JWT 配置 - 生产环境必须设置
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-28800000}
     ports:
       - "8080:8080"
     depends_on:
