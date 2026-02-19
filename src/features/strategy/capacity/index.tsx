@@ -3,8 +3,8 @@ import { Settings, Factory, TrendingUp, DollarSign, Search, Filter, RefreshCw, A
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
 import { Select } from '@/ui/Select';
-import axios from 'axios';
 import { getCapacityData } from '@/services/api/strategy';
+import { t, getLocale, Locale } from '../../../core/config/i18n';
 
 interface CapacityData {
   id: number;
@@ -46,6 +46,7 @@ const CapacityPlanningPage: React.FC = () => {
     sortUtilization: 'none',
     search: '',
   });
+  const locale = getLocale();
 
   const filteredData = useMemo(() => {
     let result = [...data];
@@ -82,10 +83,10 @@ const CapacityPlanningPage: React.FC = () => {
 
   const filteredStats = useMemo(() => {
     const totalCapacity = filteredData.length > 0
-      ? `${(filteredData.reduce((sum, item) => sum + parseFloat(item.capacity.replace(/[^\d.]/g, '')), 0) / 10000).toFixed(1)}K units`
+      ? `${(filteredData.reduce((sum, item) => sum + parseFloat(item.capacity.replace(/[^\d.]/g, ''))) / 10000).toFixed(1)}K units`
       : '0K units';
     const utilization = filteredData.length > 0
-      ? `${Math.round(filteredData.reduce((sum, item) => sum + item.utilization, 0) / filteredData.length)}%`
+      ? `${Math.round(filteredData.reduce((sum, item) => sum + item.utilization) / filteredData.length)}%`
       : '0%';
     return {
       totalCapacity,
@@ -116,7 +117,7 @@ const CapacityPlanningPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#2D7DD2' }}></div>
-        <span className="ml-3" style={{ color: '#7A8BA8' }}>Loading...</span>
+        <span className="ml-3" style={{ color: '#7A8BA8' }}>{t('error.loading', locale)}</span>
       </div>
     );
   }
@@ -126,7 +127,7 @@ const CapacityPlanningPage: React.FC = () => {
       <div className="p-4 mb-4 rounded border" style={{ background: 'rgba(229,57,53,0.1)', borderColor: 'rgba(229,57,53,0.3)' }}>
         <div className="flex items-center gap-2">
           <span className="text-lg">X</span>
-          <span className="text-sm font-medium" style={{ color: '#E53935' }}>Error</span>
+          <span className="text-sm font-medium" style={{ color: '#E53935' }}>{t('error.loadFailed', locale)}</span>
         </div>
         <p className="text-xs mt-2" style={{ color: '#7A8BA8' }}>{error}</p>
       </div>
@@ -136,43 +137,44 @@ const CapacityPlanningPage: React.FC = () => {
   return (
     <div className="page-enter">
       <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-        <span>Strategic Management</span>
+        <span>{t('menu.strategic', locale)}</span>
         <span>/</span>
-        <span className="text-white">Capacity Planning</span>
+        <span className="text-white">{t('menu.capacity', locale)}</span>
       </div>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-display" style={{ color: '#E8EDF4' }}>
-            Capacity Investment Planning
+            {t('menu.capacity', locale)}
           </h1>
-          <p className="text-sm mt-0.5" style={{ color: '#7A8BA8' }}>Capacity Analysis & Investment Optimization</p>
+          <p className="text-sm mt-0.5" style={{ color: '#7A8BA8' }}>{t('menu.capacity', locale)} & Optimization</p>
         </div>
         <Button variant="outline" size="sm">
           <Settings className="w-4 h-4 mr-1" />
-          Settings
+          {t('btn.settings', locale)}
         </Button>
       </div>
 
+      {/* Filters */}
       <div className="flex items-center gap-4 mb-6 p-4 rounded border" style={{ background: '#131926', borderColor: '#1E2D45' }}>
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4" style={{ color: '#7A8BA8' }} />
-          <span className="text-sm font-medium" style={{ color: '#E8EDF4' }}>Filters</span>
+          <span className="text-sm font-medium" style={{ color: '#E8EDF4' }}>{t('filter.all', locale)}</span>
         </div>
         <Select
           value={filters.type}
           onChange={(e) => setFilters({ ...filters, type: e.target.value as FilterOptions['type'] })}
           style={{ minWidth: 100 }}
         >
-          <option value="all">All Types</option>
-          <option value="factory">Factory</option>
-          <option value="assembly">Assembly</option>
+          <option value="all">{t('filter.all', locale)}</option>
+          <option value="factory">{typeMap.factory}</option>
+          <option value="assembly">{typeMap.assembly}</option>
         </Select>
         <Select
           value={filters.location}
           onChange={(e) => setFilters({ ...filters, location: e.target.value as FilterOptions['location'] })}
           style={{ minWidth: 100 }}
         >
-          <option value="all">All Locations</option>
+          <option value="all">{t('filter.all', locale)}</option>
           <option value="qingdao">Qingdao</option>
           <option value="su">Suzhou</option>
           <option value="thailand">Thailand</option>
@@ -183,15 +185,15 @@ const CapacityPlanningPage: React.FC = () => {
           onChange={(e) => setFilters({ ...filters, sortUtilization: e.target.value as FilterOptions['sortUtilization'] })}
           style={{ minWidth: 100 }}
         >
-          <option value="none">Sort: None</option>
-          <option value="high">High to Low</option>
-          <option value="low">Low to High</option>
+          <option value="none">{t('filter.sort', locale)}</option>
+          <option value="high">{t('filter.highToLow', locale)}</option>
+          <option value="low">{t('filter.lowToHigh', locale)}</option>
         </Select>
         <div className="relative flex-1 max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#7A8BA8' }} />
           <input
             type="text"
-            placeholder="Search factory..."
+            placeholder={t('btn.search', locale)}
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
             className="w-full pl-9 pr-3 py-2 text-sm rounded border bg-[#0D1421] placeholder-[#445568]"
@@ -203,15 +205,16 @@ const CapacityPlanningPage: React.FC = () => {
           size="sm"
           onClick={() => setFilters({ type: 'all', location: 'all', sortUtilization: 'none', search: '' })}
         >
-          Reset
+          {t('btn.reset', locale)}
         </Button>
       </div>
 
+      {/* Stats */}
       <div className="grid gap-4 mb-6" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-2">
             <Factory className="w-4 h-4" style={{ color: '#2D7DD2' }} />
-            <span className="text-sm" style={{ color: '#7A8BA8' }}>Total Capacity</span>
+            <span className="text-sm" style={{ color: '#7A8BA8' }}>{t('menu.capacity', locale)}</span>
           </div>
           <div className="text-2xl font-display font-bold" style={{ color: '#E8EDF4' }}>
             {filteredStats.totalCapacity}
@@ -252,6 +255,7 @@ const CapacityPlanningPage: React.FC = () => {
         </Card>
       </div>
 
+      {/* Capacity List */}
       <Card className="p-4 mb-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-medium" style={{ color: '#E8EDF4' }}>Capacity Projects</h3>
@@ -277,7 +281,7 @@ const CapacityPlanningPage: React.FC = () => {
                   <div>
                     <div className="font-medium" style={{ color: '#E8EDF4' }}>{item.name}</div>
                     <div className="text-xs mt-1" style={{ color: '#445568' }}>
-                      {item.location} - Type: {item.type === 'factory' ? 'Factory' : 'Assembly'}
+                      {item.location} - Type: {typeMap[item.type] || item.type}
                     </div>
                   </div>
                 </div>
@@ -297,7 +301,7 @@ const CapacityPlanningPage: React.FC = () => {
                     <div className="text-sm" style={{ color: '#E8EDF4' }}>{item.cost}</div>
                     <div className="text-xs" style={{ color: '#445568' }}>Investment</div>
                   </div>
-                  <Button variant="outline" size="sm">Optimize</Button>
+                  <Button variant="outline" size="sm">{t('btn.optimize', locale)}</Button>
                 </div>
               </div>
             ))}
@@ -305,6 +309,7 @@ const CapacityPlanningPage: React.FC = () => {
         )}
       </Card>
 
+      {/* Recommendations */}
       <Card className="p-4">
         <h3 className="text-sm font-medium mb-4" style={{ color: '#E8EDF4' }}>Investment Recommendations</h3>
         <div className="space-y-3">

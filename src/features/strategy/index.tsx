@@ -1,5 +1,5 @@
 import React from 'react';
-import { Network, TrendingUp, DollarSign, PieChart, Settings } from 'lucide-react';
+import { Network, TrendingUp, DollarSign, PieChart, Settings, AlertTriangle } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
 
