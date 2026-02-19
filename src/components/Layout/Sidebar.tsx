@@ -1,150 +1,151 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, TrendingUp, CalendarRange, BarChart3, 
   ShoppingCart, Building2, Package, GitBranch, 
   Truck, Activity, ChevronDown, ChevronRight,
   Factory, Scale, FileText, AlertTriangle, ClipboardList,
-  CheckCircle, MapPin, Percent, Zap, Target,
-  RefreshCw, Shield, BarChart, DollarSign, Bell,
-  Search, Settings, Network, TrendingDown, PieChart
+  CheckCircle, Percent, Zap, Target,
+  RefreshCw, Shield, BarChart, DollarSign, 
+  Settings, Network, PieChart
 } from 'lucide-react';
 import { DEMO_CONFIG } from '../../core/config/demo.config';
+import { t, getLocale, Locale } from '../../core/config/i18n';
+import APP_VERSION from '../../core/config/version';
+import LanguageSwitcher from './LanguageSwitcher';
 
 /**
- * HJ SCM Sidebar v2.1 - ISC 框架整合版
+ * HJ SCM Sidebar - Internationalized Version
  * 
- * 菜单顺序：战略层 → 需求 → S&OP → MPS → MRP → 采购 → 库存 → 生产 → 物流 → 风险 → 绩效 → 异常
- * 遵循 V1.1 框架：Process-Centric, Exception-Driven
- * 整合 ISC 体系：分层计划、风险三道防线、SCOR 对齐
+ * Menu Order: Dashboard → Strategic → Demand → S&OP → MPS → MRP → Source → Stock → Make → Deliver → Risk → Performance → Exception
  */
 const NAV_GROUPS = [
-  // === 1. 供应链指挥中心（总览）
+  // === 1. Dashboard
   { section: null, items: [
-    { path: '/', icon: LayoutDashboard, label: '指挥中心', badge: 3 },
+    { path: '/', icon: LayoutDashboard, labelKey: 'menu.dashboard', badge: 3 },
   ]},
   
-  // === 2. 战略层 STRATEGIC（ISC 新增）
-  { section: '战略层 · STRATEGIC', items: [
-    { path: '/strategy', icon: Network, label: '战略规划', children: [
-      { path: '/strategy/network', label: '网络规划' },
-      { path: '/strategy/capacity', label: '产能投资' },
-      { path: '/strategy/portfolio', label: '产品组合' },
-      { path: '/strategy/financial', label: '财务约束' },
+  // === 2. Strategic Layer
+  { section: 'menu.strategic', items: [
+    { path: '/strategy', icon: Network, labelKey: 'menu.strategy', children: [
+      { path: '/strategy/network', labelKey: 'menu.network' },
+      { path: '/strategy/capacity', labelKey: 'menu.capacity' },
+      { path: '/strategy/portfolio', labelKey: 'menu.portfolio' },
+      { path: '/strategy/financial', labelKey: 'menu.financial' },
     ]},
   ]},
   
-  // === 3. 需求管理（输入端）
-  { section: '需求管理 · DEMAND', items: [
-    { path: '/demand', icon: TrendingUp, label: 'AI 需求预测', badge: 0 },
-    { path: '/demand-sense', icon: Zap, label: '需求感知', badge: 0 },
-    { path: '/promotions', icon: Percent, label: '促销管理', badge: 0 },
+  // === 3. Demand Management
+  { section: 'menu.demand', items: [
+    { path: '/demand', icon: TrendingUp, labelKey: 'menu.demandForecast', badge: 0 },
+    { path: '/demand-sense', icon: Zap, labelKey: 'menu.demandSense', badge: 0 },
+    { path: '/promotions', icon: Percent, labelKey: 'menu.promotions', badge: 0 },
   ]},
   
-  // === 4. S&OP 产销协同（战术层）★核心
-  { section: 'S&OP 产销协同 · SOP', items: [
-    { path: '/sop', icon: CalendarRange, label: '产销平衡', children: [
-      { path: '/sop', label: '产销概览' },
-      { path: '/sop/balance', label: '供需对比' },
-      { path: '/sop/whatif', label: 'What-if 模拟' },
-      { path: '/sop/review', label: '需求评审' },
-      { path: '/sop/rccp', label: 'RCCP 产能' },
+  // === 4. S&OP
+  { section: 'menu.sop', items: [
+    { path: '/sop', icon: CalendarRange, labelKey: 'menu.sopOverview', children: [
+      { path: '/sop', labelKey: 'menu.sopOverview' },
+      { path: '/sop/balance', labelKey: 'menu.sopComparison' },
+      { path: '/sop/whatif', labelKey: 'menu.whatif' },
+      { path: '/sop/review', labelKey: 'menu.demandReview' },
+      { path: '/sop/rccp', labelKey: 'menu.rccp' },
     ]},
-    { path: '/variance', icon: Scale, label: '差异分析', badge: 0 },
-    { path: '/sop-meeting', icon: FileText, label: '会议管理', badge: 0 },
+    { path: '/variance', icon: Scale, labelKey: 'menu.variance', badge: 0 },
+    { path: '/sop-meeting', icon: FileText, labelKey: 'menu.sopMeeting', badge: 0 },
   ]},
   
-  // === 5. MPS 主生产计划（战术排程）
-  { section: 'MPS 排程 · MPS', items: [
-    { path: '/mps', icon: BarChart3, label: '滚动计划', children: [
-      { path: '/mps', label: '13周计划' },
-      { path: '/mps/gantt', label: '甘特图' },
-      { path: '/mps/timefences', label: 'Time Fences' },
-      { path: '/mps/atp', label: 'ATP 承诺' },
-    ]},
-  ]},
-  
-  // === 6. MRP 物料计划（执行层）
-  { section: 'MRP 物料 · MRP', items: [
-    { path: '/mrp', icon: RefreshCw, label: 'MRP 运算', children: [
-      { path: '/mrp', label: '净需求计算' },
-      { path: '/mrp/suggestions', label: '采购建议' },
-      { path: '/mrp/production', label: '工单建议' },
-    ]},
-    { path: '/kitting', icon: CheckCircle, label: '齐套分析', badge: 2 },
-  ]},
-  
-  // === 7. 采购与供应（Source）
-  { section: '采购供应 · SOURCE', items: [
-    { path: '/procurement', icon: ShoppingCart, label: 'AI 采购建议', badge: 3 },
-    { path: '/supplier', icon: Building2, label: '供应商管理', children: [
-      { path: '/supplier', label: '风险全景' },
-      { path: '/supplier/risk', label: '风险雷达' },
-      { path: '/supplier/score', label: '绩效评分' },
-      { path: '/supplier/portal', label: '协同门户' },
-      { path: '/supplier/contracts', label: '合同管理' },
+  // === 5. MPS
+  { section: 'menu.mps', items: [
+    { path: '/mps', icon: BarChart3, labelKey: 'menu.mpsOverview', children: [
+      { path: '/mps', labelKey: 'menu.mpsOverview' },
+      { path: '/mps/gantt', labelKey: 'menu.gantt' },
+      { path: '/mps/timefences', labelKey: 'menu.timefences' },
+      { path: '/mps/atp', labelKey: 'menu.atp' },
     ]},
   ]},
   
-  // === 8. 库存管理（Stock，MTS/MTO）
-  { section: '库存仓储 · STOCK', items: [
-    { path: '/inventory', icon: Package, label: '库存总览', badge: 0 },
-    { path: '/inventory/mts', icon: Factory, label: 'MTS 策略', badge: 0 },
-    { path: '/inventory/mto', icon: GitBranch, label: 'MTO 策略', badge: 0 },
-    { path: '/inventory/safety', icon: Shield, label: '安全库存', badge: 0 },
-    { path: '/inventory/abc', icon: BarChart, label: 'ABC-XYZ', badge: 0 },
-    { path: '/inventory/stagnation', icon: AlertTriangle, label: '呆滞预警', badge: 1 },
-  ]},
-  
-  // === 9. 生产执行（Make）
-  { section: '生产执行 · MAKE', items: [
-    { path: '/production', icon: Factory, label: '生产排产', children: [
-      { path: '/production', label: '工单列表' },
-      { path: '/production/schedule', label: '排程视图' },
-      { path: '/production/issue', label: '投料管理' },
-      { path: '/production/completion', label: '完工汇报' },
+  // === 6. MRP
+  { section: 'menu.mrp', items: [
+    { path: '/mrp', icon: RefreshCw, labelKey: 'menu.mrpCalc', children: [
+      { path: '/mrp', labelKey: 'menu.mrpCalc' },
+      { path: '/mrp/suggestions', labelKey: 'menu.purchaseSuggestions' },
+      { path: '/mrp/production', labelKey: 'menu.productionOrders' },
     ]},
-    { path: '/otc-flow', icon: GitBranch, label: 'OTC 追踪', badge: 0 },
+    { path: '/kitting', icon: CheckCircle, labelKey: 'menu.kitting', badge: 2 },
   ]},
   
-  // === 10. 物流交付（Deliver）
-  { section: '物流交付 · DELIVER', items: [
-    { path: '/logistics', icon: Truck, label: '在途可视', badge: 0 },
-    { path: '/logistics/shipment', icon: Package, label: '发货管理', badge: 0 },
-    { path: '/logistics/freight', icon: DollarSign, label: '运费对账', badge: 0 },
-  ]},
-  
-  // === 11. 风险监控 RISK（ISC 三道防线）
-  { section: '风险监控 · RISK', items: [
-    { path: '/risk/forecast', icon: TrendingUp, label: '预测风险', badge: 2, desc: '第一道防线' },
-    { path: '/risk/inventory', icon: Package, label: '库存风险', badge: 1, desc: '第二道防线' },
-    { path: '/risk/execution', icon: Factory, label: '执行风险', badge: 3, desc: '第三道防线' },
-    { path: '/risk/dashboard', icon: BarChart3, label: '风险看板', badge: 0 },
-  ]},
-  
-  // === 12. 绩效分析 PERFORMANCE（SCOR）
-  { section: '绩效分析 · PERFORMANCE', items: [
-    { path: '/kpi', icon: Activity, label: 'SCOR 看板', children: [
-      { path: '/kpi', label: 'KPI 总览' },
-      { path: '/kpi/trend', label: '趋势分析' },
-      { path: '/kpi/benchmark', label: '对标分析' },
+  // === 7. Procurement
+  { section: 'menu.procurement', items: [
+    { path: '/procurement', icon: ShoppingCart, labelKey: 'menu.aiProcurement', badge: 3 },
+    { path: '/supplier', icon: Building2, labelKey: 'menu.supplier', children: [
+      { path: '/supplier', labelKey: 'menu.supplierRisk' },
+      { path: '/supplier/risk', labelKey: 'menu.supplierRisk' },
+      { path: '/supplier/score', labelKey: 'menu.supplierScore' },
+      { path: '/supplier/portal', labelKey: 'menu.supplierPortal' },
+      { path: '/supplier/contracts', labelKey: 'menu.contracts' },
     ]},
-    { path: '/kpi/pyramid', icon: PieChart, label: '价值金字塔', badge: 0 },
-    { path: '/reports', icon: FileText, label: '自助报表', badge: 0 },
-    { path: '/decision', icon: ClipboardList, label: '决策支持', badge: 0 },
   ]},
   
-  // === 13. 异常工作台（Exception）
-  { section: '异常工作台 · EXCEPTION', items: [
-    { path: '/exceptions', icon: AlertTriangle, label: '智能异常', badge: 5 },
-    { path: '/alert-rules', icon: Settings, label: '预警规则', badge: 0 },
+  // === 8. Inventory
+  { section: 'menu.inventory', items: [
+    { path: '/inventory', icon: Package, labelKey: 'menu.inventoryOverview', badge: 0 },
+    { path: '/inventory/mts', icon: Factory, labelKey: 'menu.mts', badge: 0 },
+    { path: '/inventory/mto', icon: GitBranch, labelKey: 'menu.mto', badge: 0 },
+    { path: '/inventory/safety', icon: Shield, labelKey: 'menu.safetyStock', badge: 0 },
+    { path: '/inventory/abc', icon: BarChart, labelKey: 'menu.abc', badge: 0 },
+    { path: '/inventory/stagnation', icon: AlertTriangle, labelKey: 'menu.stagnation', badge: 1 },
+  ]},
+  
+  // === 9. Production
+  { section: 'menu.production', items: [
+    { path: '/production', icon: Factory, labelKey: 'menu.productionScheduling', children: [
+      { path: '/production', labelKey: 'menu.workOrders' },
+      { path: '/production/schedule', labelKey: 'menu.schedule' },
+      { path: '/production/issue', labelKey: 'menu.issue' },
+      { path: '/production/completion', labelKey: 'menu.completion' },
+    ]},
+    { path: '/otc-flow', icon: GitBranch, labelKey: 'menu.otc', badge: 0 },
+  ]},
+  
+  // === 10. Logistics
+  { section: 'menu.logistics', items: [
+    { path: '/logistics', icon: Truck, labelKey: 'menu.inTransit', badge: 0 },
+    { path: '/logistics/shipment', icon: Package, labelKey: 'menu.shipment', badge: 0 },
+    { path: '/logistics/freight', icon: DollarSign, labelKey: 'menu.freight', badge: 0 },
+  ]},
+  
+  // === 11. Risk Management
+  { section: 'menu.risk', items: [
+    { path: '/risk/forecast', icon: TrendingUp, labelKey: 'menu.forecastRisk', badge: 2, desc: 'First Line' },
+    { path: '/risk/inventory', icon: Package, labelKey: 'menu.inventoryRisk', badge: 1, desc: 'Second Line' },
+    { path: '/risk/execution', icon: Factory, labelKey: 'menu.executionRisk', badge: 3, desc: 'Third Line' },
+    { path: '/risk/dashboard', icon: BarChart3, labelKey: 'menu.riskDashboard', badge: 0 },
+  ]},
+  
+  // === 12. Performance
+  { section: 'menu.kpi', items: [
+    { path: '/kpi', icon: Activity, labelKey: 'menu.kpi', children: [
+      { path: '/kpi', labelKey: 'menu.kpiOverview' },
+      { path: '/kpi/trend', labelKey: 'menu.trend' },
+      { path: '/kpi/benchmark', labelKey: 'menu.benchmark' },
+    ]},
+    { path: '/kpi/pyramid', icon: PieChart, labelKey: 'menu.pyramid', badge: 0 },
+    { path: '/reports', icon: FileText, labelKey: 'menu.reports', badge: 0 },
+    { path: '/decision', icon: ClipboardList, labelKey: 'menu.decision', badge: 0 },
+  ]},
+  
+  // === 13. Exception Workbench
+  { section: 'menu.exceptions', items: [
+    { path: '/exceptions', icon: AlertTriangle, labelKey: 'menu.smartException', badge: 5 },
+    { path: '/alert-rules', icon: Settings, labelKey: 'menu.alertRules', badge: 0 },
   ]},
 ];
 
 /**
- * Sidebar 子菜单项组件
+ * Sidebar Item Component
  */
-const SidebarItem = ({ item, depth = 0 }) => {
+const SidebarItem = ({ item, depth = 0, locale }: { item: any, depth?: number, locale: Locale }) => {
   const location = useLocation();
   const [expanded, setExpanded] = useState(
     item.children?.some((c: any) => 
@@ -152,6 +153,7 @@ const SidebarItem = ({ item, depth = 0 }) => {
     ) || false
   );
   const Icon = item.icon;
+  const label = t(item.labelKey, locale);
   
   // 有子菜单
   if (item.children) {
@@ -166,7 +168,7 @@ const SidebarItem = ({ item, depth = 0 }) => {
           }}>
           <div className="flex items-center gap-2">
             {Icon && <Icon className="w-4 h-4 shrink-0" />}
-            <span>{item.label}</span>
+            <span>{label}</span>
             {item.badge > 0 && (
               <span className="px-1.5 py-0.5 rounded-full text-xs" 
                 style={{ background: '#E53935', color: '#fff' }}>
@@ -190,7 +192,7 @@ const SidebarItem = ({ item, depth = 0 }) => {
                   color: isActive ? '#3D9BE9' : '#7A8BA8',
                   background: isActive ? 'rgba(45,125,210,0.08)' : 'transparent'
                 })}>
-                {child.label}
+                {t(child.labelKey, locale)}
               </NavLink>
             ))}
           </div>
@@ -210,7 +212,7 @@ const SidebarItem = ({ item, depth = 0 }) => {
       })}>
       <div className="flex items-center gap-2">
         {Icon && <Icon className="w-4 h-4 shrink-0" />}
-        <span>{item.label}</span>
+        <span>{label}</span>
       </div>
       {item.badge > 0 && (
         <span className="px-1.5 py-0.5 rounded-full text-xs" 
@@ -223,53 +225,65 @@ const SidebarItem = ({ item, depth = 0 }) => {
 };
 
 /**
- * 侧边栏组件 v2.1
- * 
- * ISC 框架整合版：
- * - 新增战略层菜单
- * - 新增风险监控菜单（三道防线）
- * - 新增价值金字塔菜单
+ * Sidebar Component - Internationalized
  */
-const Sidebar = () => (
-  <aside className="flex flex-col overflow-hidden" 
-    style={{ width: '250px', minWidth: '250px', background: '#0B0F17', borderRight: '1px solid #1E2D45' }}>
-    <div className="px-4 py-4" style={{ borderBottom: '1px solid #1E2D45' }}>
-      <div className="flex items-center gap-2 mb-0.5">
-        <div className="w-6 h-6 rounded flex items-center justify-center text-white text-xs font-bold" 
-          style={{ background: '#2D7DD2' }}>豪</div>
-        <span className="font-display text-base font-semibold" 
-          style={{ color: '#E8EDF4' }}>
-          {DEMO_CONFIG.company.shortName}
-        </span>
-      </div>
-      <p className="text-xs pl-8" style={{ color: '#445568' }}>SCM智能管理系统</p>
-    </div>
-    
-    <nav className="flex-1 overflow-y-auto py-2" style={{ scrollbarWidth: 'thin' }}>
-      {NAV_GROUPS.map((group, gi) => (
-        <div key={gi} className={gi > 0 ? 'mt-1' : ''}>
-          {group.section && (
-            <div className="px-3 py-2 text-xs font-medium tracking-wider uppercase" 
-              style={{ color: '#2D5078' }}>
-              {group.section}
+const Sidebar: React.FC = () => {
+  const [locale, setLocaleState] = useState<Locale>(getLocale());
+  
+  useEffect(() => {
+    const handleChange = (e: CustomEvent) => {
+      setLocaleState(e.detail.locale);
+    };
+    window.addEventListener('localeChange', handleChange as EventListener);
+    return () => window.removeEventListener('localeChange', handleChange as EventListener);
+  }, []);
+
+  return (
+    <aside className="flex flex-col overflow-hidden" 
+      style={{ width: '250px', minWidth: '250px', background: '#0B0F17', borderRight: '1px solid #1E2D45' }}>
+      <div className="px-4 py-4" style={{ borderBottom: '1px solid #1E2D45' }}>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded flex items-center justify-center text-white text-xs font-bold" 
+              style={{ background: '#2D7DD2' }}>
+              {t('app.title', locale).charAt(0)}
             </div>
-          )}
-          <div className="px-2 space-y-0.5">
-            {group.items.map(item => (
-              <SidebarItem key={item.path} item={item} />
-            ))}
+            <span className="font-display text-base font-semibold" 
+              style={{ color: '#E8EDF4' }}>
+              {DEMO_CONFIG.company.shortName}
+            </span>
           </div>
+          <LanguageSwitcher />
         </div>
-      ))}
-    </nav>
-    
-    <div className="px-4 py-3" style={{ borderTop: '1px solid #1E2D45' }}>
-      <div className="flex items-center justify-between text-xs" style={{ color: '#2D5078' }}>
-        <span>v3.2 演示版</span>
-        <span>{DEMO_CONFIG.company.demoDate}</span>
+        <p className="text-xs pl-8" style={{ color: '#445568' }}>{t('app.subtitle', locale)}</p>
       </div>
-    </div>
-  </aside>
-);
+      
+      <nav className="flex-1 overflow-y-auto py-2" style={{ scrollbarWidth: 'thin' }}>
+        {NAV_GROUPS.map((group, gi) => (
+          <div key={gi} className={gi > 0 ? 'mt-1' : ''}>
+            {group.section && (
+              <div className="px-3 py-2 text-xs font-medium tracking-wider uppercase" 
+                style={{ color: '#2D5078' }}>
+                {t(group.section, locale)}
+              </div>
+            )}
+            <div className="px-2 space-y-0.5">
+              {group.items.map(item => (
+                <SidebarItem key={item.path} item={item} locale={locale} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </nav>
+      
+      <div className="px-4 py-3" style={{ borderTop: '1px solid #1E2D45' }}>
+        <div className="flex items-center justify-between text-xs" style={{ color: '#2D5078' }}>
+          <span>{APP_VERSION.display}</span>
+          <span>{DEMO_CONFIG.company.demoDate}</span>
+        </div>
+      </div>
+    </aside>
+  );
+};
 
 export default Sidebar;
