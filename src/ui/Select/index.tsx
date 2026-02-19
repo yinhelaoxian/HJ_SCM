@@ -51,3 +51,5 @@ const Select: React.FC<SelectProps> = ({
 
 export default Select;
 export type { SelectProps, SelectOption };
+// 命名导出
+export { Select };

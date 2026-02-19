@@ -59,7 +59,7 @@ interface CapacityForecast {
 /**
  * 产能投资规划页面
  *
- * 功能：产能分析、投资规划、设备管理、产能优化
+ * 功能：产能分析，投资规划、设备管理、产能优化
  */
 const CapacityPlanningPage: React.FC = () => {
   // API 数据状态
@@ -98,7 +98,7 @@ const CapacityPlanningPage: React.FC = () => {
       );
     }
 
-    // 搜索筛选（工厂名称）
+    // 搜索筛选
     if (filters.search.trim()) {
       const searchLower = filters.search.toLowerCase();
       result = result.filter((item) =>
@@ -197,7 +197,7 @@ const CapacityPlanningPage: React.FC = () => {
   const ErrorAlert = ({ message }: { message: string }) => (
     <div className="p-4 mb-4 rounded border" style={{ background: 'rgba(229,57,53,0.1)', borderColor: 'rgba(229,57,53,0.3)' }}>
       <div className="flex items-center gap-2">
-        <span className="text-lg">❌</span>
+        <span className="text-lg">X</span>
         <span className="text-sm font-medium" style={{ color: '#E53935' }}>错误</span>
       </div>
       <p className="text-xs mt-2" style={{ color: '#7A8BA8' }}>{message}</p>
@@ -216,7 +216,7 @@ const CapacityPlanningPage: React.FC = () => {
       <Card className="p-4 mb-4" style={{ background: 'linear-gradient(135deg, rgba(229,57,53,0.12) 0%, rgba(245,124,0,0.08) 100%)', border: '1px solid rgba(229,57,53,0.3)' }}>
         <div className="flex items-start gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">⚠️</span>
+            <span className="text-2xl">!</span>
             <h3 className="text-sm font-medium" style={{ color: '#E53935' }}>
               产能不均风险预警
             </h3>
@@ -257,12 +257,12 @@ const CapacityPlanningPage: React.FC = () => {
           <div className="text-xs mb-2" style={{ color: '#7A8BA8' }}>投资建议</div>
           <div className="flex gap-3">
             <div className="flex-1 p-2 rounded text-xs" style={{ background: 'rgba(229,57,53,0.1)' }}>
-              <div className="font-medium" style={{ color: '#E8EDF4' }}>🏭 扩建青岛总部</div>
+              <div className="font-medium" style={{ color: '#E8EDF4' }}>扩建青岛总部</div>
               <div style={{ color: '#7A8BA8' }}>产能超载 12%，需扩建</div>
               <div className="mt-1" style={{ color: '#F57C00' }}>投资 ¥1.5亿</div>
             </div>
             <div className="flex-1 p-2 rounded text-xs" style={{ background: 'rgba(0,137,123,0.1)' }}>
-              <div className="font-medium" style={{ color: '#E8EDF4' }}>🌏 提升泰国产能</div>
+              <div className="font-medium" style={{ color: '#E8EDF4' }}>提升泰国产能</div>
               <div style={{ color: '#7A8BA8' }}>利用率仅 43%，可优化</div>
               <div className="mt-1" style={{ color: '#F57C00' }}>投资 ¥5000万</div>
             </div>
@@ -507,7 +507,7 @@ const CapacityPlanningPage: React.FC = () => {
                     background: item.status === 'overloaded' ? 'rgba(229,57,53,0.15)' : 
                                item.status === 'underloaded' ? 'rgba(0,137,123,0.15)' : 'rgba(45,125,210,0.1)'
                   }}>
-                  {item.status === 'overloaded' ? '🔴' : item.status === 'underloaded' ? '🟢' : '🏭'}
+                  {item.status === 'overloaded' ? 'X' : item.status === 'underloaded' ? 'O' : 'F'}
                 </div>
                 <div>
                   <div className="font-medium" style={{ color: '#E8EDF4' }}>
@@ -567,7 +567,7 @@ const CapacityPlanningPage: React.FC = () => {
             <div key={inv.id} className="flex items-start gap-3 p-3 rounded"
               style={{
                 background: inv.priority === 'high' ? 'rgba(229,57,53,0.08)' :
-                  inv.priority === 'medium' ? 'rgba(245,124,0.08)' : 'rgba(0,137,123,0.08)'
+                  inv.priority === 'medium' ? 'rgba(245,124,0,0.08)' : 'rgba(0,137,123,0.08)'
               }}>
               <TrendingUp className="w-4 h-4 mt-0.5"
                 style={{

@@ -264,30 +264,6 @@ const NetworkPlanningPage: React.FC = () => {
     };
   }, [filteredNodes]);
 
-  // 处理图表点击事件
-  const handleChartClick = useCallback(
-    (params: any) => {
-      const chartData = filteredNodes.slice(0, 12);
-      const nodeIndex = params.dataIndex;
-      const node = chartData[nodeIndex];
-      if (!node) return;
-
-      setHighlightedNodeId(node.id);
-
-      // 滚动到对应节点
-      const nodeElement = nodeRefs.current[node.id];
-      if (nodeElement) {
-        nodeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      // 3秒后取消高亮
-      setTimeout(() => {
-        setHighlightedNodeId(null);
-      }, 3000);
-    },
-    [filteredNodes]
-  );
-
   const loadData = useCallback(async () => {
     try {
       setLoading(true);

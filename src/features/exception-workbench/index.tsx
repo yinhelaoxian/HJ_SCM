@@ -97,13 +97,6 @@ export default function ExceptionWorkbench() {
       slaDeadline: '2026-02-14 18:00',
       createdAt: '2026-02-14 10:00',
       customerLevel: 'A'
-    },
-  ];
-      priorityLevel: 'MEDIUM',
-      status: 'OPEN',
-      slaDeadline: '2026-02-17 08:00',
-      createdAt: '2026-02-14 06:00',
-      customerLevel: 'C'
     }
   ];
 
