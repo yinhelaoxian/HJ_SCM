@@ -1,9 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { Settings, DollarSign, TrendingUp, AlertCircle, Target } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Settings, DollarSign, TrendingUp, AlertCircle, Target, Search, Filter, RefreshCw } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
+import { Select } from '@/ui/Select';
 import { getFinancialData } from '@/services/api/strategy';
 import { FinancialTypes } from './types';
+
+// 筛选选项类型定义
+interface FilterOptions {
+  budgetStatus: 'all' | 'used' | 'remaining';
+  expenseType: 'all' | 'equipment' | 'labor' | 'logistics' | 'rd';
+  quarter: 'all' | 'q1' | 'q2' | 'q3' | 'q4';
+  search: string;
+}
+
+// 预算状态映射
+const budgetStatusMap: Record<string, string> = {
+  used: '已用',
+  remaining: '剩余',
+};
+
+// 支出类型映射
+const expenseTypeMap: Record<string, string> = {
+  equipment: '设备',
+  labor: '人力',
+  logistics: '物流',
+  rd: '研发',
+};
+
+// 季度映射
+const quarterMap: Record<string, string> = {
+  q1: 'Q1',
+  q2: 'Q2',
+  q3: 'Q3',
+  q4: 'Q4',
+};
 
 // 财务数据类型定义
 interface FinancialStats {
@@ -23,6 +54,9 @@ interface BudgetItem {
   used: string;
   utilization: number;
   trend: number;
+  type: 'equipment' | 'labor' | 'logistics' | 'rd';
+  quarter: string;
+  status: 'used' | 'remaining';
 }
 
 interface InvestmentConstraint {
@@ -90,6 +124,68 @@ const FinancialConstraintsPage: React.FC = () => {
   const [investmentConstraints, setInvestmentConstraints] = useState<InvestmentConstraint[]>([]);
   const [financialRisks, setFinancialRisks] = useState<FinancialRisk[]>([]);
 
+  // 筛选状态
+  const [filters, setFilters] = useState<FilterOptions>({
+    budgetStatus: 'all',
+    expenseType: 'all',
+    quarter: 'all',
+    search: '',
+  });
+
+  // 使用 useMemo 计算筛选后的预算项目
+  const filteredBudgetItems = useMemo(() => {
+    let result = [...budgetItems];
+
+    // 预算状态筛选
+    if (filters.budgetStatus !== 'all') {
+      result = result.filter((item) => item.status === filters.budgetStatus);
+    }
+
+    // 支出类型筛选
+    if (filters.expenseType !== 'all') {
+      result = result.filter((item) => item.type === filters.expenseType);
+    }
+
+    // 季度筛选
+    if (filters.quarter !== 'all') {
+      result = result.filter((item) => item.quarter === filters.quarter);
+    }
+
+    // 搜索筛选（项目名称）
+    if (filters.search.trim()) {
+      const searchLower = filters.search.toLowerCase();
+      result = result.filter((item) =>
+        item.name.toLowerCase().includes(searchLower)
+      );
+    }
+
+    return result;
+  }, [budgetItems, filters]);
+
+  // 筛选后的统计
+  const filteredStats = useMemo(() => {
+    const totalBudgetValue = filteredBudgetItems.reduce((sum, item) => {
+      const value = parseFloat(item.budget.replace(/[¥,]/g, ''));
+      return sum + (isNaN(value) ? 0 : value);
+    }, 0);
+
+    const usedBudgetValue = filteredBudgetItems.reduce((sum, item) => {
+      const value = parseFloat(item.used.replace(/[¥,]/g, ''));
+      return sum + (isNaN(value) ? 0 : value);
+    }, 0);
+
+    const avgUtilization = filteredBudgetItems.length > 0
+      ? Math.round(filteredBudgetItems.reduce((sum, item) => sum + item.utilization, 0) / filteredBudgetItems.length)
+      : 0;
+
+    return {
+      totalBudget: `¥${(totalBudgetValue / 100000000).toFixed(1)}亿`,
+      usedBudget: `¥${(usedBudgetValue / 100000000).toFixed(1)}亿`,
+      budgetUtilization: avgUtilization,
+      count: filteredBudgetItems.length,
+    };
+  }, [filteredBudgetItems]);
+
   // 获取财务数据
   useEffect(() => {
     const fetchFinancialData = async () => {
@@ -132,10 +228,12 @@ const FinancialConstraintsPage: React.FC = () => {
         } else {
           // 默认 budgetItems
           setBudgetItems([
-            { id: 1, name: '研发投入', budget: '¥500,000,000', used: '¥320,000,000', utilization: 64, trend: 2.3 },
-            { id: 2, name: '生产基地建设', budget: '¥450,000,000', used: '¥280,000,000', utilization: 62.2, trend: 1.5 },
-            { id: 3, name: '智能制造升级', budget: '¥300,000,000', used: '¥180,000,000', utilization: 60, trend: -1.2 },
-            { id: 4, name: '市场拓展', budget: '¥250,000,000', used: '¥70,000,000', utilization: 28, trend: 5.8 }
+            { id: 1, name: '研发投入', budget: '¥500,000,000', used: '¥320,000,000', utilization: 64, trend: 2.3, type: 'rd', quarter: 'q1', status: 'used' },
+            { id: 2, name: '生产基地建设', budget: '¥450,000,000', used: '¥280,000,000', utilization: 62.2, trend: 1.5, type: 'equipment', quarter: 'q2', status: 'used' },
+            { id: 3, name: '智能制造升级', budget: '¥300,000,000', used: '¥180,000,000', utilization: 60, trend: -1.2, type: 'equipment', quarter: 'q1', status: 'used' },
+            { id: 4, name: '市场拓展', budget: '¥250,000,000', used: '¥70,000,000', utilization: 28, trend: 5.8, type: 'labor', quarter: 'q3', status: 'used' },
+            { id: 5, name: '物流系统优化', budget: '¥150,000,000', used: '¥20,000,000', utilization: 13.3, trend: 1.2, type: 'logistics', quarter: 'q4', status: 'remaining' },
+            { id: 6, name: '人力资源培训', budget: '¥80,000,000', used: '¥75,000,000', utilization: 93.8, trend: 0.5, type: 'labor', quarter: 'q2', status: 'used' },
           ]);
         }
 
@@ -206,10 +304,12 @@ const FinancialConstraintsPage: React.FC = () => {
         setError('加载财务数据失败，请稍后重试');
         // 设置默认数据以保持 UI 显示
         setBudgetItems([
-          { id: 1, name: '研发投入', budget: '¥500,000,000', used: '¥320,000,000', utilization: 64, trend: 2.3 },
-          { id: 2, name: '生产基地建设', budget: '¥450,000,000', used: '¥280,000,000', utilization: 62.2, trend: 1.5 },
-          { id: 3, name: '智能制造升级', budget: '¥300,000,000', used: '¥180,000,000', utilization: 60, trend: -1.2 },
-          { id: 4, name: '市场拓展', budget: '¥250,000,000', used: '¥70,000,000', utilization: 28, trend: 5.8 }
+          { id: 1, name: '研发投入', budget: '¥500,000,000', used: '¥320,000,000', utilization: 64, trend: 2.3, type: 'rd', quarter: 'q1', status: 'used' },
+          { id: 2, name: '生产基地建设', budget: '¥450,000,000', used: '¥280,000,000', utilization: 62.2, trend: 1.5, type: 'equipment', quarter: 'q2', status: 'used' },
+          { id: 3, name: '智能制造升级', budget: '¥300,000,000', used: '¥180,000,000', utilization: 60, trend: -1.2, type: 'equipment', quarter: 'q1', status: 'used' },
+          { id: 4, name: '市场拓展', budget: '¥250,000,000', used: '¥70,000,000', utilization: 28, trend: 5.8, type: 'labor', quarter: 'q3', status: 'used' },
+          { id: 5, name: '物流系统优化', budget: '¥150,000,000', used: '¥20,000,000', utilization: 13.3, trend: 1.2, type: 'logistics', quarter: 'q4', status: 'remaining' },
+          { id: 6, name: '人力资源培训', budget: '¥80,000,000', used: '¥75,000,000', utilization: 93.8, trend: 0.5, type: 'labor', quarter: 'q2', status: 'used' },
         ]);
         setInvestmentConstraints([
           { id: 1, title: '年度预算上限', description: '年度总预算不得超过¥15亿元', priority: 'high', impact: '硬性约束' },
