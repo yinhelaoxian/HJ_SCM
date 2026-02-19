@@ -1,5 +1,10 @@
 // Mock API 服务
 // 用于前后端联调测试
+//
+// ⚠️ 重要：供应商命名规范说明
+// - 演示数据 (src/services/mock/mock.data.ts): SUP-DE-001, SUP-CN-012, SUP-CN-023, SUP-TH-007
+// - 开发数据 (src/mock/services/mockAPI.ts): 使用统一的命名规范
+// - 目的：消除两套数据命名不一致导致的混淆
 
 // 模拟延迟
 const MOCK_DELAY = 300;
@@ -8,31 +13,50 @@ const MOCK_DELAY = 300;
 
 export const mockSuppliers = [
   {
-    id: 'SUP-001',
-    code: 'QDDJ',
-    name: '青岛电机有限公司',
+    id: 'SUP-DE-001',
+    code: 'BUHLER',
+    name: 'Bühler Motor GmbH',
+    nameCn: '德国布尔电机',
     level: 'A',
     status: 'ACTIVE',
-    contactName: '张经理',
-    contactPhone: '138-5321-0001',
-    contactEmail: 'zhang@qddj.com'
+    country: 'DE',
+    region: 'EMEA',
+    contactName: 'Hans Mueller',
+    contactPhone: '+49-89-1234-5678',
+    contactEmail: 'h.mueller@buhler-motor.de'
   },
   {
-    id: 'SUP-002',
-    code: 'ZJKJ',
-    name: '中晶科技',
+    id: 'SUP-CN-012',
+    code: 'SUZHOU_JINGQU',
+    name: 'Suzhou Jingqu Technology',
+    nameCn: '苏州精驱科技',
     level: 'A',
     status: 'ACTIVE',
-    contactName: '李工',
-    contactPhone: '139-5321-0002',
-    contactEmail: 'li@zjkj.com'
+    country: 'CN',
+    region: 'APAC',
+    contactName: '张经理',
+    contactPhone: '138-5321-0001',
+    contactEmail: 'zhang@suzhoujingqu.com'
+  },
+  {
+    id: 'SUP-TH-007',
+    code: 'THAI_TECH',
+    name: 'Thai Tech Manufacturing',
+    nameCn: '泰国科技制造',
+    level: 'B',
+    status: 'ACTIVE',
+    country: 'TH',
+    region: 'APAC',
+    contactName: 'Somchai',
+    contactPhone: '+66-2-1234-5678',
+    contactEmail: 'somchai@thaitech.co.th'
   }
 ];
 
 export const mockPurchaseOrders = [
   {
     id: 'PO-2026-001',
-    supplierId: 'SUP-001',
+    supplierId: 'SUP-DE-001',
     supplierName: '青岛电机有限公司',
     materialId: 'MED-MOTOR-001',
     materialName: '医养电机',
@@ -46,7 +70,7 @@ export const mockPurchaseOrders = [
   },
   {
     id: 'PO-2026-002',
-    supplierId: 'SUP-001',
+    supplierId: 'SUP-DE-001',
     supplierName: '青岛电机有限公司',
     materialId: 'MED-MOTOR-001',
     materialName: '医养电机',
@@ -60,7 +84,7 @@ export const mockPurchaseOrders = [
   },
   {
     id: 'PO-2026-003',
-    supplierId: 'SUP-002',
+    supplierId: 'SUP-CN-012',
     supplierName: '中晶科技',
     materialId: 'MED-CONTROL-001',
     materialName: '控制模块',
@@ -135,7 +159,7 @@ export const mockExceptions = [
     id: 'EXC-002',
     type: 'DELAY',
     title: '供应商延期提醒',
-    supplierId: 'SUP-001',
+    supplierId: 'SUP-DE-001',
     supplierName: '青岛电机有限公司',
     delayDays: 3,
     priorityScore: 78,
@@ -229,7 +253,7 @@ export const mockAPI = {
       return {
         success: true,
         token: 'mock-jwt-token-' + Date.now(),
-        supplierId: 'SUP-001',
+        supplierId: 'SUP-DE-001',
         supplierName: '青岛电机有限公司',
         level: 'A'
       };

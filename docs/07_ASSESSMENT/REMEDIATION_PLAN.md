@@ -21,10 +21,10 @@
 
 | 问题 | 文件 | 预估工时 | 状态 |
 |------|------|----------|------|
-| Repository 接口补充 | `backend/*/repository/*.java` | 8h | 待处理 |
-| 单元测试运行修复 | `backend/*/test/*.java` | 4h | 待处理 |
-| React-is 版本修复 | `package.json` | 0.5h | 待处理 |
-| Mock 数据统一 | `src/services/mock.data.ts` + `mockAPI.ts` | 4h | 待处理 |
+| Repository 接口补充 | `repository/*.java` | 8h | ✅ 已完成 |
+| 单元测试运行修复 | `backend/*/test/*.java` | 4h | ⏳ 待处理 |
+| React-is 版本修复 | `package.json` | 0.5h | ✅ 已完成 |
+| Mock 数据统一 | `src/services/mock.data.ts` + `mockAPI.ts` | 4h | ⏳ 待处理 |
 
 ### 🟢 P2 - 中期优化（1-2个月）
 
