@@ -1,15 +1,45 @@
 #!/bin/bash
 
 # HJ_SCM 可靠启动脚本 (支持systemd和nohup两种方式)
-# 用法: ./hj-run.sh start|stop|status|restart|enable
+# 用法: ./hj-run.sh start|stop|status|restart|enable|auto-commit
 
 PROJECT_DIR="/home/ubuntu/.openclaw/workspace/HJ_SCM"
 SERVICE_NAME="hj-scm"
+AUTO_COMMIT=true  # 是否自动提交代码
 
 cd "$PROJECT_DIR"
 
+# 自动提交函数
+auto_commit() {
+    if [ "$AUTO_COMMIT" != "true" ]; then
+        return
+    fi
+    
+    # 检查是否有未提交的变更
+    if git diff --quiet 2>/dev/null || git diff --cached --quiet 2>/dev/null; then
+        echo "📦 检测到代码变更，自动提交..."
+        git add -A
+        # 生成提交信息
+        MSG="chore: 自动提交 $(date '+%Y-%m-%d %H:%M')"
+        git commit -m "$MSG" 2>/dev/null
+        
+        # 检查隧道是否可用
+        if bash ~/tunnel_ec2.sh 2>/dev/null; then
+            echo "🚀 推送到GitHub..."
+            git push origin main 2>/dev/null
+            echo "✅ 已推送到GitHub"
+        else
+            echo "⚠️  SSH隧道不可用，推送延迟"
+        fi
+    fi
+}
+
 case "${1:-start}" in
   start)
+    # 启动前自动提交
+    echo "🔍 检查代码变更..."
+    auto_commit
+    
     # 检查是否可以用systemd
     if command -v systemctl &> /dev/null; then
       echo "🚀 使用systemd启动服务..."
@@ -36,6 +66,9 @@ case "${1:-start}" in
     ;;
     
   stop)
+    # 停止前自动提交
+    auto_commit
+    
     if command -v systemctl &> /dev/null && sudo systemctl is-active --quiet $SERVICE_NAME 2>/dev/null; then
       echo "🛑 停止服务 (systemd)..."
       sudo systemctl stop $SERVICE_NAME
@@ -82,6 +115,37 @@ case "${1:-start}" in
     $0 start
     ;;
     
+  commit)
+    # 手动触发提交
+    echo "📦 手动提交代码..."
+    git add -A
+    MSG="${2:-manual commit $(date '+%Y-%m-%d %H:%M')}"
+    git commit -m "$MSG"
+    echo "✅ 已提交"
+    ;;
+    
+  push)
+    # 手动推送到GitHub
+    echo "🚀 推送到GitHub..."
+    if bash ~/tunnel_ec2.sh 2>/dev/null; then
+      git push origin main
+      echo "✅ 已推送"
+    else
+      echo "❌ SSH隧道不可用"
+    fi
+    ;;
+    
+  auto)
+    # 开启/关闭自动提交
+    if [ "$2" = "off" ]; then
+      AUTO_COMMIT=false
+      echo "⚠️  已关闭自动提交"
+    else
+      AUTO_COMMIT=true
+      echo "✅ 已开启自动提交"
+    fi
+    ;;
+    
   enable)
     if command -v systemctl &> /dev/null; then
       echo "🔧 启用开机自启..."
@@ -120,6 +184,17 @@ case "${1:-start}" in
     ;;
     
   *)
-    echo "用法: ./hj-run.sh [start|stop|status|restart|enable|disable|install|log]"
+    echo "用法: ./hj-run.sh [start|stop|status|restart|commit|push|auto|enable|disable|install|log]"
+    echo ""
+    echo "命令:"
+    echo "  start   - 启动服务（自动提交代码）"
+    echo "  stop    - 停止服务（自动提交代码）"
+    echo "  status  - 查看服务状态"
+    echo "  restart - 重启服务"
+    echo "  commit  - 手动提交代码"
+    echo "  push    - 推送到GitHub"
+    echo "  auto off - 关闭自动提交"
+    echo "  enable  - 开机自启"
+    echo "  install - 安装systemd服务"
     ;;
 esac
