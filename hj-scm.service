@@ -1,0 +1,17 @@
+[Unit]
+Description=HJ SCM Development Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/.openclaw/workspace/HJ_SCM
+ExecStart=/usr/bin/npm run dev
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/.openclaw/workspace/HJ_SCM/vite.log
+StandardError=append:/home/ubuntu/.openclaw/workspace/HJ_SCM/vite.log
+Environment=NODE_ENV=development
+
+[Install]
+WantedBy=multi-user.target
