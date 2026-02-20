@@ -731,4 +731,4 @@ const NetworkPlanningPage: React.FC = () => {
   );
 };
 
-export default NetworkPage;
+export default NetworkPlanningPage;
