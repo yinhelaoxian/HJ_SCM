@@ -32,7 +32,7 @@ import FreightPage from './features/freight';
 import StrategyPage from './features/strategy';
 import CapacityPage from './features/strategy/capacity';
 import FinancialPage from './features/strategy/financial';
-import NetworkPage from './features/strategy/network';
+import NetworkPlanningPage from './features/strategy/network';
 import PortfolioPage from './features/strategy/portfolio';
 import RiskDashboardPage from './features/risk-dashboard';
 import SCORDashboardPage from './features/kpi-scor';
@@ -190,7 +190,7 @@ const App: React.FC = () => (
               <Route path="/strategy" element={<StrategyPage />} />
               <Route path="/strategy/capacity" element={<CapacityPage />} />
               <Route path="/strategy/financial" element={<FinancialPage />} />
-              <Route path="/strategy/network" element={<NetworkPage />} />
+              <Route path="/strategy/network" element={<NetworkPlanningPage />} />
               <Route path="/strategy/portfolio" element={<PortfolioPage />} />
               
               {/* === 风险监控 === */}
