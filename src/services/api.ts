@@ -10,6 +10,175 @@ interface ApiResponse<T> {
   message?: string;
 }
 
+// ============ 缺失的类型定义 ============
+
+// MRP 相关类型
+interface MrpRunResponse {
+  runId: string;
+  status: string;
+  message: string;
+}
+
+interface MrpRequirement {
+  id: string;
+  materialCode: string;
+  materialName: string;
+  quantity: number;
+  date: string;
+  plantCode: string;
+}
+
+interface KitCheckResult {
+  requirementId: string;
+  availableQty: number;
+  shortfallQty: number;
+  status: 'sufficient' | 'insufficient';
+}
+
+interface ProcurementSuggestion {
+  id: string;
+  materialCode: string;
+  materialName: string;
+  suggestedQty: number;
+  supplier: string;
+  priority: string;
+}
+
+// Trace 相关类型
+interface TraceNode {
+  id: string;
+  type: 'material' | 'order' | 'batch' | 'production';
+  code: string;
+  name: string;
+  quantity: number;
+  date: string;
+  children?: TraceNode[];
+  parents?: TraceNode[];
+}
+
+interface ChangeImpactAnalysis {
+  documentId: string;
+  impactedItems: Array<{
+    itemId: string;
+    itemType: string;
+    impactLevel: 'high' | 'medium' | 'low';
+    description: string;
+  }>;
+  recommendedActions: string[];
+}
+
+// 库存相关类型
+interface InventoryBalance {
+  materialCode: string;
+  materialName: string;
+  plantCode: string;
+  warehouseCode: string;
+  onHand: number;
+  reserved: number;
+  available: number;
+  unit: string;
+}
+
+interface ATPResult {
+  materialCode: string;
+  requestedQty: number;
+  availableQty: number;
+  shortfall: number;
+ ATP: number;
+}
+
+interface MaterialClassification {
+  materialCode: string;
+  abcClass: string;
+  xyzClass: string;
+  annualDemand: number;
+  value: number;
+}
+
+interface StagnationResult {
+  materialCode: string;
+  materialName: string;
+  warehouseCode: string;
+  onHand: number;
+  lastMovementDate: string;
+  stagnationDays: number;
+  severity: 'critical' | 'warning' | 'normal';
+}
+
+// 生产相关类型
+interface WorkOrder {
+  id: string;
+  orderNo: string;
+  materialCode: string;
+  materialName: string;
+  plannedQty: number;
+  completedQty: number;
+  status: 'pending' | 'in-progress' | 'completed';
+  startDate: string;
+  dueDate: string;
+}
+
+// 供应商门户类型
+interface OrderDTO {
+  id: string;
+  orderNo: string;
+  materialCode: string;
+  materialName: string;
+  quantity: number;
+  unit: string;
+  price: number;
+  currency: string;
+  deliveryDate: string;
+  status: 'pending' | 'confirmed' | 'shipped' | 'delivered';
+}
+
+interface SupplierScore {
+  supplierCode: string;
+  overallScore: number;
+  deliveryScore: number;
+  qualityScore: number;
+  costScore: number;
+  trend: 'up' | 'down' | 'stable';
+}
+
+// 物流相关类型
+interface InTransitDTO {
+  id: string;
+  orderNo: string;
+  logisticsProvider: string;
+  trackingNo: string;
+  origin: string;
+  destination: string;
+  status: 'in-transit' | 'delivered' | 'exception';
+  shippedDate: string;
+  estimatedDelivery: string;
+}
+
+interface TrackingDetailDTO {
+  trackingNo: string;
+  events: Array<{
+    timestamp: string;
+    location: string;
+    status: string;
+    description: string;
+  }>;
+}
+
+// 异常告警类型
+interface ExceptionItem {
+  id: string;
+  type: 'delay' | 'quality' | 'inventory' | 'cost';
+  title: string;
+  description: string;
+  severity: 'critical' | 'warning' | 'info';
+  status: 'open' | 'acknowledged' | 'resolved';
+  createdAt: string;
+  acknowledgedAt?: string;
+  resolvedAt?: string;
+}
+
+// ============ API 定义 ============
+
 // MRP 相关 API
 export const mrpApi = {
   // 执行 MRP 运算

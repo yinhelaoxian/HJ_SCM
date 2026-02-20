@@ -1,15 +1,24 @@
 /**
  * HJ SCM 版本配置
- * 动态版本号
+ * 浏览器兼容版本
  */
 
-// 直接读取 package.json 内容
-import fs from 'fs';
-import path from 'path';
+// 从 Vite 注入的环境变量读取版本
+// 在 vite.config.ts 中通过 define 注入
+const getVersion = (): string => {
+  // @ts-ignore
+  if (typeof __APP_VERSION__ !== 'undefined') {
+    // @ts-ignore
+    return __APP_VERSION__;
+  }
+  // 回退：从 import.meta.env.VITE_APP_VERSION 读取
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    return import.meta.env.VITE_APP_VERSION || '1.0.0';
+  }
+  return '1.0.0';
+};
 
-const versionPath = path.resolve(process.cwd(), 'package.json');
-const pkg = JSON.parse(fs.readFileSync(versionPath, 'utf-8'));
-const version = pkg.version || '1.0.0';
+const version = getVersion();
 
 export const APP_VERSION = {
   version: version,
