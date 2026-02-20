@@ -729,4 +729,4 @@ const FinancialConstraintsPage: React.FC = () => {
   );
 };
 
-export default FinancialPage;
+export default FinancialConstraintsPage;
