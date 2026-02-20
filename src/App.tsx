@@ -104,7 +104,10 @@ const Header = () => {
  */
 const App: React.FC = () => (
   <ToastProvider>
-    <BrowserRouter>
+    <BrowserRouter future={{
+      v7_startTransition: true,
+      v7_relativeSplatPath: true
+    }}>
       <div className="h-screen flex" style={{ background: '#0B0F17' }}>
         <Sidebar />
         <main className="flex-1 flex flex-col overflow-hidden">
