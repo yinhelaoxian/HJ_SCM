@@ -1,5 +1,17 @@
 // Financial types for external use
 
+// Re-export all types as FinancialTypes for compatibility
+export type FinancialTypes = {
+  FilterOptions: FilterOptions;
+  FinancialStats: FinancialStats;
+  BudgetItem: BudgetItem;
+  InvestmentConstraint: InvestmentConstraint;
+  FinancialRisk: FinancialRisk;
+  FinancialMetric: FinancialMetric;
+  FinancialProjection: FinancialProjection;
+  FinancialConstraint: FinancialConstraint;
+};
+
 export interface FilterOptions {
   budgetStatus: 'all' | 'used' | 'remaining';
   expenseType: 'all' | 'equipment' | 'labor' | 'logistics' | 'rd';

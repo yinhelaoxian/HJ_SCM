@@ -23,7 +23,7 @@ const StrategyPage = () => {
           🌐 战略规划
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <Settings className="w-4 h-4 mr-1" />
             配置
           </Button>
@@ -105,7 +105,7 @@ const StrategyPage = () => {
                   <div className="text-sm" style={{ color: '#E8EDF4' }}>{net.cost}</div>
                   <div className="text-xs" style={{ color: '#445568' }}>年化成本</div>
                 </div>
-                <Button variant="outline" size="sm">优化</Button>
+                <Button variant="ghost" size="sm">优化</Button>
               </div>
             </div>
           ))}

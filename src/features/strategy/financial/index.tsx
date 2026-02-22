@@ -100,6 +100,13 @@ interface FinancialApiResponse {
     severity: string;
     suggestion: string;
   }>;
+  projections?: Array<{
+    period: string;
+    budget: string;
+    used: string;
+    utilization: number;
+    trend: number;
+  }>;
 }
 
 /**
@@ -192,7 +199,7 @@ const FinancialConstraintsPage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getFinancialData() as unknown as FinancialApiResponse;
+        const data = await getFinancialData() as any;
         
         // 解析 metrics
         if (data.metrics && data.metrics.length > 0) {
@@ -217,7 +224,7 @@ const FinancialConstraintsPage: React.FC = () => {
             utilization: number;
             trend: number;
           }>;
-          setBudgetItems(projections.map((p, index) => ({
+          setBudgetItems((projections as any).map((p: any, index: number) => ({
             id: index + 1,
             name: p.period,
             budget: p.budget,
@@ -376,7 +383,7 @@ const FinancialConstraintsPage: React.FC = () => {
           <p className="text-sm mt-0.5" style={{ color: '#7A8BA8' }}>预算控制与财务风险管控</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <Settings className="w-4 h-4 mr-1" />
             配置
           </Button>
@@ -403,7 +410,7 @@ const FinancialConstraintsPage: React.FC = () => {
         <AlertCircle className="w-8 h-8 mx-auto mb-4" style={{ color: '#E53935' }} />
         <p style={{ color: '#E53935' }}>{error}</p>
         <Button 
-          variant="outline" 
+          variant="ghost" 
           size="sm" 
           className="mt-4"
           onClick={() => window.location.reload()}
@@ -439,13 +446,14 @@ const FinancialConstraintsPage: React.FC = () => {
             <label className="text-sm" style={{ color: '#7A8BA8' }}>预算状态</label>
             <Select
               value={filters.budgetStatus}
-              onChange={(e) => setFilters({ ...filters, budgetStatus: e.target.value as FilterOptions['budgetStatus'] })}
+              onChange={(value) => setFilters({ ...filters, budgetStatus: value as FilterOptions['budgetStatus'] })}
+              options={[
+                { value: 'all', label: '全部' },
+                { value: 'used', label: '已用' },
+                { value: 'remaining', label: '剩余' },
+              ]}
               style={{ minWidth: 100 }}
-            >
-              <option value="all">全部</option>
-              <option value="used">已用</option>
-              <option value="remaining">剩余</option>
-            </Select>
+            />
           </div>
 
           {/* 支出类型筛选 */}
@@ -453,15 +461,16 @@ const FinancialConstraintsPage: React.FC = () => {
             <label className="text-sm" style={{ color: '#7A8BA8' }}>支出类型</label>
             <Select
               value={filters.expenseType}
-              onChange={(e) => setFilters({ ...filters, expenseType: e.target.value as FilterOptions['expenseType'] })}
+              onChange={(value) => setFilters({ ...filters, expenseType: value as FilterOptions['expenseType'] })}
+              options={[
+                { value: 'all', label: '全部' },
+                { value: 'equipment', label: '设备' },
+                { value: 'labor', label: '人力' },
+                { value: 'logistics', label: '物流' },
+                { value: 'rd', label: '研发' },
+              ]}
               style={{ minWidth: 100 }}
-            >
-              <option value="all">全部</option>
-              <option value="equipment">设备</option>
-              <option value="labor">人力</option>
-              <option value="logistics">物流</option>
-              <option value="rd">研发</option>
-            </Select>
+            />
           </div>
 
           {/* 季度筛选 */}
@@ -469,15 +478,16 @@ const FinancialConstraintsPage: React.FC = () => {
             <label className="text-sm" style={{ color: '#7A8BA8' }}>季度</label>
             <Select
               value={filters.quarter}
-              onChange={(e) => setFilters({ ...filters, quarter: e.target.value as FilterOptions['quarter'] })}
+              onChange={(value) => setFilters({ ...filters, quarter: value as FilterOptions['quarter'] })}
+              options={[
+                { value: 'all', label: '全部' },
+                { value: 'q1', label: 'Q1' },
+                { value: 'q2', label: 'Q2' },
+                { value: 'q3', label: 'Q3' },
+                { value: 'q4', label: 'Q4' },
+              ]}
               style={{ minWidth: 80 }}
-            >
-              <option value="all">全部</option>
-              <option value="q1">Q1</option>
-              <option value="q2">Q2</option>
-              <option value="q3">Q3</option>
-              <option value="q4">Q4</option>
-            </Select>
+            />
           </div>
 
           {/* 搜索框 */}
@@ -501,7 +511,7 @@ const FinancialConstraintsPage: React.FC = () => {
 
           {/* 重置按钮 */}
           <Button 
-            variant="outline" 
+            variant="ghost" 
             size="sm"
             onClick={() => setFilters({ budgetStatus: 'all', expenseType: 'all', quarter: 'all', search: '' })}
           >
@@ -581,7 +591,7 @@ const FinancialConstraintsPage: React.FC = () => {
                   <Filter className="w-8 h-8 mx-auto mb-2 opacity-50" />
                   <p>没有符合条件的项目</p>
                   <Button 
-                    variant="outline" 
+                    variant="ghost" 
                     size="sm" 
                     className="mt-2"
                     onClick={() => setFilters({ budgetStatus: 'all', expenseType: 'all', quarter: 'all', search: '' })}
@@ -633,7 +643,7 @@ const FinancialConstraintsPage: React.FC = () => {
                           环比趋势
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">调整</Button>
+                      <Button variant="ghost" size="sm">调整</Button>
                     </div>
                   </div>
                 ))
