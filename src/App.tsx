@@ -139,6 +139,7 @@ const App: React.FC = () => (
               {/* === MPS 主生产计划 === */}
               <Route path="/mps" element={<MPS />} />
               <Route path="/mps/gantt" element={<MPS />} />
+              <Route path="/mps/timefences" element={<MPS />} />
               <Route path="/mps/atp" element={<ATPCheck />} />
               
               {/* === MRP 物料计划 === */}
@@ -167,6 +168,12 @@ const App: React.FC = () => (
               
               {/* === 库存管理 === */}
               <Route path="/inventory" element={<InventoryWorkbench />} />
+              <Route path="/inventory/mts" element={
+                <PlaceholderPage title="MTS 策略" desc="按库存生产策略配置与执行" emoji="🏭" />
+              } />
+              <Route path="/inventory/mto" element={
+                <PlaceholderPage title="MTO 策略" desc="按订单生产策略配置与执行" emoji="📋" />
+              } />
               <Route path="/inventory/safety" element={<SafetyStockPage />} />
               <Route path="/inventory/abc" element={<ABCXYZPage />} />
               <Route path="/inventory/stagnation" element={<StagnationPage />} />
