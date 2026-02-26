@@ -48,7 +48,7 @@ const GoodsReceiptPage = () => {
           📥 收货作业
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -108,7 +108,7 @@ const GoodsReceiptPage = () => {
                     <span className="text-xs px-2 py-1 rounded" style={{ background: badge.bg, color: badge.color }}>
                       {badge.text}
                     </span>
-                    <Button variant={receipt.status === 'RECEIVING' ? 'primary' : 'outline'} size="xs">
+                    <Button variant={receipt.status === 'RECEIVING' ? 'primary' : 'outline'} size="sm">
                       {receipt.status === 'RECEIVING' ? '开始收货' : '详情'}
                     </Button>
                   </div>
@@ -145,7 +145,7 @@ const GoodsReceiptPage = () => {
                           </td>
                           <td className="py-2 px-2 text-center">
                             {receipt.status === 'RECEIVING' && (
-                              <Button variant="outline" size="xs">扫码收货</Button>
+                              <Button variant="ghost" size="sm">扫码收货</Button>
                             )}
                           </td>
                         </tr>

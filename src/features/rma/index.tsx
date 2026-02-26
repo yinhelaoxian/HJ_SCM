@@ -49,7 +49,7 @@ const RMAPage = () => {
           🔄 RMA退货管理
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -109,7 +109,7 @@ const RMAPage = () => {
                     <span className="text-xs px-2 py-1 rounded" style={{ background: badge.bg, color: badge.color }}>
                       {badge.text}
                     </span>
-                    <Button variant={rma.status === 'PENDING' ? 'primary' : 'outline'} size="xs">
+                    <Button variant={rma.status === 'PENDING' ? 'primary' : 'outline'} size="sm">
                       {rma.status === 'PENDING' ? '受理' : '详情'}
                     </Button>
                   </div>

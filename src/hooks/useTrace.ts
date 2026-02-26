@@ -86,7 +86,7 @@ export function useBatchTrace() {
     try {
       const response = await api.trace.traceByBatch(batchNo);
       if (response.code === 200) {
-        setResult(response.data);
+        setResult(response.data as MrpRunResponse);
       } else {
         setError(response.message || '批次追溯失败');
       }
@@ -116,7 +116,7 @@ export function useChangeImpact() {
     try {
       const response = await api.trace.analyzeChangeImpact(params);
       if (response.code === 200) {
-        setResult(response.data);
+        setResult(response.data as MrpRunResponse);
       } else {
         setError(response.message || '分析失败');
       }

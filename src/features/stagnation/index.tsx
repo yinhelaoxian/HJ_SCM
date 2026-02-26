@@ -21,7 +21,7 @@ const StagnationPage = () => {
         <h1 className="text-2xl font-display" style={{ color: '#E8EDF4' }}>
           ⚡ 呆滞预警
         </h1>
-        <Button variant="outline" size="sm">
+        <Button variant="ghost" size="sm">
           导出报告
         </Button>
       </div>
@@ -100,7 +100,7 @@ const StagnationPage = () => {
                   }}>
                   {item.action}
                 </span>
-                <Button variant="outline" size="sm">处理</Button>
+                <Button variant="ghost" size="sm">处理</Button>
               </div>
             </div>
           ))}

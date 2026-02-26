@@ -105,7 +105,7 @@ const SafetyStockPage = () => {
                     </span>
                   </td>
                   <td className="py-2 px-3 text-center">
-                    <Button variant="ghost" size="xs">调整</Button>
+                    <Button variant="ghost" size="sm">调整</Button>
                   </td>
                 </tr>
               ))}

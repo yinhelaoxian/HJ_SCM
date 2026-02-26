@@ -87,7 +87,7 @@ export default function SOPWorkflow() {
           <p className="text-gray-400 mt-1">版本管理 · 需求评审 · 一致性检查</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline">
+          <Button variant="ghost">
             <GitBranch className="w-4 h-4 mr-2" />
             版本对比
           </Button>
@@ -215,7 +215,7 @@ export default function SOPWorkflow() {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="ghost" size="sm">
                     <XCircle className="w-4 h-4 mr-1" />
                     拒绝
                   </Button>

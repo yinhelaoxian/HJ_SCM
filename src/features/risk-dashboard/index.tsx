@@ -162,7 +162,7 @@ const RiskDashboardPage = () => {
                 建议增加 A 类物料安全库存 15%，预计降低缺货风险 8%
               </div>
             </div>
-            <Button variant="outline" size="xs">执行</Button>
+            <Button variant="ghost" size="sm">执行</Button>
           </div>
           <div className="flex items-start gap-3 p-3 rounded"
             style={{ background: 'rgba(0,137,123,0.08)' }}>
@@ -173,7 +173,7 @@ const RiskDashboardPage = () => {
                 季节性预测准确率提升 5%，建议推广至其他产品线
               </div>
             </div>
-            <Button variant="outline" size="xs" style={{ color: '#00897B' }}>详情</Button>
+            <Button variant="ghost" size="sm" style={{ color: '#00897B' }}>详情</Button>
           </div>
         </div>
       </Card>

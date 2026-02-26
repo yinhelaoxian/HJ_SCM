@@ -28,7 +28,7 @@ const ABCXYZPage = () => {
           📊 ABC-XYZ 分类
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <Grid className="w-4 h-4 mr-1" />
             矩阵视图
           </Button>

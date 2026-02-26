@@ -23,7 +23,7 @@ const SCORKPIPage = () => {
           📊 SCOR绩效看板
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>

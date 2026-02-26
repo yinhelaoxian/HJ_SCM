@@ -73,7 +73,7 @@ const ProductionOrdersPage = () => {
           🏭 生产订单
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -158,7 +158,7 @@ const ProductionOrdersPage = () => {
                       {badge.text}
                     </span>
                     {order.status === 'CREATED' && (
-                      <Button variant="primary" size="xs">
+                      <Button variant="primary" size="sm">
                         <Play className="w-3 h-3 mr-1" />
                         下达生产
                       </Button>

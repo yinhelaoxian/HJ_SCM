@@ -59,7 +59,7 @@ const IQCInspectionPage = () => {
           🔍 IQC来料检验
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -120,7 +120,7 @@ const IQCInspectionPage = () => {
                       style={{ background: badge.bg, color: badge.color }}>
                       {badge.text}
                     </span>
-                    <Button variant="ghost" size="xs">详情</Button>
+                    <Button variant="ghost" size="sm">详情</Button>
                   </div>
                 </div>
                 
@@ -164,7 +164,7 @@ const IQCInspectionPage = () => {
                         触发 NCR 处理流程
                       </span>
                     </div>
-                    <Button variant="outline" size="xs" style={{ borderColor: '#E53935', color: '#E53935' }}>
+                    <Button variant="ghost" size="sm" style={{ borderColor: '#E53935', color: '#E53935' }}>
                       创建 NCR
                     </Button>
                   </div>

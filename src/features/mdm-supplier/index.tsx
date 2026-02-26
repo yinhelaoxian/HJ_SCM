@@ -79,7 +79,7 @@ const SupplierManagementPage = () => {
           🏢 供应商管理
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -261,7 +261,7 @@ const SupplierManagementPage = () => {
             </div>
             
             <div className="flex items-center justify-end gap-2 mt-6">
-              <Button variant="outline" onClick={() => setShowForm(false)}>取消</Button>
+              <Button variant="ghost" onClick={() => setShowForm(false)}>取消</Button>
               <Button>
                 <Save className="w-4 h-4 mr-1" />
                 保存

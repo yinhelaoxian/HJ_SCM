@@ -22,7 +22,7 @@ const ShipmentPage = () => {
           📤 发货管理
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <FileText className="w-4 h-4 mr-1" />
             批量打印
           </Button>
@@ -99,7 +99,7 @@ const ShipmentPage = () => {
                   {ship.status}
                 </span>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="ghost" size="sm">
                     <FileText className="w-3 h-3 mr-1" />
                     打印
                   </Button>

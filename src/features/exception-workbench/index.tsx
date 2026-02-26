@@ -348,7 +348,7 @@ export default function ExceptionWorkbench() {
                   <Button className="w-full" leftIcon={<CheckCircle className="w-4 h-4" />}>
                     处理异常
                   </Button>
-                  <Button variant="outline" className="w-full" leftIcon={<ArrowUp className="w-4 h-4" />}>
+                  <Button variant="ghost" className="w-full" leftIcon={<ArrowUp className="w-4 h-4" />}>
                     升级处理
                   </Button>
                   <Button variant="ghost" className="w-full" leftIcon={<User className="w-4 h-4" />}>

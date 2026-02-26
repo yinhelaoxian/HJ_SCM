@@ -22,7 +22,7 @@ const FreightPage = () => {
           💰 运费对账
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <FileText className="w-4 h-4 mr-1" />
             导出账单
           </Button>

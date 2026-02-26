@@ -22,7 +22,7 @@ const MRPPage = () => {
           ⚙️ MRP 运算
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             重新运算
           </Button>
@@ -115,7 +115,7 @@ const MRPPage = () => {
                     </span>
                   </td>
                   <td className="py-2 px-3 text-center">
-                    <Button variant="ghost" size="xs">确认</Button>
+                    <Button variant="ghost" size="sm">确认</Button>
                   </td>
                 </tr>
               ))}

@@ -20,7 +20,7 @@ export function useMrpRun() {
     try {
       const response = await api.mrp.runMrp(params);
       if (response.code === 200) {
-        setResult(response.data);
+        setResult(response.data as MrpRunResponse);
       } else {
         setError(response.message || 'MRP 运行失败');
       }
@@ -72,7 +72,7 @@ export function useKitCheck() {
     try {
       const response = await api.mrp.checkKit({ requirementIds });
       if (response.code === 200) {
-        setResult(response.data);
+        setResult(response.data as MrpRunResponse);
       } else {
         setError(response.message || '齐套检查失败');
       }

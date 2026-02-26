@@ -96,7 +96,7 @@ const MaterialManagementPage = () => {
           📦 物料主数据管理
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleSearch}>
+          <Button variant="ghost" size="sm" onClick={handleSearch}>
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -147,7 +147,7 @@ const MaterialManagementPage = () => {
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
           </div>
-          <Button variant="outline" onClick={handleSearch}>搜索</Button>
+          <Button variant="ghost" onClick={handleSearch}>搜索</Button>
         </div>
       </Card>
 
@@ -304,7 +304,7 @@ const MaterialManagementPage = () => {
             </div>
             
             <div className="flex items-center justify-end gap-2 mt-6">
-              <Button variant="outline" onClick={() => { setShowForm(false); setEditingMaterial(null); }}>
+              <Button variant="ghost" onClick={() => { setShowForm(false); setEditingMaterial(null); }}>
                 取消
               </Button>
               <Button onClick={handleSave}>

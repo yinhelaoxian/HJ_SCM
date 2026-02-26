@@ -127,7 +127,7 @@ const Decision: React.FC = () => {
                       <CheckCircle className="w-4 h-4 mr-1" />
                       批准
                     </Button>
-                    <Button variant="outline" className="flex-1">
+                    <Button variant="ghost" className="flex-1">
                       <Clock className="w-4 h-4 mr-1" />
                       驳回
                     </Button>

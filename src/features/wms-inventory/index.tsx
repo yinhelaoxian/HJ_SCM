@@ -34,7 +34,7 @@ const InventoryPage = () => {
           📦 库存查询
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -74,7 +74,7 @@ const InventoryPage = () => {
               style={{ background: '#131926', borderColor: '#1E2D45', color: '#E8EDF4' }}
             />
           </div>
-          <Button variant="outline">重置</Button>
+          <Button variant="ghost">重置</Button>
           <Button>搜索</Button>
         </div>
       </Card>
@@ -114,7 +114,7 @@ const InventoryPage = () => {
                       </span>
                     </td>
                     <td className="py-3 px-3 text-center">
-                      <Button variant="ghost" size="xs">详情</Button>
+                      <Button variant="ghost" size="sm">详情</Button>
                     </td>
                   </tr>
                 );

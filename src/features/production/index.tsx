@@ -23,7 +23,7 @@ const ProductionPage = () => {
           🏭 生产排产
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <ClipboardList className="w-4 h-4 mr-1" />
             导出计划
           </Button>

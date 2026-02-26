@@ -96,7 +96,7 @@ export default function DemandForecastWorkbench() {
           <p className="text-gray-400 mt-1">ML预测模型 · 13周滚动计划</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={handleForecast} disabled={loading}>
+          <Button variant="ghost" onClick={handleForecast} disabled={loading}>
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             重新预测
           </Button>

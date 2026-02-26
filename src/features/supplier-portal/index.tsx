@@ -272,7 +272,7 @@ function OrdersTab({ orders, onConfirm, onUploadASN, loading, getStatusBadge }) 
               className="pl-10 pr-4 py-2 w-64 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
             />
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <Filter className="w-4 h-4 mr-2" />
             筛选
           </Button>
@@ -354,7 +354,7 @@ function OrdersTab({ orders, onConfirm, onUploadASN, loading, getStatusBadge }) 
                         </Button>
                       )}
                       {order.status === 'ACKNOWLEDGED' && (
-                        <Button variant="outline" size="sm" onClick={() => onUploadASN(order.id)}>
+                        <Button variant="ghost" size="sm" onClick={() => onUploadASN(order.id)}>
                           <Upload className="w-4 h-4 mr-1" />
                           上传ASN
                         </Button>

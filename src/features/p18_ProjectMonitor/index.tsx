@@ -205,19 +205,19 @@ export default function ProjectMonitor() {
             快捷操作
           </h3>
           <div className="space-y-2">
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="ghost" className="w-full justify-start">
               <GitCommit className="w-4 h-4 mr-2" />
               提交代码
             </Button>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="ghost" className="w-full justify-start">
               <Container className="w-4 h-4 mr-2" />
               Docker 构建
             </Button>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="ghost" className="w-full justify-start">
               <Database className="w-4 h-4 mr-2" />
               运行测试
             </Button>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="ghost" className="w-full justify-start">
               <Server className="w-4 h-4 mr-2" />
               查看日志
             </Button>

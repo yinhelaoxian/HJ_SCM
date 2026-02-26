@@ -74,7 +74,7 @@ export default function InventoryReport() {
         <h3 className="text-lg font-semibold text-white mb-4">报表导出</h3>
         <div className="grid grid-cols-3 gap-4">
           {['库存余额表', '批次追溯表', '呆滞明细表'].map((name, i) => (
-            <Button key={i} variant="outline" className="w-full">
+            <Button key={i} variant="ghost" className="w-full">
               <Download className="w-4 h-4 mr-2"/>
               {name}
             </Button>

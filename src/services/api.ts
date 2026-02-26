@@ -313,7 +313,10 @@ export const inventoryApi = {
     materialCode: string;
     serviceLevel?: number;
   }): Promise<ApiResponse<{ safetyStock: number }>> {
-    const query = new URLSearchParams(params).toString();
+    const query = new URLSearchParams({
+      materialCode: params.materialCode,
+      ...(params.serviceLevel !== undefined && { serviceLevel: params.serviceLevel.toString() })
+    }).toString();
     const response = await fetch(`${API_BASE}/inventory/safety-stock?${query}`);
     return response.json();
   },

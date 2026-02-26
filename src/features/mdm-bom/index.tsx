@@ -36,7 +36,7 @@ const BOMManagementPage = () => {
           🏗️ BOM管理
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -112,7 +112,7 @@ const BOMManagementPage = () => {
                   style={{ background: 'rgba(45,125,210,0.05)', borderColor: '#2D7DD2' }}>
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="text-sm font-medium" style={{ color: '#7A8BA8' }}>BOM子件清单</h4>
-                    <Button variant="ghost" size="xs">
+                    <Button variant="ghost" size="sm">
                       <Plus className="w-3 h-3 mr-1" />
                       添加子件
                     </Button>

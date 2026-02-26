@@ -21,7 +21,7 @@ const KittingPage = () => {
         <h1 className="text-2xl font-display" style={{ color: '#E8EDF4' }}>
           📦 齐套分析
         </h1>
-        <Button variant="outline" size="sm">
+        <Button variant="ghost" size="sm">
           刷新齐套状态
         </Button>
       </div>

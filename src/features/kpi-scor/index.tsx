@@ -101,7 +101,7 @@ const SCORDashboardPage = () => {
           📊 SCOR 绩效看板
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             对标分析
           </Button>
           <Button size="sm">

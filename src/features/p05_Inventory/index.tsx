@@ -82,7 +82,7 @@ export default function InventoryWorkbench() {
           <p className="text-gray-400 mt-1">多级库存视图 · 批次追踪 · ATP计算 · 呆滞预警</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={handleExport}>
+          <Button variant="ghost" onClick={handleExport}>
             <Download className="w-4 h-4 mr-2" />
             导出
           </Button>
@@ -225,7 +225,7 @@ export default function InventoryWorkbench() {
                     className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="ghost" size="sm">
                   <Filter className="w-4 h-4 mr-2" />
                   筛选
                 </Button>

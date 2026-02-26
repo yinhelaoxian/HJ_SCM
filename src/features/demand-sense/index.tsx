@@ -16,7 +16,7 @@ const DemandSensePage = () => {
           ⚡ 需求感知
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4 mr-1" />
             刷新
           </Button>
@@ -65,7 +65,7 @@ const DemandSensePage = () => {
                 }}
               />
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="ghost" size="sm">
               <Filter className="w-4 h-4" />
             </Button>
           </div>

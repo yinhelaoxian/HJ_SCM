@@ -68,8 +68,8 @@ const LogisticsPage = () => {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-medium" style={{ color: '#E8EDF4' }}>物流地图</h3>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="xs">实时</Button>
-            <Button variant="ghost" size="xs">历史轨迹</Button>
+            <Button variant="ghost" size="sm">实时</Button>
+            <Button variant="ghost" size="sm">历史轨迹</Button>
           </div>
         </div>
         <div className="h-64 rounded flex items-center justify-center"
@@ -113,7 +113,7 @@ const LogisticsPage = () => {
                   {ship.status}
                 </span>
                 <span className="text-xs" style={{ color: '#7A8BA8' }}>ETA: {ship.eta}</span>
-                <Button variant="ghost" size="xs">详情</Button>
+                <Button variant="ghost" size="sm">详情</Button>
               </div>
             </div>
           ))}
