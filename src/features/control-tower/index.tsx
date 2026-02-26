@@ -19,7 +19,6 @@ import {
   Globe,
   Database,
   CheckCircle,
-  AlertTriangle,
   XCircle
 } from 'lucide-react';
 
