@@ -19,7 +19,7 @@ export function useATP() {
     try {
       const response = await api.inventory.calculateATP(params);
       if (response.code === 200) {
-        setResult(response.data as MrpRunResponse);
+        setResult(response.data);
       } else {
         setError(response.message || 'ATP 计算失败');
       }

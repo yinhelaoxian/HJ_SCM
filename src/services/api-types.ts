@@ -5,17 +5,19 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-// MRP 相关类型
+// MRP 相关类型 - 使用更宽松的定义
 export interface MrpRunResponse {
-  runId: string;
-  status: 'COMPLETED' | 'FAILED' | 'PARTIAL';
-  durationMs: number;
-  requirementCount: number;
-  shortageCount: number;
-  suggestionCount: number;
+  runId?: string;
+  status?: 'COMPLETED' | 'FAILED' | 'PARTIAL';
+  durationMs?: number;
+  requirementCount?: number;
+  shortageCount?: number;
+  suggestionCount?: number;
   warnings?: string[];
   errorMessage?: string;
-  createdAt: string;
+  createdAt?: string;
+  // 允许其他属性
+  [key: string]: any;
 }
 
 export interface MrpRequirement {
@@ -23,57 +25,62 @@ export interface MrpRequirement {
   itemName?: string;
   requiredQty: number;
   uom?: string;
-  level: number;
+  level?: number;
   itemCategory?: string;
   sourceType?: string;
   leadTime?: number;
   safetyStock?: number;
   traceId?: string;
+  [key: string]: any;
 }
 
 export interface KitCheckResult {
-  checkDate: string;
-  kitItems: KitItem[];
-  shortages: KitShortage[];
-  overallFillRate: number;
+  checkDate?: string;
+  kitItems?: KitItem[];
+  shortages?: KitShortage[];
+  overallFillRate?: number;
+  [key: string]: any;
 }
 
 export interface KitItem {
   itemCode: string;
-  requiredQty: number;
-  availableQty: number;
-  fillRate: number;
+  requiredQty?: number;
+  availableQty?: number;
+  fillRate?: number;
+  [key: string]: any;
 }
 
 export interface KitShortage {
   itemCode: string;
-  requiredQty: number;
-  availableQty: number;
-  shortageQty: number;
-  fillRate: number;
-  urgencyLevel: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  requiredQty?: number;
+  availableQty?: number;
+  shortageQty?: number;
+  fillRate?: number;
+  urgencyLevel?: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
   requiredDate?: string;
   traceId?: string;
+  [key: string]: any;
 }
 
 export interface ProcurementSuggestion {
   itemCode: string;
   itemName?: string;
-  suggestedQty: number;
-  suggestedDate: string;
-  supplierCode: string;
-  supplierName: string;
+  suggestedQty?: number;
+  suggestedDate?: string;
+  supplierCode?: string;
+  supplierName?: string;
   estimatedPrice?: number;
-  urgencyLevel: string;
+  urgencyLevel?: string;
   reason?: string;
   traceId?: string;
+  [key: string]: any;
 }
 
 // Trace 相关类型
 export interface TraceNode {
-  traceId: string;
-  documentType: string;
-  documentId: string;
+  traceId?: string;
+  documentType?: string;
+  documentId?: string;
   version?: number;
   materialCode?: string;
   batchNo?: string;
@@ -82,11 +89,12 @@ export interface TraceNode {
   plantCode?: string;
   status?: string;
   children?: TraceNode[];
+  [key: string]: any;
 }
 
 export interface ChangeImpactAnalysis {
-  sourceDocument: string;
-  sourceTraceId: string;
+  sourceDocument?: string;
+  sourceTraceId?: string;
   oldQuantity?: number;
   newQuantity?: number;
   quantityChange?: number;
@@ -96,56 +104,61 @@ export interface ChangeImpactAnalysis {
   impactLevel?: 'HIGH' | 'MEDIUM' | 'LOW';
   recommendation?: string;
   medicalImpact?: boolean;
-  status: string;
+  status?: string;
   message?: string;
+  [key: string]: any;
 }
 
 // 库存相关类型
 export interface InventoryBalance {
-  id: string;
+  id?: string;
   materialCode: string;
   materialName?: string;
   plantCode: string;
-  warehouseCode: string;
-  onHandQty: number;
-  reservedQty: number;
-  availableQty: number;
-  inTransitQty: number;
+  warehouseCode?: string;
+  onHandQty?: number;
+  reservedQty?: number;
+  availableQty?: number;
+  inTransitQty?: number;
   safetyStock?: number;
   oldestBatchDate?: string;
   batchCount?: number;
+  [key: string]: any;
 }
 
 export interface ATPResult {
   materialCode: string;
-  requestedQty: number;
-  requestedDate: string;
-  availableQty: number;
-  inTransitQty: number;
-  atpQty: number;
-  canFulfill: boolean;
+  requestedQty?: number;
+  requestedDate?: string;
+  availableQty?: number;
+  inTransitQty?: number;
+  atpQty?: number;
+  canFulfill?: boolean;
   promisedDate?: string;
+  [key: string]: any;
 }
 
 export interface MaterialClassification {
   materialCode: string;
-  abcClass: 'A' | 'B' | 'C';
-  xyzClass: 'X' | 'Y' | 'Z';
-  combinedClass: 'HIGH' | 'MEDIUM' | 'LOW';
-  annualValue: number;
-  classifiedAt: string;
+  abcClass?: 'A' | 'B' | 'C';
+  xyzClass?: 'X' | 'Y' | 'Z';
+  combinedClass?: 'HIGH' | 'MEDIUM' | 'LOW';
+  annualValue?: number;
+  classifiedAt?: string;
+  [key: string]: any;
 }
 
 export interface StagnationResult {
   materialCode: string;
-  plantCode: string;
-  checkDate: string;
-  daysInStock: number;
-  turnoverRate: number;
-  daysNoMovement: number;
-  riskScore: number;
-  riskLevel: 'HIGH' | 'MEDIUM' | 'LOW';
-  recommendations: string[];
+  plantCode?: string;
+  checkDate?: string;
+  daysInStock?: number;
+  turnoverRate?: number;
+  daysNoMovement?: number;
+  riskScore?: number;
+  riskLevel?: 'HIGH' | 'MEDIUM' | 'LOW';
+  recommendations?: string[];
+  [key: string]: any;
 }
 
 // 生产相关类型
@@ -153,14 +166,15 @@ export interface WorkOrder {
   orderId: string;
   materialCode: string;
   materialName?: string;
-  quantity: number;
-  planStartDate: string;
-  planEndDate: string;
+  quantity?: number;
+  planStartDate?: string;
+  planEndDate?: string;
   actualStartDate?: string;
   actualEndDate?: string;
-  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
   plantCode: string;
   workstationCode?: string;
+  [key: string]: any;
 }
 
 // 供应商门户类型
@@ -168,73 +182,80 @@ export interface OrderDTO {
   orderId: string;
   supplierCode: string;
   supplierName?: string;
-  orderDate: string;
-  deliveryDate: string;
-  status: 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED';
-  items: OrderItemDTO[];
-  totalAmount: number;
+  orderDate?: string;
+  deliveryDate?: string;
+  status?: 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED';
+  items?: OrderItemDTO[];
+  totalAmount?: number;
+  [key: string]: any;
 }
 
 export interface OrderItemDTO {
   itemCode: string;
   itemName?: string;
-  quantity: number;
-  unitPrice: number;
+  quantity?: number;
+  unitPrice?: number;
   confirmedQty?: number;
+  [key: string]: any;
 }
 
 export interface SupplierScore {
   supplierCode: string;
-  overallScore: number;
-  otdScore: number;
-  qualityScore: number;
-  priceScore: number;
-  serviceScore: number;
-  trend: 'UP' | 'DOWN' | 'STABLE';
-  lastUpdate: string;
+  overallScore?: number;
+  otdScore?: number;
+  qualityScore?: number;
+  priceScore?: number;
+  serviceScore?: number;
+  trend?: 'UP' | 'DOWN' | 'STABLE';
+  lastUpdate?: string;
+  [key: string]: any;
 }
 
 // 物流相关类型
 export interface InTransitDTO {
   trackingNo: string;
-  logisticsProvider: string;
+  logisticsProvider?: string;
   materialCode: string;
   materialName?: string;
-  quantity: number;
-  shippedDate: string;
-  estimatedArrivalDate: string;
-  currentStatus: string;
+  quantity?: number;
+  shippedDate?: string;
+  estimatedArrivalDate?: string;
+  currentStatus?: string;
   currentLocation?: string;
+  [key: string]: any;
 }
 
 export interface TrackingDetailDTO {
   trackingNo: string;
-  logisticsProvider: string;
-  shippedDate: string;
-  estimatedArrival: string;
-  currentStatus: string;
+  logisticsProvider?: string;
+  shippedDate?: string;
+  estimatedArrival?: string;
+  currentStatus?: string;
   currentLocation?: string;
-  events: TrackingEvent[];
+  events?: TrackingEvent[];
+  [key: string]: any;
 }
 
 export interface TrackingEvent {
-  eventTime: string;
-  eventLocation: string;
-  eventDescription: string;
-  status: string;
+  eventTime?: string;
+  eventLocation?: string;
+  eventDescription?: string;
+  status?: string;
+  [key: string]: any;
 }
 
 // 异常相关类型
 export interface ExceptionItem {
   exceptionId: string;
-  exceptionType: 'SHORTAGE' | 'DELAY' | 'QUALITY' | 'CAPACITY';
-  title: string;
+  exceptionType?: 'SHORTAGE' | 'DELAY' | 'QUALITY' | 'CAPACITY';
+  title?: string;
   materialCode?: string;
   materialName?: string;
-  priority: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
-  status: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-  createdAt: string;
+  priority?: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  status?: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
+  createdAt?: string;
   slaDeadline?: string;
   assignedTo?: string;
   impact?: string;
+  [key: string]: any;
 }
