@@ -4,7 +4,7 @@ const BASE_URL = '/api/scm'; // 假设的后端 API 地址
 
 export const fetchControlTowerData = async () => {
   try {
-    const response = await axios.get();
+    const response = await axios.get(`${BASE_URL}/control-tower`);
     return response.data;
   } catch (error) {
     console.error('Error fetching control tower data:', error);
@@ -14,7 +14,7 @@ export const fetchControlTowerData = async () => {
 
 export const fetchThreeLinesOfDefenseData = async () => {
   try {
-    const response = await axios.get();
+    const response = await axios.get(`${BASE_URL}/three-lines`);
     return response.data;
   } catch (error) {
     console.error('Error fetching three lines of defense data:', error);
@@ -24,7 +24,7 @@ export const fetchThreeLinesOfDefenseData = async () => {
 
 export const fetchISCProcessData = async () => {
   try {
-    const response = await axios.get();
+    const response = await axios.get(`${BASE_URL}/isc-process`);
     return response.data;
   } catch (error) {
     console.error('Error fetching ISC process data:', error);
@@ -34,7 +34,7 @@ export const fetchISCProcessData = async () => {
 
 export const fetchRiskEvents = async () => {
   try {
-    const response = await axios.get();
+    const response = await axios.get(`${BASE_URL}/risk-events`);
     return response.data;
   } catch (error) {
     console.error('Error fetching risk events:', error);

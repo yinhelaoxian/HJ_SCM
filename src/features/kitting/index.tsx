@@ -104,7 +104,7 @@ const KittingPage = () => {
                     />
                   </div>
                 </div>
-                <Button variant={order.status === 'critical' ? 'destructive' : 'outline'} size="sm">
+                <Button variant={order.status === 'critical' ? 'danger' : 'ghost'} size="sm">
                   {order.status === 'ready' ? '下达生产' : '查看缺口'}
                 </Button>
               </div>

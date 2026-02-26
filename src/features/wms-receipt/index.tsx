@@ -108,7 +108,7 @@ const GoodsReceiptPage = () => {
                     <span className="text-xs px-2 py-1 rounded" style={{ background: badge.bg, color: badge.color }}>
                       {badge.text}
                     </span>
-                    <Button variant={receipt.status === 'RECEIVING' ? 'primary' : 'outline'} size="sm">
+                    <Button variant={receipt.status === 'RECEIVING' ? 'primary' : 'secondary'} size="sm">
                       {receipt.status === 'RECEIVING' ? '开始收货' : '详情'}
                     </Button>
                   </div>

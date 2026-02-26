@@ -294,23 +294,26 @@ export default function DemandForecastWorkbench() {
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-white mb-4">季节性因子</h3>
         <div className="flex gap-2 flex-wrap">
-          {Object.entries(forecastData?.seasonalFactors || {}).map(([week, factor]) => (
-            <div
-              key={week}
-              className={`px-3 py-2 rounded-lg text-sm ${
-                factor > 1.0 
-                  ? 'bg-blue-500/20 text-blue-400' 
-                  : factor < 1.0 
-                    ? 'bg-amber-500/20 text-amber-400'
-                    : 'bg-gray-700 text-gray-300'
-              }`}
-            >
-              <span className="font-medium">{week}</span>
-              <span className="ml-2">
-                {factor > 1 ? '+' : ''}{(factor - 1) * 100}%
-              </span>
-            </div>
-          ))}
+          {Object.entries(forecastData?.seasonalFactors || {}).map(([week, factor]) => {
+            const numFactor = Number(factor);
+            return (
+              <div
+                key={week}
+                className={`px-3 py-2 rounded-lg text-sm ${
+                  numFactor > 1.0
+                    ? 'bg-blue-500/20 text-blue-400'
+                    : numFactor < 1.0
+                      ? 'bg-amber-500/20 text-amber-400'
+                      : 'bg-gray-700 text-gray-300'
+                }`}
+              >
+                <span className="font-medium">{week}</span>
+                <span className="ml-2">
+                  {numFactor > 1 ? '+' : ''}{(numFactor - 1) * 100}%
+                </span>
+              </div>
+            );
+          })}
         </div>
       </Card>
     </div>

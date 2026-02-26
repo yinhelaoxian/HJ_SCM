@@ -20,7 +20,7 @@ export default function DataLineageViewer() {
     { source: 'demand-forecast', target: 'sop' },
     { source: 'sop', target: 'mps' },
     { source: 'mps', target: 'mrp' },
-    { source: 'mrp', source: 'purchase', target: 'purchase' },
+    { source: 'mrp', target: 'purchase' },
     { source: 'mrp', target: 'production' }
   ];
 

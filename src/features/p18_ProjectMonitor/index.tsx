@@ -243,7 +243,7 @@ export default function ProjectMonitor() {
             </div>
           ))}
         </div>
-        <Button variant="link" className="mt-3 text-xs" style={{ color: '#3D9BE9' }}>
+        <Button variant="ghost" className="mt-3 text-xs" style={{ color: '#3D9BE9' }}>
           查看全部提交 →
         </Button>
       </Card>

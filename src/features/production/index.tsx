@@ -111,7 +111,7 @@ const ProductionPage = () => {
                   </div>
                 </div>
                 <Button 
-                  variant={order.status === '待排产' ? 'primary' : 'outline'} 
+                  variant={order.status === '待排产' ? 'primary' : 'secondary'} 
                   size="sm"
                 >
                   {order.status === '待排产' ? '开始排产' : 

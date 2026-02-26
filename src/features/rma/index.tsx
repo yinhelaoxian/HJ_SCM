@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Package, RotateCcw, AlertTriangle, RefreshCw, PackageReturn, Check } from 'lucide-react';
+import { Package, RotateCcw, AlertTriangle, RefreshCw, RotateCcw as PackageReturn, Check } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
 
@@ -109,7 +109,7 @@ const RMAPage = () => {
                     <span className="text-xs px-2 py-1 rounded" style={{ background: badge.bg, color: badge.color }}>
                       {badge.text}
                     </span>
-                    <Button variant={rma.status === 'PENDING' ? 'primary' : 'outline'} size="sm">
+                    <Button variant={rma.status === 'PENDING' ? 'primary' : 'secondary'} size="sm">
                       {rma.status === 'PENDING' ? '受理' : '详情'}
                     </Button>
                   </div>

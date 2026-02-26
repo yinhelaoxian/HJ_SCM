@@ -12,7 +12,9 @@ const getVersion = (): string => {
     return __APP_VERSION__;
   }
   // 回退：从 import.meta.env.VITE_APP_VERSION 读取
+  // @ts-ignore
   if (typeof import.meta !== 'undefined' && import.meta.env) {
+    // @ts-ignore
     return import.meta.env.VITE_APP_VERSION || '1.0.0';
   }
   return '1.0.0';
