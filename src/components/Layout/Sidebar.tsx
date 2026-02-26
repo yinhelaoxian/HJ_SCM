@@ -7,7 +7,7 @@ import {
   Factory, Scale, FileText, AlertTriangle, ClipboardList,
   CheckCircle, Percent, Zap, Target,
   RefreshCw, Shield, BarChart, DollarSign, 
-  Settings, Network, PieChart
+  Settings, Network, PieChart, Radio
 } from 'lucide-react';
 import { DEMO_CONFIG } from '../../core/config/demo.config';
 import { t, getLocale, Locale } from '../../core/config/i18n';
@@ -23,6 +23,7 @@ const NAV_GROUPS = [
   // === 1. Dashboard
   { section: null, items: [
     { path: '/', icon: LayoutDashboard, labelKey: 'menu.dashboard', badge: 3 },
+    { path: '/control-tower', icon: Radio, labelKey: 'menu.controlTower', badge: 0 },
   ]},
   
   // === 2. Strategic Layer

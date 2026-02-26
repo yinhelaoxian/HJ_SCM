@@ -36,6 +36,7 @@ import NetworkPlanningPage from './features/strategy/network';
 import PortfolioPage from './features/strategy/portfolio';
 import RiskDashboardPage from './features/risk-dashboard';
 import SCORDashboardPage from './features/kpi-scor';
+import ControlTower from './features/control-tower';
 // MDM 模块
 import MaterialManagementPage from './features/mdm-material';
 import BOMManagementPage from './features/mdm-bom';
@@ -116,6 +117,7 @@ const App: React.FC = () => (
             <Routes>
               {/* === 指挥中心 === */}
               <Route path="/" element={<Dashboard />} />
+              <Route path="/control-tower" element={<ControlTower />} />
               
               {/* === MDM 主数据管理（新增）=== */}
               <Route path="/mdm/material" element={<MaterialManagementPage />} />

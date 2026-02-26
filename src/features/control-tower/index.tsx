@@ -19,7 +19,7 @@ import {
   Globe,
   Database,
   CheckCircle,
-  Warning,
+  AlertTriangle,
   XCircle
 } from 'lucide-react';
 
@@ -178,7 +178,7 @@ export default function ControlTower() {
   const getStatusIcon = (status: 'good' | 'warning' | 'critical') => {
     switch (status) {
       case 'good': return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'warning': return <Warning className="w-5 h-5 text-yellow-500" />;
+      case 'warning': return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
       case 'critical': return <XCircle className="w-5 h-5 text-red-500" />;
     }
   };
@@ -235,7 +235,7 @@ export default function ControlTower() {
                   <p className="text-sm text-gray-500">待处理预警</p>
                   <p className="text-2xl font-bold text-yellow-600">8</p>
                 </div>
-                <Warning className="w-10 h-10 text-yellow-500" />
+                <AlertTriangle className="w-10 h-10 text-yellow-500" />
               </div>
             </div>
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
