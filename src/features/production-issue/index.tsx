@@ -30,7 +30,7 @@ interface MaterialRequirement {
   unit: string;
   requiredQuantity: number;
   availableQuantity: number;
-  status: 'available' | 'pending' | 'shortage';
+  status: 'available' | 'pending' | 'shortage' | 'partial';
   location: string;
   batchNumber: string;
 }

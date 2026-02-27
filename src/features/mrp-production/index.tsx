@@ -1,7 +1,7 @@
 // 工单建议页面
 import React, { useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { CheckCircle2, AlertTriangle, TrendingUp, Clock, Filter, Search, Download, Plus, RefreshCw, MoreVertical, ChevronRight } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, TrendingUp, Clock, Filter, Search, Download, Plus, RefreshCw, MoreVertical, ChevronRight, XCircle } from 'lucide-react';
 
 // 类型定义
 interface ProductionOrder {

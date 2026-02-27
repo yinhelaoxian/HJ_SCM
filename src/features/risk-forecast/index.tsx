@@ -35,15 +35,14 @@ const RiskForecastPage = () => {
   const demandFluctuationChart = {
     tooltip: { trigger: 'axis', backgroundColor: '#1A2235', borderColor: '#2D7DD2', textStyle: { color: '#E8EDF4' } },
     xAxis: { type: 'category', data: demandFluctuation.map(d => d.period), axisLabel: { color: '#7A8BA8' } },
-    yAxis: { type: 'value', axisLabel: { color: '#7A8BA8' }, splitLine: { lineStyle: { color: '#1E2D45', type: 'dashed' } } },
+    yAxis: [
+      { type: 'value', axisLabel: { color: '#7A8BA8' }, splitLine: { lineStyle: { color: '#1E2D45', type: 'dashed' } } },
+      { type: 'value', name: '偏差率(%)', position: 'right', axisLabel: { color: '#7A8BA8' }, splitLine: { show: false } }
+    ],
     series: [
       { name: '预测值', type: 'bar', data: demandFluctuation.map(d => d.forecast), itemStyle: { color: '#7A8BA8' } },
       { name: '实际值', type: 'bar', data: demandFluctuation.map(d => d.actual), itemStyle: { color: '#2D7DD2' } },
       { name: '偏差率', type: 'line', yAxisIndex: 1, data: demandFluctuation.map(d => d.variance), smooth: true, lineStyle: { color: '#E53935', width: 2 }, itemStyle: { color: '#E53935' } }
-    ],
-    yAxis: [
-      { type: 'value', axisLabel: { color: '#7A8BA8' }, splitLine: { lineStyle: { color: '#1E2D45', type: 'dashed' } } },
-      { type: 'value', name: '偏差率(%)', position: 'right', axisLabel: { color: '#7A8BA8' }, splitLine: { show: false } }
     ]
   };
 

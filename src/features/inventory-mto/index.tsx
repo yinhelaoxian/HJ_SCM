@@ -30,6 +30,15 @@ interface ProductionProcess {
   status: 'completed' | 'in-progress' | 'pending';
 }
 
+// 颜色常量
+const colors = {
+  navy: '#0a1628',
+  cyan: '#00b4d8',
+  orange: '#f57c00',
+  cardBg: 'rgba(255,255,255,0.04)',
+  border: 'rgba(0,180,216,0.2)',
+};
+
 // 模拟数据
 const mtoOrders: MTOOrder[] = [
   { id: 1, orderNumber: 'MTO-2026-001', customer: '苹果公司', product: 'iPhone 15 Pro 外壳', quantity: 5000, unitPrice: 125.5, totalAmount: 627500, orderDate: '2026-01-15', deliveryDate: '2026-03-15', remainingDays: 47, productionStatus: 'in-progress', qualityStatus: 'pending', riskLevel: 'medium' },
@@ -65,14 +74,6 @@ const chartData = {
     { name: '中风险', value: 50 },
     { name: '高风险', value: 30 },
   ],
-};
-
-const colors = {
-  navy: '#0a1628',
-  cyan: '#00b4d8',
-  orange: '#f57c00',
-  cardBg: 'rgba(255,255,255,0.04)',
-  border: 'rgba(0,180,216,0.2)',
 };
 
 export default function InventoryMTOPage() {
