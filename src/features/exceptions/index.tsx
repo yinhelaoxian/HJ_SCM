@@ -30,7 +30,7 @@ interface Ticket {
   title: string;
   type: string;
   priority: 'high' | 'medium' | 'low';
-  status: 'open' | 'in-progress' | 'closed';
+  status: 'open' | 'in-progress' | 'processing' | 'closed';
   assignee: string;
   createdAt: string;
   updatedAt: string;

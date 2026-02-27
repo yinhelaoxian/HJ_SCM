@@ -35,6 +35,15 @@ interface MaterialRequirement {
   batchNumber: string;
 }
 
+// 颜色常量
+const colors = {
+  navy: '#0a1628',
+  cyan: '#00b4d8',
+  orange: '#f57c00',
+  cardBg: 'rgba(255,255,255,0.04)',
+  border: 'rgba(0,180,216,0.2)',
+};
+
 // 模拟数据
 const productionIssues: ProductionIssue[] = [
   { id: 1, workOrderNumber: 'WO-2026-001', product: '智能手机 X1', category: '电子产品', plannedQuantity: 500, issuedQuantity: 350, remainingQuantity: 150, materialStatus: 'partial', productionLine: 'Line 1', supervisor: '张经理', issueDate: '2026-02-25', expectedCompletionDate: '2026-03-05', status: 'in-progress', efficiency: 85.5, qualityRate: 98.2 },
@@ -73,14 +82,6 @@ const chartData = {
     { date: '2026-02-24', efficiency: 90.7 },
     { date: '2026-02-25', efficiency: 87.5 },
   ],
-};
-
-const colors = {
-  navy: '#0a1628',
-  cyan: '#00b4d8',
-  orange: '#f57c00',
-  cardBg: 'rgba(255,255,255,0.04)',
-  border: 'rgba(0,180,216,0.2)',
 };
 
 export default function ProductionIssuePage() {
