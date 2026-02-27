@@ -37,6 +37,7 @@ import PortfolioPage from './features/strategy/portfolio';
 import RiskDashboardPage from './features/risk-dashboard';
 import SCORDashboardPage from './features/kpi-scor';
 import ControlTower from './features/control-tower';
+import SupplierRisk from './features/supplier-risk';
 // MDM 模块
 import MaterialManagementPage from './features/mdm-material';
 import BOMManagementPage from './features/mdm-bom';
@@ -169,9 +170,7 @@ const App: React.FC = () => (
               {/* === 采购与供应 === */}
               <Route path="/procurement" element={<ProcurementPage />} />
               <Route path="/supplier" element={<SupplierScore />} />
-              <Route path="/supplier/risk" element={
-                <PlaceholderPage title="供应商风险" desc="风险雷达、传播链分析" emoji="⚠️" />
-              } />
+              <Route path="/supplier/risk" element={<SupplierRisk />} />
               <Route path="/supplier/score" element={<SupplierScore />} />
               <Route path="/supplier/portal" element={<SupplierPortal />} />
               <Route path="/supplier/contracts" element={<SupplierContractsPage />} />

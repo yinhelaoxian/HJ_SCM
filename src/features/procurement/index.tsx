@@ -25,22 +25,22 @@ interface NegotiationHistory {
   status: 'success' | 'pending' | 'failed';
 }
 
-// 模拟数据
+// 模拟数据 - 符合豪江智能设备科技业务（医疗器械/自动化设备制造）
 const suppliers: Supplier[] = [
-  { id: 1, name: '华为技术有限公司', category: '电子元器件', score: 95, price: 125.5, deliveryTime: 3, reliability: 98, riskLevel: 'low' },
-  { id: 2, name: '腾讯云服务', category: '云计算服务', score: 92, price: 89.0, deliveryTime: 2, reliability: 95, riskLevel: 'low' },
-  { id: 3, name: '阿里巴巴供应链', category: '物流服务', score: 88, price: 65.8, deliveryTime: 4, reliability: 92, riskLevel: 'medium' },
-  { id: 4, name: '小米供应链', category: '电子产品', score: 85, price: 110.0, deliveryTime: 5, reliability: 88, riskLevel: 'medium' },
-  { id: 5, name: '字节跳动科技', category: 'AI服务', score: 90, price: 150.0, deliveryTime: 3, reliability: 94, riskLevel: 'low' },
-  { id: 6, name: '百度智能云', category: 'AI服务', score: 87, price: 135.0, deliveryTime: 4, reliability: 90, riskLevel: 'medium' },
+  { id: 1, name: '西门子医疗设备', category: '医用传感器', score: 95, price: 125.5, deliveryTime: 3, reliability: 98, riskLevel: 'low' },
+  { id: 2, name: '欧姆龙自动化', category: '精密电机', score: 92, price: 89.0, deliveryTime: 2, reliability: 95, riskLevel: 'low' },
+  { id: 3, name: '博世力士乐', category: '液压组件', score: 88, price: 65.8, deliveryTime: 4, reliability: 92, riskLevel: 'medium' },
+  { id: 4, name: '三菱电机', category: '控制系统', score: 85, price: 110.0, deliveryTime: 5, reliability: 88, riskLevel: 'medium' },
+  { id: 5, name: 'ABB机器人', category: '工业机器人', score: 90, price: 150.0, deliveryTime: 3, reliability: 94, riskLevel: 'low' },
+  { id: 6, name: '施耐德电气', category: '电气元件', score: 87, price: 135.0, deliveryTime: 4, reliability: 90, riskLevel: 'medium' },
 ];
 
 const negotiationHistory: NegotiationHistory[] = [
-  { id: 1, supplier: '华为技术有限公司', product: 'CPU芯片', date: '2026-02-27', price: 125.5, previousPrice: 135.0, status: 'success' },
-  { id: 2, supplier: '腾讯云服务', product: '云服务器', date: '2026-02-26', price: 89.0, previousPrice: 95.0, status: 'success' },
-  { id: 3, name: '阿里巴巴供应链', product: '物流配送', date: '2026-02-25', price: 65.8, previousPrice: 70.0, status: 'pending' },
-  { id: 4, supplier: '小米供应链', product: '智能手机', date: '2026-02-24', price: 110.0, previousPrice: 120.0, status: 'success' },
-  { id: 5, supplier: '字节跳动科技', product: 'AI算法', date: '2026-02-23', price: 150.0, previousPrice: 160.0, status: 'failed' },
+  { id: 1, supplier: '西门子医疗设备', product: '医用压力传感器', date: '2026-02-27', price: 125.5, previousPrice: 135.0, status: 'success' },
+  { id: 2, supplier: '欧姆龙自动化', product: '伺服电机', date: '2026-02-26', price: 89.0, previousPrice: 95.0, status: 'success' },
+  { id: 3, supplier: '博世力士乐', product: '液压缸', date: '2026-02-25', price: 65.8, previousPrice: 70.0, status: 'pending' },
+  { id: 4, supplier: '三菱电机', product: 'PLC控制器', date: '2026-02-24', price: 110.0, previousPrice: 120.0, status: 'success' },
+  { id: 5, supplier: 'ABB机器人', product: '装配机器人', date: '2026-02-23', price: 150.0, previousPrice: 160.0, status: 'failed' },
 ];
 
 const chartData = {
@@ -53,10 +53,10 @@ const chartData = {
     { name: '6月', value: 98000 },
   ],
   categoryBreakdown: [
-    { name: '电子元器件', value: 45 },
-    { name: '云计算服务', value: 25 },
-    { name: '物流服务', value: 18 },
-    { name: 'AI服务', value: 12 },
+    { name: '医用传感器', value: 35 },
+    { name: '精密电机', value: 25 },
+    { name: '液压组件', value: 20 },
+    { name: '控制系统', value: 20 },
   ],
 };
 

@@ -30,20 +30,20 @@ interface ProductionPlan {
   status: 'completed' | 'in-progress' | 'pending';
 }
 
-// 模拟数据
+// 模拟数据 - 符合豪江智能设备科技业务（医疗器械/自动化设备制造）
 const mtsStrategies: MTSStrategy[] = [
-  { id: 1, product: '智能手机 X1', category: '电子产品', currentStock: 125, safetyStock: 80, reorderPoint: 100, maxStock: 200, leadTime: 7, forecastDemand: 150, actualSales: 135, fillRate: 95.5, stockTurnover: 8.2, status: 'optimal' },
-  { id: 2, product: '笔记本电脑 Pro', category: '电子产品', currentStock: 45, safetyStock: 50, reorderPoint: 70, maxStock: 150, leadTime: 14, forecastDemand: 80, actualSales: 75, fillRate: 98.2, stockTurnover: 6.8, status: 'warning' },
-  { id: 3, product: '智能手表 S3', category: '可穿戴设备', currentStock: 85, safetyStock: 40, reorderPoint: 60, maxStock: 120, leadTime: 10, forecastDemand: 100, actualSales: 95, fillRate: 92.3, stockTurnover: 9.5, status: 'optimal' },
-  { id: 4, product: '平板电脑 Tab', category: '电子产品', currentStock: 35, safetyStock: 40, reorderPoint: 50, maxStock: 100, leadTime: 12, forecastDemand: 60, actualSales: 55, fillRate: 88.9, stockTurnover: 7.3, status: 'critical' },
-  { id: 5, product: '无线耳机 Air', category: '音频设备', currentStock: 150, safetyStock: 60, reorderPoint: 80, maxStock: 250, leadTime: 8, forecastDemand: 180, actualSales: 165, fillRate: 93.8, stockTurnover: 10.2, status: 'optimal' },
+  { id: 1, product: '医用输液泵', category: '医疗设备', currentStock: 125, safetyStock: 80, reorderPoint: 100, maxStock: 200, leadTime: 7, forecastDemand: 150, actualSales: 135, fillRate: 95.5, stockTurnover: 8.2, status: 'optimal' },
+  { id: 2, product: '手术台控制系统', category: '医疗设备', currentStock: 45, safetyStock: 50, reorderPoint: 70, maxStock: 150, leadTime: 14, forecastDemand: 80, actualSales: 75, fillRate: 98.2, stockTurnover: 6.8, status: 'warning' },
+  { id: 3, product: '心电监护仪', category: '医疗设备', currentStock: 85, safetyStock: 40, reorderPoint: 60, maxStock: 120, leadTime: 10, forecastDemand: 100, actualSales: 95, fillRate: 92.3, stockTurnover: 9.5, status: 'optimal' },
+  { id: 4, product: '呼吸机传感器', category: '医疗配件', currentStock: 35, safetyStock: 40, reorderPoint: 50, maxStock: 100, leadTime: 12, forecastDemand: 60, actualSales: 55, fillRate: 88.9, stockTurnover: 7.3, status: 'critical' },
+  { id: 5, product: '电动手术床', category: '医疗设备', currentStock: 150, safetyStock: 60, reorderPoint: 80, maxStock: 250, leadTime: 8, forecastDemand: 180, actualSales: 165, fillRate: 93.8, stockTurnover: 10.2, status: 'optimal' },
 ];
 
 const productionPlans: ProductionPlan[] = [
-  { id: 1, product: '智能手机 X1', planQuantity: 200, actualQuantity: 195, productionDate: '2026-02-25', efficiency: 97.5, status: 'completed' },
-  { id: 2, product: '笔记本电脑 Pro', planQuantity: 100, actualQuantity: 85, productionDate: '2026-02-26', efficiency: 85.0, status: 'completed' },
-  { id: 3, product: '智能手表 S3', planQuantity: 150, actualQuantity: 142, productionDate: '2026-02-27', efficiency: 94.7, status: 'in-progress' },
-  { id: 4, product: '平板电脑 Tab', planQuantity: 80, actualQuantity: 0, productionDate: '2026-02-28', efficiency: 0, status: 'pending' },
+  { id: 1, product: '医用输液泵', planQuantity: 200, actualQuantity: 195, productionDate: '2026-02-25', efficiency: 97.5, status: 'completed' },
+  { id: 2, product: '手术台控制系统', planQuantity: 100, actualQuantity: 85, productionDate: '2026-02-26', efficiency: 85.0, status: 'completed' },
+  { id: 3, product: '心电监护仪', planQuantity: 150, actualQuantity: 142, productionDate: '2026-02-27', efficiency: 94.7, status: 'in-progress' },
+  { id: 4, product: '呼吸机传感器', planQuantity: 80, actualQuantity: 0, productionDate: '2026-02-28', efficiency: 0, status: 'pending' },
 ];
 
 const chartData = {
