@@ -8,10 +8,11 @@ import fs from 'fs'
 const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8'))
 
 export default defineConfig({
+  base: '/hjscm/',
   plugins: [react(), tailwindcss()],
   server: {
     port: 3000,
-    host: true,
+    host: "0.0.0.0",
     allowedHosts: true
   },
   resolve: {

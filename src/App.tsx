@@ -58,6 +58,7 @@ import RiskInventoryPage from './features/risk-inventory';
 import KPIBenchmarkPage from './features/kpi-benchmark';
 import ReportsPage from './features/reports';
 import ExceptionsPage from './features/exceptions';
+import StrategyCenter from './features/strategy-center';
 
 /**
  * 占位符页面组件
@@ -135,6 +136,7 @@ const App: React.FC = () => (
               {/* === 指挥中心 === */}
               <Route path="/" element={<Dashboard />} />
               <Route path="/control-tower" element={<ControlTower />} />
+              <Route path="/strategy-center" element={<StrategyCenter />} />
               
               {/* === MDM 主数据管理（新增）=== */}
               <Route path="/mdm/material" element={<MaterialManagementPage />} />

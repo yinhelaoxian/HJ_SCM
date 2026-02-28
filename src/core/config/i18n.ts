@@ -30,6 +30,7 @@ export const TRANSLATIONS: Record<string, Record<Locale, string>> = {
   // 菜单
   'menu.dashboard': { 'zh-CN': '指挥中心', 'en-US': 'Dashboard' },
   'menu.controlTower': { 'zh-CN': '供应链控制塔', 'en-US': 'Control Tower' },
+  'menu.strategyCenter': { 'zh-CN': '战略数据中心', 'en-US': 'Strategy Center' },
   'menu.strategic': { 'zh-CN': '战略层 · STRATEGIC', 'en-US': 'Strategic Layer' },
   'menu.strategy': { 'zh-CN': '战略规划', 'en-US': 'Strategic Planning' },
   'menu.network': { 'zh-CN': '网络规划', 'en-US': 'Network Planning' },

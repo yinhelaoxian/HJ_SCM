@@ -24,6 +24,7 @@ const NAV_GROUPS = [
   { section: null, items: [
     { path: '/', icon: LayoutDashboard, labelKey: 'menu.dashboard', badge: 3 },
     { path: '/control-tower', icon: Radio, labelKey: 'menu.controlTower', badge: 0 },
+    { path: '/strategy-center', icon: Target, labelKey: 'menu.strategyCenter', badge: 0 },
   ]},
   
   // === 2. Strategic Layer
